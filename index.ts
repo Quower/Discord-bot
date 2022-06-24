@@ -27,9 +27,6 @@ export const client = new DiscordJS.Client({
         //Intents.FLAGS.GUILD_WEBHOOKS
     ]
 })
-/*const guild = client.guilds.get("id"); 
-if (guild) {console.log(guild.members.fetch())}*/
-//const channel = client.channels.get('sds')
 
 
 client.on('ready', () => {
@@ -41,7 +38,6 @@ client.on('ready', () => {
         botOwners: '424279456031703041'
 
     })
-    //console.log(client.guilds.cache.get("9/11 flight crew"))
     client.guilds.cache.forEach(guild => {
         if (guild.name === "9/11 flight crew") {
             /*const members = guild.members.fetch
