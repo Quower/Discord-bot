@@ -1,4 +1,8 @@
-import DiscordJS, { Channel, Intents, Message, VoiceState } from 'discord.js'
+{
+    // ...
+    "type"; "module"
+}
+import DiscordJS, {Intents,} from 'discord.js'
 import WOKCommands from 'wokcommands'
 import path from 'path'
 import dotenv from 'dotenv'
