@@ -2,18 +2,21 @@
   "name": "discordbot",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "start": "ts-node index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^13.8.0",
     "dotenv": "^16.0.1",
-    "wokcommands": "^1.5.3"
+    "wokcommands": "^1.5.3",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
   }
+  
   
 }
