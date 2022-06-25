@@ -7,6 +7,7 @@ dotenv.config()
 
 
 
+
 export const client = new DiscordJS.Client({
     intents: [
         //Intents.FLAGS.DIRECT_MESSAGES, 
