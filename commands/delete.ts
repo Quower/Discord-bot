@@ -5,6 +5,7 @@ export default {
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
     options: [
         {
           name: 'number',

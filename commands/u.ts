@@ -6,15 +6,16 @@ export default {
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     callback: async ({client, guild}) => {
 
         
-        
+        let cool = new String()
         guild!.members
   .fetch()
   .then((members) =>
-    members.forEach((member) => console.log(`${member.user.username}#${member.user.tag}`)),
+  members.forEach((member) => cool = `${cool}/n${member.user.tag}`),
   );
         
         /*const id = '966345190480687167';
