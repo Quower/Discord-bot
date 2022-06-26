@@ -15,9 +15,13 @@ export default {
         .fetch()
         .then((members) =>
           members.forEach((member) => cool = `${cool}/n${member.user.tag}`),
-        );
+        ).then(() => {
+          return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}\n${cool}`
+        })
 
+        
 
-        return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}\n${cool}`
+        
+        
     },
 } as ICommand
