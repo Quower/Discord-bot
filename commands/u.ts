@@ -14,7 +14,7 @@ export default {
         await guild!.members
         .fetch()
         .then(async (members) =>
-          await members.forEach((member) => cool = `${cool}/n${member.user.tag}`),
+          await members.forEach((member) => cool = `${cool}\n${member.user}`),
         )
           return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}\n${cool}`
 
