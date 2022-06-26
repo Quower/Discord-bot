@@ -11,13 +11,13 @@ export default {
 
         
         let cool = new String("")
-        guild!.members
+        await guild!.members
         .fetch()
-        .then((members) =>
-          members.forEach((member) => cool = `${cool}/n${member.user.tag}`),
-        ).then(() => {
+        .then(async (members) =>
+          await members.forEach((member) => cool = `${cool}/n${member.user.tag}`),
+        )
           return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}\n${cool}`
-        })
+
 
         
 
