@@ -18,7 +18,6 @@ export default {
     description: 'opens menu for voice channel',
 
     slash: true,
-    testOnly: true,
     ownerOnly: true,
     guildOnly: true,
     /*options: [
