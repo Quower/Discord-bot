@@ -296,32 +296,32 @@ export default {
 function Update_message_embed() {
     const embed = new MessageEmbed()
         embed.title = 'VcMenu'
-        if ( VcMenu === true && VcMenuwhitelist === true ) {
-            if (VcMenuMemberList.length > 0) {
-                embed.addFields(
-                    { name: 'Allowed members', value: VcMenuMemberList.join('\n'), inline:true},
-                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                )
-            } else {
-                embed.addFields(
-                    { name: 'Allowed members', value: 'none', inline:true},
-                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                )
-            }
-            
-        } else if ( VcMenu === true && VcMenuwhitelist === false ) {
-            //const channel = client.channels.get(VcMenuVc)
-            if (VcMenuMemberList.length > 0) {
-                embed.addFields(
-                    { name: 'Blocked members', value: VcMenuMemberList.join('\n'), inline:true},
-                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                    )
-                } else {
+        if ( VcMenu === true ) {
+            if (VcMenuwhitelist === true) {
+                if (VcMenuMemberList.length > 0) {
+                                embed.addFields(
+                                    { name: 'Allowed members', value: VcMenuMemberList.join('\n'), inline:true},
+                                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
+                                )
+                            } else {
+                                embed.addFields(
+                                    { name: 'Allowed members', value: 'none', inline:true},
+                                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
+                                )
+                            }
+            } else if (VcMenuwhitelist === false) {
+                if (VcMenuMemberList.length > 0) {
                     embed.addFields(
-                        { name: 'Allowed members', value: 'none', inline:true},
+                        { name: 'Blocked members', value: VcMenuMemberList.join('\n'), inline:true},
                         { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                    )
+                        )
+                    } else {
+                        embed.addFields(
+                            { name: 'Allowed members', value: 'none', inline:true},
+                            { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
+                        )
                 }
+            }
         }
         else {
             embed.addFields(
