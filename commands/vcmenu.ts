@@ -318,7 +318,7 @@ function Update_message_embed() {
                         )
                     } else {
                         embed.addFields(
-                            { name: 'Allowed members', value: 'none', inline:true},
+                            { name: 'Bloked members', value: 'none', inline:true},
                             { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
                         )
                 }
