@@ -297,6 +297,7 @@ function Update_message_embed() {
     const embed = new MessageEmbed()
         embed.title = 'VcMenu'
         if ( VcMenu === true ) {
+            console.log(VcMenuwhitelist)
             if (VcMenuwhitelist === true) {
                 if (VcMenuMemberList.length > 0) {
                                 embed.addFields(
@@ -351,6 +352,9 @@ function Update_message_row() {
             .setLabel('ON')
             .setStyle(MessageButtonStyles.SUCCESS)
         )
+
+
+        console.log(VcMenuwhitelist)
         
 
         if(VcMenuwhitelist === true) {
