@@ -2,6 +2,7 @@ import DiscordJS, {Intents,} from 'discord.js'
 import WOKCommands from 'wokcommands'
 import path from 'path'
 import dotenv from 'dotenv'
+import mongoose from 'mongoose'
 dotenv.config()
 
 
@@ -30,91 +31,27 @@ export const client = new DiscordJS.Client({
 })
 
 
-client.on('ready', () => {
+client.on('ready', async () => {
+    /*await mongoose.connect(
+        process.env.MONGODB!,
+        {
+            keepAlive: true
+        }
+    )*/
+
     console.log(`Logged in as: ${client.user?.username}${client.user?.tag}`)
     new WOKCommands(client, {
         commandsDir: path.join(__dirname, 'commands'),
         typeScript: true,
         testServers: '966345190480687167',
-        botOwners: '424279456031703041'
-
+        botOwners: '424279456031703041',
+        mongoUri: process.env.MONGODB,
     })
-    client.guilds.cache.forEach(guild => {
-        if (guild.name === "9/11 flight crew") {
-            /*const members = guild.members.fetch
-            console.log(members)*/
-            //let role_member: any
-            //let member_role: any
-            /*guild!.members
-            .fetch()
-            .then((members) =>
-              members.forEach((member) => {
-                if (member.user.tag === "Amercian Spy#6295") {
-                    const role_member = member
-                    console.log(role_member)
-                    guild.roles
-                    .fetch()
-                    .then((role) =>
-                      role.forEach((role) => {
-                        if(role.name === "Mod69") {
-                            const member_role = role
-                            console.log(member_role)
-                            if (member_role instanceof DiscordJS.Role && role_member instanceof DiscordJS.GuildMember && member_role && role_member) {
-                            role_member.roles.add(member_role)
-                        }
-                        }
-                      }),
-                    )
-                }
-              }),
-            )*/
-            
-            
-
-        }
-    });
-    
-    
 })
-
-// client.on('messageCreate', async (message) => {
-//     if(message.content === '9090' && message.author.bot) {
-
-//     }
-// })
-
 
 
 
 client.login(process.env.TOKEN)
 
 
-// client.on('voiceStateUpdate', (oldState, newState) => {
-
-
-//     if(newState.channel?.id === "986734845046714379") {
-//         if(newState.member?.id == "424279456031703041" /*|| newState.member?.id == "815929389513703455" */) {
-//             return
-//         }
-//         else {
-//             if (newState.member?.voice) 
-//             newState.member.voice.disconnect()
-//         }
-//         // if(newState.member?.id ==="776768978197938178") {
-//         //     newState.member.voice.disconnect()
-//         // }
-
-
-//     }
-  
-//   }
-// )
-
-// client.on('messageCreate', msg => {
-// if (msg.content.toLocaleLowerCase().includes("cringe") === true && !msg.member?.user.bot && msg.member?.id !== "424279456031703041") {
-//     msg.reply({
-//         content: "no ur cringe"
-//     })
-// }
-// })
 
