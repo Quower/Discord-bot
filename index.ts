@@ -110,11 +110,11 @@ client.login(process.env.TOKEN)
 //   }
 // )
 
-client.on('messageCreate', msg => {
-if (msg.content.toLocaleLowerCase().includes("cringe") === true && !msg.member?.user.bot && msg.member?.id !== "424279456031703041") {
-    msg.reply({
-        content: "no ur cringe"
-    })
-}
-})
+// client.on('messageCreate', msg => {
+// if (msg.content.toLocaleLowerCase().includes("cringe") === true && !msg.member?.user.bot && msg.member?.id !== "424279456031703041") {
+//     msg.reply({
+//         content: "no ur cringe"
+//     })
+// }
+// })
 

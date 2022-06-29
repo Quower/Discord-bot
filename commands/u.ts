@@ -11,26 +11,13 @@ export default {
     callback: async ({client, guild}) => {
 
         
-        let cool = new String()
-        guild!.members
-  .fetch()
-  .then((members) =>
-  members.forEach((member) => cool = `${cool}/n${member.user.tag}`),
-  );
-        
-        /*const id = '966345190480687167';
-const guild1 = client.guilds.cache.find((g) => g.id === id);
+      let cool = new String("")
+      await guild!.members
+      .fetch()
+      .then(async (members) =>
+        await members.forEach((member) => cool = `${cool}\n${member.user}`),
+      )
+        return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}${cool}`
 
-if (!guild1)
-  return `Can't find any guild with the ID "${id}"`
-
-guild1.members
-  .fetch()
-  .then((members) =>
-    members.forEach((member) => console.log(member.user.username)),
-  );*/
-
-
-        return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}`
     },
 } as ICommand

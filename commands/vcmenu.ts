@@ -1,7 +1,6 @@
 import { Channel, Client, ContextMenuInteraction, GuildMember, Interaction, Message, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, MessageSelectOptionData, SelectMenuInteraction, VoiceChannel } from "discord.js";
 import { MessageButtonStyles } from "discord.js/typings/enums";
 import { ICommand } from "wokcommands";
-//import DiscordJS, {  } from 'discord.js'
 let VcMenu = false
 let VcMenuwhitelist = false
 let VcMenuMemberList = new Array()
@@ -9,32 +8,14 @@ let MenuVC: any
 let addingMembers = new Boolean
 let removingMembers = new Boolean
 let menuMessage: any
-//let menu = new MessageSelectMenu
-// let MenuMessageChannel = new String
-//let VcMenuVc = new String('')
 
 export default {
     category: 'voice channel stuff',
     description: 'opens menu for voice channel',
 
     slash: true,
-    testOnly: true,
     ownerOnly: true,
     guildOnly: true,
-    /*options: [
-        {
-          name: 'add/remove member',
-          description: 'add or remove member from whitelist or blacklist',
-          required: false,
-          type: 'USER',
-        },
-        {
-            name: 'add/remove member',
-            description: 'add or remove member from whitelist or blacklist',
-            required: false,
-            type: 'USER',
-          },
-      ],**/
 
     init: async (client: Client) => {
         client.on('interactionCreate', async Interaction => {
@@ -227,7 +208,6 @@ export default {
 
                 } else if (removingMembers === true) {
                     msg.mentions.members!.forEach(mentions => {
-                        //VcMenuMemberList = VcMenuMemberList.splice( VcMenuMemberList.find)
                         VcMenuMemberList = VcMenuMemberList.filter(function(value, index, arr){ 
                             return value !== mentions;
                         });
@@ -297,32 +277,33 @@ export default {
 function Update_message_embed() {
     const embed = new MessageEmbed()
         embed.title = 'VcMenu'
-        if ( VcMenu === true && VcMenuwhitelist === true ) {
-            if (VcMenuMemberList.length > 0) {
-                embed.addFields(
-                    { name: 'Allowed members', value: VcMenuMemberList.join('\n'), inline:true},
-                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                )
-            } else {
-                embed.addFields(
-                    { name: 'Allowed members', value: 'none', inline:true},
-                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                )
-            }
-            
-        } else if ( VcMenu === true && VcMenuwhitelist === false ) {
-            //const channel = client.channels.get(VcMenuVc)
-            if (VcMenuMemberList.length > 0) {
-                embed.addFields(
-                    { name: 'Blocked members', value: VcMenuMemberList.join('\n'), inline:true},
-                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                    )
-                } else {
+        if ( VcMenu === true ) {
+            console.log(VcMenuwhitelist)
+            if (VcMenuwhitelist === true) {
+                if (VcMenuMemberList.length > 0) {
+                                embed.addFields(
+                                    { name: 'Allowed members', value: VcMenuMemberList.join('\n'), inline:true},
+                                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
+                                )
+                            } else {
+                                embed.addFields(
+                                    { name: 'Allowed members', value: 'none', inline:true},
+                                    { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
+                                )
+                            }
+            } else if (VcMenuwhitelist === false) {
+                if (VcMenuMemberList.length > 0) {
                     embed.addFields(
-                        { name: 'Allowed members', value: 'none', inline:true},
+                        { name: 'Blocked members', value: VcMenuMemberList.join('\n'), inline:true},
                         { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
-                    )
+                        )
+                    } else {
+                        embed.addFields(
+                            { name: 'Bloked members', value: 'none', inline:true},
+                            { name: 'Enabled Vc', value: `:loud_sound: ${MenuVC}`, inline:true}
+                        )
                 }
+            }
         }
         else {
             embed.addFields(
@@ -424,7 +405,7 @@ function Update_message_row() {
 }
 
 function update_vcmembers() {
-    if (MenuVC instanceof VoiceChannel /*&& VcMenuMemberList.length > 0*/) {
+    if (MenuVC instanceof VoiceChannel ) {
         const members = MenuVC.members
         if (VcMenuwhitelist === true) {
             members.forEach(member => {
