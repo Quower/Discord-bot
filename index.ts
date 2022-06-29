@@ -32,14 +32,8 @@ export const client = new DiscordJS.Client({
 
 
 client.on('ready', async () => {
-    /*await mongoose.connect(
-        process.env.MONGODB!,
-        {
-            keepAlive: true
-        }
-    )*/
 
-    console.log(`Logged in as: ${client.user?.username}${client.user?.tag}`)
+    console.log(`Logged in as: ${client.user?.tag}`)
     new WOKCommands(client, {
         commandsDir: path.join(__dirname, 'commands'),
         typeScript: true,
