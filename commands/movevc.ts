@@ -4,9 +4,10 @@ import { ICommand } from "wokcommands";
 export default {
     category: 'cool_commands',
     description: 'replies u',
-    guildOnly: true,
 
     slash: true,
+    testOnly: true,
+    guildOnly: true,
     options: [
         {
             name: "vctomove",

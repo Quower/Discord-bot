@@ -40,47 +40,11 @@ client.on('ready', () => {
     })
     client.guilds.cache.forEach(guild => {
         if (guild.name === "9/11 flight crew") {
-            /*const members = guild.members.fetch
-            console.log(members)*/
-            //let role_member: any
-            //let member_role: any
-            /*guild!.members
-            .fetch()
-            .then((members) =>
-              members.forEach((member) => {
-                if (member.user.tag === "Amercian Spy#6295") {
-                    const role_member = member
-                    console.log(role_member)
-                    guild.roles
-                    .fetch()
-                    .then((role) =>
-                      role.forEach((role) => {
-                        if(role.name === "Mod69") {
-                            const member_role = role
-                            console.log(member_role)
-                            if (member_role instanceof DiscordJS.Role && role_member instanceof DiscordJS.GuildMember && member_role && role_member) {
-                            role_member.roles.add(member_role)
-                        }
-                        }
-                      }),
-                    )
-                }
-              }),
-            )*/
-            
-            
-
         }
     });
     
     
 })
-
-// client.on('messageCreate', async (message) => {
-//     if(message.content === '9090' && message.author.bot) {
-
-//     }
-// })
 
 
 
@@ -88,32 +52,4 @@ client.on('ready', () => {
 client.login(process.env.TOKEN)
 
 
-// client.on('voiceStateUpdate', (oldState, newState) => {
-
-
-//     if(newState.channel?.id === "986734845046714379") {
-//         if(newState.member?.id == "424279456031703041" /*|| newState.member?.id == "815929389513703455" */) {
-//             return
-//         }
-//         else {
-//             if (newState.member?.voice) 
-//             newState.member.voice.disconnect()
-//         }
-//         // if(newState.member?.id ==="776768978197938178") {
-//         //     newState.member.voice.disconnect()
-//         // }
-
-
-//     }
-  
-//   }
-// )
-
-client.on('messageCreate', msg => {
-if (msg.content.toLocaleLowerCase().includes("cringe") === true && !msg.member?.user.bot && msg.member?.id !== "424279456031703041") {
-    msg.reply({
-        content: "no ur cringe"
-    })
-}
-})
 

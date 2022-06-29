@@ -18,10 +18,5 @@ export default {
         )
           return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}${cool}`
 
-
-        
-
-        
-        
     },
 } as ICommand

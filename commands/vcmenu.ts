@@ -1,7 +1,6 @@
 import { Channel, Client, ContextMenuInteraction, GuildMember, Interaction, Message, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, MessageSelectOptionData, SelectMenuInteraction, VoiceChannel } from "discord.js";
 import { MessageButtonStyles } from "discord.js/typings/enums";
 import { ICommand } from "wokcommands";
-//import DiscordJS, {  } from 'discord.js'
 let VcMenu = false
 let VcMenuwhitelist = false
 let VcMenuMemberList = new Array()
@@ -9,9 +8,6 @@ let MenuVC: any
 let addingMembers = new Boolean
 let removingMembers = new Boolean
 let menuMessage: any
-//let menu = new MessageSelectMenu
-// let MenuMessageChannel = new String
-//let VcMenuVc = new String('')
 
 export default {
     category: 'voice channel stuff',
@@ -20,20 +16,6 @@ export default {
     slash: true,
     ownerOnly: true,
     guildOnly: true,
-    /*options: [
-        {
-          name: 'add/remove member',
-          description: 'add or remove member from whitelist or blacklist',
-          required: false,
-          type: 'USER',
-        },
-        {
-            name: 'add/remove member',
-            description: 'add or remove member from whitelist or blacklist',
-            required: false,
-            type: 'USER',
-          },
-      ],**/
 
     init: async (client: Client) => {
         client.on('interactionCreate', async Interaction => {
@@ -226,7 +208,6 @@ export default {
 
                 } else if (removingMembers === true) {
                     msg.mentions.members!.forEach(mentions => {
-                        //VcMenuMemberList = VcMenuMemberList.splice( VcMenuMemberList.find)
                         VcMenuMemberList = VcMenuMemberList.filter(function(value, index, arr){ 
                             return value !== mentions;
                         });
@@ -352,9 +333,6 @@ function Update_message_row() {
             .setLabel('ON')
             .setStyle(MessageButtonStyles.SUCCESS)
         )
-
-
-        console.log(VcMenuwhitelist)
         
 
         if(VcMenuwhitelist === true) {
@@ -427,7 +405,7 @@ function Update_message_row() {
 }
 
 function update_vcmembers() {
-    if (MenuVC instanceof VoiceChannel /*&& VcMenuMemberList.length > 0*/) {
+    if (MenuVC instanceof VoiceChannel ) {
         const members = MenuVC.members
         if (VcMenuwhitelist === true) {
             members.forEach(member => {
