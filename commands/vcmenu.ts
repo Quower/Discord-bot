@@ -8,6 +8,15 @@ let MenuVC: any
 let addingMembers = new Boolean
 let removingMembers = new Boolean
 let menuMessage: any
+/*var Menu = {
+    VcMenu,
+    VcMenuwhitelist,
+    VcMenuMemberList,
+    addingMembers,
+    removingMembers,
+    menuMessage,
+    MenuVC,
+}*/
 
 export default {
     category: 'voice channel stuff',
@@ -22,7 +31,7 @@ export default {
             if (Interaction.isButton()) {
                 const { customId, member, message, channel, guild} = Interaction
 
-                if (menuMessage === message) {
+                if (menuMessage! === message) {
                     if (member instanceof GuildMember && member.id == '424279456031703041') {
                         const targetMessage = await channel?.messages.fetch(message.id, {
                             cache: true,
