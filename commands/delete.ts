@@ -4,7 +4,6 @@ export default {
     description: 'clears messages',
 
     slash: true,
-    testOnly: true,
     guildOnly: true,
     options: [
         {

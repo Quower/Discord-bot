@@ -5,7 +5,6 @@ export default {
     description: 'replies u',
 
     slash: true,
-    testOnly: true,
     guildOnly: true,
 
     callback: async ({client, guild}) => {

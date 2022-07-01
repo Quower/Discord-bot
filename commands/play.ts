@@ -1,3 +1,4 @@
+import { DisTube } from "distube";
 import { ICommand } from "wokcommands";
 
 export default {
@@ -5,7 +6,6 @@ export default {
     description: 'starts playing music',
 
     slash: true,
-    testOnly: true,
     guildOnly: true,
     options: [ 
         {
