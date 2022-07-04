@@ -5,8 +5,8 @@ let VcMenu = false
 let VcMenuwhitelist = false
 let VcMenuMemberList = new Array()
 let MenuVC: any
-let addingMembers = new Boolean
-let removingMembers = new Boolean
+let addingMembers = false
+let removingMembers = false
 let menuMessage: any
 
 export default {
@@ -63,8 +63,8 @@ export default {
                             MenuVC = null
                             VcMenuwhitelist = false
                             VcMenuMemberList = new Array()
-                            addingMembers = new Boolean
-                            removingMembers = new Boolean
+                            addingMembers = false
+                            removingMembers = false
                     
                             if(!targetMessage) {return}
                             await targetMessage.edit({
