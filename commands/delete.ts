@@ -2,7 +2,7 @@ import { ICommand } from "wokcommands";
 export default {
     category: 'message stuff',
     description: 'clears messages',
-
+ 
     slash: true,
     guildOnly: true,
     options: [
