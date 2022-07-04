@@ -1,13 +1,23 @@
 import { Channel, Client, ContextMenuInteraction, GuildMember, Interaction, Message, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, MessageSelectOptionData, SelectMenuInteraction, VoiceChannel } from "discord.js";
 import { MessageButtonStyles } from "discord.js/typings/enums";
 import { ICommand } from "wokcommands";
+
 let VcMenu = false
 let VcMenuwhitelist = false
 let VcMenuMemberList = new Array()
 let MenuVC: any
-let addingMembers = new Boolean
-let removingMembers = new Boolean
+let addingMembers = false
+let removingMembers = false
 let menuMessage: any
+/*var Menu = {
+    VcMenu,
+    VcMenuwhitelist,
+    VcMenuMemberList,
+    addingMembers,
+    removingMembers,
+    menuMessage,
+    MenuVC,
+}*/
 
 export default {
     category: 'voice channel stuff',
@@ -18,6 +28,10 @@ export default {
     guildOnly: true,
 
     init: async (client: Client) => {
+        /*client.on('ready', async () => {
+            const VcData = await vcmenudata
+
+        })*/
         client.on('interactionCreate', async Interaction => {
             if (Interaction.isButton()) {
                 const { customId, member, message, channel, guild} = Interaction
@@ -63,8 +77,8 @@ export default {
                             MenuVC = null
                             VcMenuwhitelist = false
                             VcMenuMemberList = new Array()
-                            addingMembers = new Boolean
-                            removingMembers = new Boolean
+                            addingMembers = false
+                            removingMembers = false
                     
                             if(!targetMessage) {return}
                             await targetMessage.edit({

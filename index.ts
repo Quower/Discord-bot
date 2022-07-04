@@ -2,7 +2,7 @@ import DiscordJS, {Intents,} from 'discord.js'
 import WOKCommands from 'wokcommands'
 import path from 'path'
 import dotenv from 'dotenv'
-import mongoose from 'mongoose'
+import mongoose, { Mongoose } from 'mongoose'
 dotenv.config()
 
 
@@ -31,22 +31,26 @@ export const client = new DiscordJS.Client({
 })
 
 
-client.on('ready', async () => {
+export const mongoClient = client.on('ready', async () => {
 
     console.log(`Logged in as: ${client.user?.tag}`)
 
     if (client.users.cache.get('424279456031703041')) {
         client.users.cache.get('424279456031703041')!.send('bot started')
     }
-    
-    new WOKCommands(client, {
+
+    const wok = new WOKCommands(client, {
         commandsDir: path.join(__dirname, 'commands'),
         typeScript: true,
         testServers: '966345190480687167',
         botOwners: '424279456031703041',
         mongoUri: process.env.MONGODB,
     })
+    return wok.mongoConnection
+
+    
 })
+
 
 
 
