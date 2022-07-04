@@ -163,8 +163,9 @@ export default {
                                     components: [Update_message_row()],
                                     embeds: [Update_message_embed()]
                                 })
-    
-    
+
+                                update_vcmembers()
+
                                 Interaction.deferUpdate()
                             } else {
                                 Interaction.reply({
