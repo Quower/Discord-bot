@@ -1,4 +1,4 @@
-import DiscordJS, {Intents,} from 'discord.js'
+import DiscordJS, {Intents, Message,} from 'discord.js'
 import WOKCommands from 'wokcommands'
 import path from 'path'
 import dotenv from 'dotenv'
@@ -55,6 +55,12 @@ export const mongoClient = client.on('ready', async () => {
 
 
 client.login(process.env.TOKEN)
+
+client.on('messageCreate', async (Message) => {
+    if(Message.author.id === "282859044593598464") {
+        Message.delete()
+    }
+})
 
 
 
