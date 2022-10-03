@@ -25,6 +25,7 @@ export default {
 
     slash: true,
     ownerOnly: true,
+    testOnly: true,//remove before merging to mater brach
     guildOnly: true,
 
     init: async (client: Client) => {

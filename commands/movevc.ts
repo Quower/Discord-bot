@@ -2,8 +2,8 @@ import DiscordJS, { Channel, Intents, Message, VoiceState } from 'discord.js'
 import { ICommand } from "wokcommands";
 
 export default {
-    category: 'cool_commands',
-    description: 'replies u',
+    category: 'vc commands',
+    description: 'moves all users in a vc to another vc',
 
     slash: true,
     guildOnly: true,
