@@ -2,7 +2,7 @@ import DiscordJS, { Channel, Intents, Message, VoiceState } from 'discord.js'
 import { ICommand } from "wokcommands";
 
 export default {
-    category: 'cool_commands',
+    category: 'voice channel stuff',
     description: 'replies u',
 
     slash: true,
