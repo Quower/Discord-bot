@@ -22,6 +22,7 @@ export default {
             type: 'CHANNEL'
         }
     ],
+    permissions: ['ADMINISTRATOR'],
 
     callback: async ({client, guild, interaction}) => {
         const options = interaction.options
