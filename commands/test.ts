@@ -4,8 +4,8 @@ export default {
     category: 'testing commands',
     description: 'command for testing',
     guildOnly: true,
-
     slash: true,
+    ownerOnly: true,
 
     callback: async ({client, guild}) => {
 
@@ -16,7 +16,7 @@ export default {
         .then(async (members) =>
           await members.forEach((member) => cool = `${cool}\n${member.user}`),
         )
-          return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}${cool}`
+          return `not finished command`
 
     },
 } as ICommand
