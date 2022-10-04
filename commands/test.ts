@@ -10,6 +10,7 @@ export default {
 
     slash: true,
     guildOnly: true,
+    testOnly: true,//remove before merging to mater brach
     init: async (client: Client) => { 
 
     },
