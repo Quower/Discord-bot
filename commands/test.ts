@@ -1,7 +1,7 @@
 import { Client, RoleManager } from "discord.js";
 import { ICommand } from "wokcommands";
-import coolSchema from "../mongodb/testschema";
-import { mongoClient } from "../index";
+import testSchema from '../mongodb/testschema'
+import mongoose from "mongoose"
 let number1 = 0
 
 export default {
@@ -16,15 +16,29 @@ export default {
     },
 
     callback: async ({client, guild}) => {
-      number1++
 
-      const schema = {
-        number: "number1"
-      }
+      
+      
 
-      await new coolSchema(schema).save
 
-      return `u${client.emojis.cache.get("987676604970991646")}${client.emojis.cache.get("987676777176498250")}\n${number1}`
+      mongoose.connection.db.collection('test').findOne({}, async function(err, result) {
+        if (err) throw err;
+        if (!result) {
+          await new testSchema({
+            number: number1
+          }).save()
+        } else {
+          number1 = result.number
+          number1++
+          mongoose.connection.db.collection('test').updateOne({}, { $set: {number: number1} }, function(err) {
+            if (err) throw err;
+          })
+
+        }
+      })
+      
+
+      return `${number1}`
 
     },
 } as ICommand

@@ -1,11 +1,11 @@
 import mongoose from "mongoose"
 
-const coolSchema = new mongoose.Schema({
+const testSchema = new mongoose.Schema({
     number : {
-        type : String,
+        type:  mongoose.SchemaTypes.Number,
         required : true,
-        default : 0
+        default : 1
     }
 })
 
-export default mongoose.model('test', coolSchema)
+export default mongoose.model('test', testSchema, 'test')
