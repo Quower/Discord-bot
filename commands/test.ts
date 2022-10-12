@@ -15,7 +15,8 @@ export default {
 
     },
 
-    callback: async ({client, guild}) => {
+    callback: async ({client, guild, interaction}) => {
+      await interaction.reply('test')
 
       
       
@@ -24,21 +25,25 @@ export default {
       mongoose.connection.db.collection('test').findOne({}, async function(err, result) {
         if (err) throw err;
         if (!result) {
-          await new testSchema({
+          new testSchema({
             number: number1
           }).save()
+          interaction.editReply(`${number1}`)
+          
+        
         } else {
           number1 = result.number
           number1++
           mongoose.connection.db.collection('test').updateOne({}, { $set: {number: number1} }, function(err) {
             if (err) throw err;
+            interaction.editReply(`${number1}`)
           })
 
         }
       })
       
 
-      return `${number1}`
+      
 
     },
 } as ICommand
