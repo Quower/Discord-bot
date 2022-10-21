@@ -33,7 +33,7 @@ export const client = new DiscordJS.Client({
 
 client.on('ready', async () => {
 
-    console.log(`Logged in as: ${client.user?.tag}`)
+    console.log(`Logged in as: ${client.user?.tag} test`)
 
     if (client.users.cache.get('424279456031703041')) {
         client.users.cache.get('424279456031703041')!.send('bot started')
