@@ -36,7 +36,7 @@ client.on('ready', async () => {
     console.log(`Logged in as: ${client.user?.tag}`)
 
     if (client.users.cache.get('424279456031703041')) {
-        client.users.cache.get('424279456031703041')!.send('bot started')
+        client.users.cache.get('424279456031703041')!.send('bot started yay')
     }
 
     new WOKCommands(client, {
