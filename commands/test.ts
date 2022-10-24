@@ -16,7 +16,7 @@ export default {
         .then(async (members) =>
           await members.forEach((member) => cool = `${cool}\n${member.user}`),
         )
-          return `not finished command`
+          return `not finished command dab`
 
     },
 } as ICommand
