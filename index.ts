@@ -60,6 +60,7 @@ client.on("ready", async () => {
     testServers: "966345190480687167",
     botOwners: "424279456031703041",
     mongoUri: process.env.MONGODB,
+    dbOptions: {name: 'test'}
   });
 });
 

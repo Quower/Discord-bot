@@ -1,4 +1,3 @@
-import { DisTube } from "distube";
 import { ICommand } from "wokcommands";
 
 export default {

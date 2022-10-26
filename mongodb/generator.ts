@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const generatorSchema = new mongoose.Schema({
-  chanelId: {
+  channelId: {
     type: mongoose.SchemaTypes.String,
     required: true,
   },
