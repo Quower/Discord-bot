@@ -1,18 +1,11 @@
 import {
-  BaseGuildTextChannel,
-  BaseGuildVoiceChannel,
-  Channel,
   Client,
-  GuildChannel,
-  MessageEmbed,
-  RoleManager,
   MessageActionRow,
   Guild,
-  SelectMenuInteraction,
   MessageSelectMenu,
+  VoiceChannel,
 } from "discord.js";
 import mongoose from "mongoose";
-import { client } from "..";
 
 export async function Select_Generator(
   guild: Guild | null,
@@ -31,14 +24,26 @@ export async function Select_Generator(
     .setMinValues(minValue)
     .setPlaceholder("Nothing Selected");
   await generators.forEach((generator) => {
-    selectMenu.addOptions([
-      {
-        label: `<#${generator.channelId}>`,
-        description: "idk what to put in description",
-        value: generator.channelId,
-        emoji: `1034894487236902942`,
-      },
-    ]);
+    const channel = client.channels.cache.get(generator.channelId);
+    if (channel instanceof VoiceChannel) {
+      selectMenu.addOptions([
+        {
+          label: `${channel.name}`,
+          description: `${channel.position}`,
+          value: generator.channelId,
+          emoji: `1034894487236902942`,
+        },
+      ]);
+    } else {
+      selectMenu.addOptions([
+        {
+          label: `${"#deleted-channel"}`,
+          description: `${"stuff"}`,
+          value: generator.channelId,
+          emoji: `1034894487236902942`,
+        },
+      ]);
+    }
   });
   row.addComponents(selectMenu);
   return row;
