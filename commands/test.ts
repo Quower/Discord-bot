@@ -14,9 +14,13 @@ export default {
   init: async (client: Client) => {},
 
   callback: async ({ client, guild, interaction }) => {
-    await interaction.reply("test");
+    await interaction.reply({
+      content: 'test',
+      ephemeral: true
+    });
 
-    mongoose.connection.db
+
+    /*mongoose.connection.db
       .collection("test")
       .findOne({}, async function (err, result) {
         if (err) throw err;
@@ -35,6 +39,6 @@ export default {
               interaction.editReply(`${number1}`);
             });
         }
-      });
+      });*/
   },
 } as ICommand;

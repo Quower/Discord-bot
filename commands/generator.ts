@@ -1,14 +1,12 @@
 import {
-  Client,
+  Client, Interaction,
 } from "discord.js";
 import { ICommand } from "wokcommands";
 import fs from "fs";
-const subcommandfiles = fs
-  .readdirSync("./subcommands/generator")
-  .filter((file) => file.endsWith(".ts"));
-const subcommands = subcommandfiles.map((x) => {
-  return x.replace(".ts", "");
-});
+import { Path } from "typescript";
+import { Setup_Subcommands } from "../functions/commands/setup_subcommands"
+let subcommands = Setup_Subcommands("./subcommands/generator/")
+
 
 export default {
   category: "testing commands",
@@ -54,8 +52,11 @@ export default {
 
     const subcommand = options.getSubcommand();
 
-    if (subcommands.includes(subcommand)) {
-      require(`../subcommands/generator/${subcommand}`).run(guild, interaction);
+    let func = (await subcommands).find(subcomman => subcomman.command == subcommand)?.callback
+    if (func) {
+      (await subcommands).find(subcomman => subcomman.command == subcommand)?.callback(client, interaction)
     }
+
+
   },
 } as ICommand;
