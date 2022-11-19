@@ -1,5 +1,5 @@
 import { Client, RoleManager } from "discord.js";
-import { ICommand } from "wokcommands";
+import { CommandObject } from "wokcommands";
 import testSchema from "../mongodb/testschema";
 import mongoose from "mongoose";
 let number1 = 0;
@@ -41,4 +41,4 @@ export default {
         }
       });*/
   },
-} as ICommand;
+} as CommandObject;

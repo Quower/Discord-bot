@@ -1,29 +1,29 @@
-import DiscordJS, { Intents, Message } from "discord.js";
-import WOKCommands from "wokcommands";
+import DiscordJS, { IntentsBitField, Message } from "discord.js";
 import path from "path";
 import dotenv from "dotenv";
 import mongoose, { Mongoose } from "mongoose";
+import WOK, { DefaultCommands } from "wokcommands";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 
 export const client = new DiscordJS.Client({
   intents: [
-    //Intents.FLAGS.DIRECT_MESSAGES,
-    //Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-    //Intents.FLAGS.DIRECT_MESSAGE_TYPING,
-    Intents.FLAGS.GUILDS,
-    //Intents.FLAGS.GUILD_BANS,
-    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-    //Intents.FLAGS.GUILD_INTEGRATIONS,
-    //Intents.FLAGS.GUILD_INVITES,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    //Intents.FLAGS.GUILD_MESSAGE_TYPING,
-    //Intents.FLAGS.GUILD_PRESENCES,
-    //Intents.FLAGS.GUILD_SCHEDULED_EVENTS,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-    //Intents.FLAGS.GUILD_WEBHOOKS
+    IntentsBitField.Flags.DirectMessages,
+    //IntentsBitField.Flags.DirectMessageReactions,
+    //IntentsBitField.Flags.DirectMessageTyping,
+    IntentsBitField.Flags.Guilds,
+    //IntentsBitField.Flags.GuildBans,
+    IntentsBitField.Flags.GuildEmojisAndStickers,
+    //IntentsBitField.Flags.GuildIntegrations,
+    //IntentsBitField.Flags.GuildInvites,
+    IntentsBitField.Flags.GuildMembers,
+    IntentsBitField.Flags.GuildMessages,
+    //IntentsBitField.Flags.GuildMessageReactions,
+    //IntentsBitField.Flags.GuildMessageTyping,
+    //IntentsBitField.Flags.GuildPresences,
+    //IntentsBitField.Flags.GuildScheduledEvents,
+    IntentsBitField.Flags.GuildVoiceStates,
+    //IntentsBitField.Flags.GuildWebhooks
   ],
 });
 
@@ -54,13 +54,28 @@ client.on("ready", async () => {
     client.users.cache.get("424279456031703041")!.send("bot started");
   }
 
-  const wok = new WOKCommands(client, {
-    commandsDir: path.join(__dirname, "commands"),
-    typeScript: true,
-    testServers: "966345190480687167",
-    botOwners: "424279456031703041",
+  new WOK({
+    testServers: ["966345190480687167"],
+    botOwners: ["424279456031703041"],
     mongoUri: process.env.MONGODB,
-    dbOptions: {name: 'test'}
+    // The client for your bot. This is the only required property
+    client,
+    // Path to your commands folder
+    commandsDir: path.join(__dirname, "commands"),
+    // Path to your features folder
+    featuresDir: path.join(__dirname, "features"),
+    // Configure your event handlers
+    events: {
+      dir: path.join(__dirname, "events"),
+    },
+    disabledDefaultCommands: [
+       DefaultCommands.ChannelCommand,
+       DefaultCommands.CustomCommand,
+       DefaultCommands.Prefix,
+      // DefaultCommands.RequiredPermissions,
+      // DefaultCommands.RequiredRoles,
+      // DefaultCommands.ToggleCommand
+    ],
   });
 });
 
