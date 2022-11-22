@@ -1,7 +1,7 @@
 import {
   Client, Guild, CommandInteraction,
 } from "discord.js";
-import WOK, { CommandObject, CommandType } from "wokcommands";
+import WOK, { Command, CommandObject, CommandType } from "wokcommands";
 import fs from "fs";
 import { Path } from "typescript";
 import { Setup_Subcommands } from "../functions/commands/setup_subcommands"
@@ -110,4 +110,4 @@ export default {
 
   },
   
-} as CommandObject;
+} as Command;

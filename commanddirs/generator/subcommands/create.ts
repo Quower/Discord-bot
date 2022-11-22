@@ -1,16 +1,26 @@
-import { Client, CommandInteraction, Options } from "discord.js";
-import { subcommand } from "../../models/subcommand";
-import generatorSchema from "../../mongodb/generator";
+import {
+  ApplicationCommandOptionChannelTypesMixin,
+  ChannelType,
+  Client,
+  CommandInteraction,
+  Options,
+} from "discord.js";
+import { subcommand } from "../../../handler/models/subcommand";
+import generatorSchema from "../../../mongodb/generator";
 
 export default {
-  description: "",
+  description: "create a vc generator",
   options: [],
+  guildOnly: true,
+  testOnly: true,
+  permissions: ["ADMINISTRATOR"],
   callback: (client: Client, interaction: CommandInteraction) => {
-    if (client == undefined && interaction == undefined) {return}
+    if (client == undefined && interaction == undefined) {
+      return;
+    }
+    const name = interaction.options.get("name");
     interaction.guild?.channels
-      .create(interaction.options.getString("name") || "name not inputed", {
-        type: "GUILD_VOICE",
-      })
+      .create({ name: `${name}`, type: ChannelType.GuildVoice })
       .then(async (channel) => {
         await new generatorSchema({
           channelId: channel.id,

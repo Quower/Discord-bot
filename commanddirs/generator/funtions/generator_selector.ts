@@ -1,8 +1,8 @@
 import {
   Client,
-  MessageActionRow,
+  ActionRowBuilder,
   Guild,
-  MessageSelectMenu,
+  SelectMenuBuilder,
   VoiceChannel,
 } from "discord.js";
 import mongoose from "mongoose";
@@ -17,8 +17,8 @@ export async function Select_Generator(
   const generators = await mongoose.connection.db
     .collection("generators")
     .find({ guildId: guild!.id });
-  const row = new MessageActionRow();
-  const selectMenu = new MessageSelectMenu()
+  const row = new ActionRowBuilder<SelectMenuBuilder>();
+  const selectMenu = new SelectMenuBuilder()
     .setCustomId(customId)
     .setMaxValues(maxValue)
     .setMinValues(minValue)

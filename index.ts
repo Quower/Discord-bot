@@ -1,8 +1,11 @@
 import DiscordJS, { IntentsBitField, Message } from "discord.js";
 import path from "path";
 import dotenv from "dotenv";
+import fs from "fs";
 import mongoose, { Mongoose } from "mongoose";
 import WOK, { DefaultCommands } from "wokcommands";
+import commandHandler from "./handler/setup"
+import CommandHandler from "./handler/setup";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 
@@ -27,26 +30,6 @@ export const client = new DiscordJS.Client({
   ],
 });
 
-/*export const mongoClient = client.on('ready', async () => {
-
-    console.log(`Logged in as: ${client.user?.tag}`)
-
-    if (client.users.cache.get('424279456031703041')) {
-        client.users.cache.get('424279456031703041')!.send('bot started')
-    }
-
-    const wok = new WOKCommands(client, {
-        commandsDir: path.join(__dirname, 'commands'),
-        typeScript: true,
-        testServers: '966345190480687167',
-        botOwners: '424279456031703041',
-        mongoUri: process.env.MONGODB,
-    })
-    return wok.mongoConnection
-
-    
-})*/
-
 client.on("ready", async () => {
   console.log(`Logged in as: ${client.user?.tag}`);
 
@@ -54,7 +37,14 @@ client.on("ready", async () => {
     client.users.cache.get("424279456031703041")!.send("bot started");
   }
 
-  new WOK({
+  new CommandHandler({
+    testServers: ["966345190480687167"],
+    botOwners: ["424279456031703041"],
+    mongoUri: process.env.MONGODB,
+    client,}
+  )
+
+  /*new WOK({
     testServers: ["966345190480687167"],
     botOwners: ["424279456031703041"],
     mongoUri: process.env.MONGODB,
@@ -69,14 +59,14 @@ client.on("ready", async () => {
       dir: path.join(__dirname, "events"),
     },
     disabledDefaultCommands: [
-       DefaultCommands.ChannelCommand,
-       DefaultCommands.CustomCommand,
-       DefaultCommands.Prefix,
+      DefaultCommands.ChannelCommand,
+      DefaultCommands.CustomCommand,
+      DefaultCommands.Prefix,
       // DefaultCommands.RequiredPermissions,
       // DefaultCommands.RequiredRoles,
       // DefaultCommands.ToggleCommand
     ],
-  });
+  });*/
 });
 
 client.login(process.env.TOKEN);

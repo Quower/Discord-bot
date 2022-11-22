@@ -9,7 +9,6 @@ export async function Setup_Subcommands(
     .readdirSync(folder)
     .filter((file) => file.endsWith(".ts"));
   let subcommands = new Array();
-
   subcommandfiles.forEach((subcommandfile) => {
     const name = subcommandfile.replace(".ts", "");
     const subcommandpath = `${folder}${name}`;
@@ -18,8 +17,9 @@ export async function Setup_Subcommands(
       command: name,
       description: subcommandexport.default.description,
       path: subcommandpath,
-      callback:  function(client: Client, interaction: CommandInteraction) {
-        subcommandexport.default.callback(client, interaction)},
+      callback: function (client: Client, interaction: CommandInteraction) {
+        subcommandexport.default.callback(client, interaction);
+      },
     } as subcommandobject;
 
     subcommands.push(subcommand);

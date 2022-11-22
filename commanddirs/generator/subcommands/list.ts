@@ -1,12 +1,14 @@
-import { Client, MessageEmbed, CommandInteraction } from "discord.js";
+import { Client, EmbedBuilder, CommandInteraction } from "discord.js";
 import mongoose from "mongoose";
-import { subcommand } from "../../models/subcommand";
+import { subcommand } from "../../../handler/models/subcommand";
 
 export default {
   description: "",
   options: [],
   callback: async (client: Client, interaction: CommandInteraction) => {
-    if (client == undefined && interaction == undefined) {return}
+    if (client == undefined && interaction == undefined) {
+      return;
+    }
     let channels = "";
     await mongoose.connection.db
       .collection("generators")
@@ -15,12 +17,12 @@ export default {
         channels = `${channels}• <#${generator.channelId}>\n`;
       });
 
-    const embed = new MessageEmbed();
-    embed.title = "Generators";
+    const embed = new EmbedBuilder();
+    embed.setTitle("Generators");
     if (channels.length == 0) {
       channels = "None";
     }
-    embed.description = channels;
+    embed.setDescription(channels);
     interaction.editReply({
       embeds: [embed],
     });

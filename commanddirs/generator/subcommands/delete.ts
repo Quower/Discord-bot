@@ -1,19 +1,22 @@
 import {
   Client,
-  MessageButton,
-  MessageEmbed,
   CommandInteraction,
-  MessageActionRow,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
 } from "discord.js";
-import { MessageButtonStyles } from "discord.js/typings/enums";
-import { Select_Generator } from "../../functions/generator/generator_selector";
-import { subcommand } from "../../models/subcommand";
+import { subcommand } from "../../../handler/models/subcommand";
+import generatorSchema from "../../../mongodb/generator";
+import { Select_Generator } from "../funtions/generator_selector";
 
 export default {
   description: "",
   options: [],
   callback: async (client: Client, interaction: CommandInteraction) => {
-    if (client == undefined && interaction == undefined) {return}
+    if (client == undefined && interaction == undefined) {
+      return;
+    }
     const row = await Select_Generator(
       interaction.guild,
       "deletechannel",
@@ -21,15 +24,15 @@ export default {
       1,
       client
     );
-    const row2 = new MessageActionRow();
+    const row2 = new ActionRowBuilder<ButtonBuilder>();
     row2.addComponents(
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId("deletechannelcancel")
         .setLabel("Cancel")
-        .setStyle(MessageButtonStyles.SECONDARY)
+        .setStyle(ButtonStyle.Secondary)
     );
-    const embed2 = new MessageEmbed();
-    embed2.title = ":loud_sound: Delete generator";
+    const embed2 = new EmbedBuilder();
+    embed2.setTitle(":loud_sound: Delete generator");
     interaction.editReply({
       embeds: [embed2],
       components: [row, row2],
