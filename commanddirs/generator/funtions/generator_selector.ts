@@ -5,7 +5,7 @@ import {
   SelectMenuBuilder,
   VoiceChannel,
 } from "discord.js";
-import mongoose from "mongoose";
+import generatorSchema from "../models/generatorSchema";
 
 export async function Select_Generator(
   guild: Guild | null,
@@ -14,9 +14,7 @@ export async function Select_Generator(
   maxValue: number,
   client: Client
 ) {
-  const generators = await mongoose.connection.db
-    .collection("generators")
-    .find({ guildId: guild!.id });
+  const generators = await generatorSchema.find({ guildId: guild!.id });
   const row = new ActionRowBuilder<SelectMenuBuilder>();
   const selectMenu = new SelectMenuBuilder()
     .setCustomId(customId)

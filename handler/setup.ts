@@ -3,15 +3,13 @@ import {
   ApplicationCommandOptionType,
   Client,
   CommandInteraction,
-  Guild,
+  RESTPostAPIChatInputApplicationCommandsJSONBody,
   SlashCommandBuilder,
 } from "discord.js";
 import fs from "fs";
-import { setOriginalNode } from "typescript";
+import mongoose from "mongoose";
 import { client } from "../index";
-import { commandobject } from "./models/command";
-import { subcommandobject } from "./models/subcommand";
-import { subcommandArray } from "./models/subcommand";
+import { commandobject, subcommandobject, subcommandArray } from "./typings";
 
 const events = fs
   .readdirSync("./events")
@@ -38,11 +36,11 @@ commandfolders.forEach((folder) => {
       object.default.callback(client, interaction);
     },
     options: object.default.options || null,
-    guildOnly: object.default.guildOnly || false,
+    allowInDMs: object.default.allowInDMs || false,
     ownerOnly: object.default.ownerOnly || false,
     testOnly: object.default.testOnly || false,
     permissions: object.default.permissions || null,
-    noManinCommand: object.default.noManinCommand || false,
+    ManinCommand: object.default.ManinCommand || false,
   } as commandobject;
 
   commands.push(subcommand);
@@ -60,17 +58,13 @@ export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
     const object = require(`.${path}`);
 
     const subcommand = {
-      command: name,
+      command: name.split(".")[0],
       description: object.default.description,
       path: path,
       callback: function (client: Client, interaction: CommandInteraction) {
         object.default.callback(client, interaction);
       },
       options: object.default.options,
-      guildOnly: object.default.guildOnly || false,
-      ownerOnly: object.default.ownerOnly || false,
-      testOnly: object.default.testOnly || false,
-      permissions: object.default.permissions || null,
     } as subcommandobject;
 
     subcommands.push(subcommand);
@@ -79,12 +73,7 @@ export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
   return subcommands;
 }
 
-// export default async function setupHandler(
-//   testServers: String[],
-//   botOwners: String[],
-//   mongoUri: String,
-//   client: Client
-// ) {}
+export const commandsExport = commands;
 
 export default class CommandHandler {
   testServers!: String[];
@@ -93,17 +82,17 @@ export default class CommandHandler {
   mongoUri!: String;
   constructor(options: {
     client: Client;
-    mongoUri: String | undefined;
-    testServers?: String[] | undefined;
-    botOwners?: String[] | undefined;
+    mongoUri: string;
+    testServers?: string[] | undefined;
+    botOwners?: string[] | undefined;
   }) {
     this.init(options);
   }
   async init(options: {
     client: Client;
-    mongoUri?: String;
-    testServers?: String[];
-    botOwners?: String[];
+    mongoUri?: string;
+    testServers?: string[];
+    botOwners?: string[];
   }) {
     let { client, mongoUri = "", testServers = [], botOwners = [] } = options;
     this.client = client;
@@ -111,20 +100,67 @@ export default class CommandHandler {
     this.botOwners = botOwners;
     this.mongoUri = mongoUri;
 
+    let commandArray = new Array();
+    // client.application?.commands
+
+    let guildCommands =
+      Array<RESTPostAPIChatInputApplicationCommandsJSONBody>();
+    let globalCommands =
+      Array<RESTPostAPIChatInputApplicationCommandsJSONBody>();
     commands.forEach((command) => {
-      let options = command.options;
+      let options = command.options || [];
+
       command.subcommands.forEach((subcommand) => {
         const option: ApplicationCommandOption = {
-          name: `${subcommand.command}`,
+          name: subcommand.command,
           type: ApplicationCommandOptionType.Subcommand,
           description: `${subcommand.description}`,
-          options: subcommand.options,
+          options: subcommand.options || [],
         };
+
+        options.push(option);
       });
+
+      let commandBuilder = new SlashCommandBuilder();
+
+      commandBuilder.setName(command.command);
+      commandBuilder.default_member_permissions;
+      if ((command.MainCommand = true)) {
+        commandBuilder.setDescription(command.description);
+      }
+      commandBuilder.setDMPermission(command.allowInDMs);
+      let commandJSON = commandBuilder.toJSON();
+      commandJSON.options = options;
+
+      if ((command.testOnly = true)) {
+        guildCommands.push(commandJSON);
+      } else if ((command.testOnly = false)) {
+        globalCommands.push(commandJSON);
+      }
     });
+
+    await mongoose.default.connect(mongoUri, {
+      keepAlive: true,
+    });
+
+    // console.log(
+    //   `${JSON.stringify(
+    //     globalCommands,
+    //     null,
+    //     "  "
+    //   )}\n///////////////////////////////\n${JSON.stringify(
+    //     guildCommands,
+    //     null,
+    //     "  "
+    //   )}`
+    // );
+    testServers.forEach(async (testServer) => {
+      let guild = await client.guilds.fetch(testServer);
+      if (!guild) {
+        return;
+      }
+      guild.commands.set(guildCommands);
+    });
+    client.application?.commands.set(globalCommands);
   }
-  // setupHandler() {
-  //   console.log('test2')
-  //   return "Hello, " + this.testServers;
-  // }
 }

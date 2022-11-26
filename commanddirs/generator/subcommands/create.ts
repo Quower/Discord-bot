@@ -1,19 +1,22 @@
 import {
-  ApplicationCommandOptionChannelTypesMixin,
+  ApplicationCommandOptionType,
   ChannelType,
   Client,
   CommandInteraction,
-  Options,
 } from "discord.js";
-import { subcommand } from "../../../handler/models/subcommand";
-import generatorSchema from "../../../mongodb/generator";
+import { subcommand } from "../../../handler/typings";
+import generatorSchema from "../models/generatorSchema";
 
 export default {
   description: "create a vc generator",
-  options: [],
-  guildOnly: true,
-  testOnly: true,
-  permissions: ["ADMINISTRATOR"],
+  options: [
+    {
+      name: "name",
+      description: "name for the generated vc",
+      type: ApplicationCommandOptionType.String,
+      required: true,
+    },
+  ],
   callback: (client: Client, interaction: CommandInteraction) => {
     if (client == undefined && interaction == undefined) {
       return;
@@ -26,8 +29,9 @@ export default {
           channelId: channel.id,
           guildId: channel.guildId,
         }).save();
-        interaction.editReply({
+        interaction.reply({
           content: `created a vc generator: <#${channel.id}>`,
+          ephemeral: true,
         });
       });
   },

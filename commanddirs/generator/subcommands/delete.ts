@@ -6,13 +6,11 @@ import {
   ButtonStyle,
   EmbedBuilder,
 } from "discord.js";
-import { subcommand } from "../../../handler/models/subcommand";
-import generatorSchema from "../../../mongodb/generator";
+import { subcommand } from "../../../handler/typings";
 import { Select_Generator } from "../funtions/generator_selector";
 
 export default {
-  description: "",
-  options: [],
+  description: "delete a vc generator",
   callback: async (client: Client, interaction: CommandInteraction) => {
     if (client == undefined && interaction == undefined) {
       return;
@@ -33,9 +31,10 @@ export default {
     );
     const embed2 = new EmbedBuilder();
     embed2.setTitle(":loud_sound: Delete generator");
-    interaction.editReply({
+    interaction.reply({
       embeds: [embed2],
       components: [row, row2],
+      ephemeral: true
     });
   },
 } as subcommand;

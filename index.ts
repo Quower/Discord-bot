@@ -1,13 +1,13 @@
-import DiscordJS, { IntentsBitField, Message } from "discord.js";
-import path from "path";
+import DiscordJS, {
+  ChatInputCommandInteraction,
+  IntentsBitField,
+} from "discord.js";
 import dotenv from "dotenv";
-import fs from "fs";
-import mongoose, { Mongoose } from "mongoose";
-import WOK, { DefaultCommands } from "wokcommands";
-import commandHandler from "./handler/setup"
 import CommandHandler from "./handler/setup";
+import CommandInteractionCreate from "./handler/events/CommandInteractionCreate";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
+export const botOwners = ["424279456031703041"];
 
 export const client = new DiscordJS.Client({
   intents: [
@@ -39,10 +39,10 @@ client.on("ready", async () => {
 
   new CommandHandler({
     testServers: ["966345190480687167"],
-    botOwners: ["424279456031703041"],
-    mongoUri: process.env.MONGODB,
-    client,}
-  )
+    botOwners: botOwners,
+    mongoUri: process.env.MONGODB || "",
+    client,
+  });
 
   /*new WOK({
     testServers: ["966345190480687167"],
@@ -71,8 +71,24 @@ client.on("ready", async () => {
 
 client.login(process.env.TOKEN);
 
-client.on("messageCreate", async (Message) => {
-  if (Message.author.id === "282859044593598464") {
-    Message.delete();
+// client.on("messageCreate", async (Message) => {
+//   if (Message.author.id === "282859044593598464") {
+//     Message.delete();
+//   }
+// });
+
+/*const events = fs
+  .readdirSync("./handler/events")
+  .filter((file) => file.endsWith(".ts"));
+for (const file of events) {
+  const eventName = file.split(".")[0];
+  const event = require(`./handler/events/${file}`);
+  console.log("test");
+  client.on(eventName, event.bind(null, client));
+}***/
+
+client.on(DiscordJS.Events.InteractionCreate, (interaction) => {
+  if (interaction instanceof ChatInputCommandInteraction) {
+    CommandInteractionCreate(client, interaction);
   }
 });
