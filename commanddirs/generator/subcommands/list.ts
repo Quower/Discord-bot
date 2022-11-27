@@ -8,11 +8,11 @@ export default {
     if (client == undefined && interaction == undefined) {
       return;
     }
-    let channels = "list all vc generators";
+    let channels = "**list of all vc generators:**";
     await (
       await generatorSchema.find({ guildId: interaction.guild!.id })
     ).forEach((generator) => {
-      channels = `${channels}• <#${generator.channelId}>\n`;
+      channels = `${channels}\n• <#${generator.channelId}>`;
     });
 
     const embed = new EmbedBuilder();

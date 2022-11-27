@@ -11,15 +11,6 @@ import mongoose from "mongoose";
 import { client } from "../index";
 import { commandobject, subcommandobject, subcommandArray } from "./typings";
 
-const events = fs
-  .readdirSync("./events")
-  .filter((file) => file.endsWith(".ts"));
-for (const file of events) {
-  const eventName = file.split(".")[0];
-  const event = require(`./events/${file}`);
-  client.on(eventName, event.bind(null, client));
-}
-
 const commandfolders = fs.readdirSync("./commanddirs");
 let commands = new Array<commandobject>();
 commandfolders.forEach((folder) => {

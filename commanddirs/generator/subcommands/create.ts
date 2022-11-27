@@ -1,8 +1,8 @@
 import {
   ApplicationCommandOptionType,
   ChannelType,
+  ChatInputCommandInteraction,
   Client,
-  CommandInteraction,
 } from "discord.js";
 import { subcommand } from "../../../handler/typings";
 import generatorSchema from "../models/generatorSchema";
@@ -17,11 +17,11 @@ export default {
       required: true,
     },
   ],
-  callback: (client: Client, interaction: CommandInteraction) => {
+  callback: (client: Client, interaction: ChatInputCommandInteraction) => {
     if (client == undefined && interaction == undefined) {
       return;
     }
-    const name = interaction.options.get("name");
+    const name = interaction.options.getString("name")
     interaction.guild?.channels
       .create({ name: `${name}`, type: ChannelType.GuildVoice })
       .then(async (channel) => {

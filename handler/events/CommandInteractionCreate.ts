@@ -13,11 +13,9 @@ export default async (
   client: Client,
   interaction: ChatInputCommandInteraction
 ) => {
-  console.log("test3");
   let commandObject = (await commandsExport).find(
     (comannd) => comannd.command == interaction.commandName
   );
-  console.log("test4");
 
   if (interaction.member?.permissions instanceof PermissionsBitField) {
     if (commandObject?.ownerOnly) {
@@ -29,7 +27,6 @@ export default async (
         return;
       }
     }
-    console.log("test5");
 
     if (
       (interaction.member?.permissions instanceof PermissionsBitField &&
@@ -37,20 +34,16 @@ export default async (
         interaction.member?.permissions.has(commandObject?.permissions)) ||
       botOwners.includes(interaction.member.user.id)
     ) {
-      console.log("test6");
 
       if (interaction.options.getSubcommand()) {
-        console.log("test71");
 
         let subcommandObject = commandObject?.subcommands.find(
           (subcommand) =>
             subcommand.command == interaction.options.getSubcommand()
         );
-        console.log(`test81`);
 
         subcommandObject?.callback(client, interaction);
       } else {
-        console.log("test72");
 
         commandObject?.callback(client, interaction);
       }

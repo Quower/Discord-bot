@@ -1,17 +1,17 @@
 import {
   Client,
-  CommandInteraction,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { subcommand } from "../../../handler/typings";
 import { Select_Generator } from "../funtions/generator_selector";
 
 export default {
   description: "delete a vc generator",
-  callback: async (client: Client, interaction: CommandInteraction) => {
+  callback: async (client: Client, interaction: ChatInputCommandInteraction) => {
     if (client == undefined && interaction == undefined) {
       return;
     }
