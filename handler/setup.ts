@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import { client } from "../index";
 import { commandobject, subcommandobject, subcommandArray } from "./typings";
 
+
 const commandfolders = fs.readdirSync("./commanddirs");
 let commands = new Array<commandobject>();
 commandfolders.forEach((folder) => {
