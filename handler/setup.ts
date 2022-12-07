@@ -1,16 +1,29 @@
 import {
+  ActionRowBuilder,
   ApplicationCommandOption,
   ApplicationCommandOptionType,
+  ButtonStyle,
+  ChatInputCommandInteraction,
   Client,
   CommandInteraction,
+  EmbedBuilder,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
+  SelectMenuBuilder,
   SlashCommandBuilder,
 } from "discord.js";
 import fs from "fs";
 import mongoose from "mongoose";
+import test from "../commands.old/test";
 import { client } from "../index";
-import { commandobject, subcommandobject, subcommandArray } from "./typings";
-
+import {
+  commandobject,
+  subcommandobject,
+  subcommandArray,
+  returnMenu,
+  menuobject,
+  buttonobject,
+  selectMenuobject,
+} from "./typings";
 
 const commandfolders = fs.readdirSync("./commanddirs");
 let commands = new Array<commandobject>();
@@ -38,19 +51,44 @@ commandfolders.forEach((folder) => {
   commands.push(subcommand);
 });
 
+const menufolders = fs.readdirSync("./menus");
+let menus = new Array<menuobject>();
+menufolders.forEach((folder) => {
+  const name = folder;
+  const path = `./menus/${folder}/`;
+  const object = require(`.${path}menu.ts`);
+  const buttons = Setup_Buttons(`${path}buttons/`);
+  const selectMenus = Setup_SelectMenus(`${path}selectMenus/`);
+  const menu = {
+    path: path,
+    create: function (
+      client: Client,
+      interaction: ChatInputCommandInteraction,
+      Save: boolean
+    ) {
+      object.default.create(client, interaction, Save);
+    },
+    name: name,
+    buttons: buttons,
+    selectMenus: selectMenus,
+  } as menuobject;
+
+  menus.push(menu);
+});
+
 export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
   const subcommandfiles = fs
     .readdirSync(folder)
     .filter((file) => file.endsWith(".ts"));
-  let subcommands = new Array();
+  let subcommands: subcommandobject[] = new Array();
 
   subcommandfiles.forEach((file) => {
-    const name = file.toString();
+    const name = file.split(".")[0];
     const path = `${folder}${file}`;
     const object = require(`.${path}`);
 
     const subcommand = {
-      command: name.split(".")[0],
+      command: name,
       description: object.default.description,
       path: path,
       callback: function (client: Client, interaction: CommandInteraction) {
@@ -65,7 +103,67 @@ export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
   return subcommands;
 }
 
+export function Setup_Buttons(folder: fs.PathLike): buttonobject[] {
+  const buttonfiles = fs
+    .readdirSync(folder)
+    .filter((file) => file.endsWith(".ts"));
+  let buttons: buttonobject[] = new Array();
+
+  buttonfiles.forEach((file) => {
+    const name = file.split(".")[0];
+    const path = `${folder}${file}`;
+    const object = require(`.${path}`);
+
+    const subcommand = {
+      name: name,
+      path: path,
+      callback: function (client: Client, interaction: CommandInteraction) {
+        object.default.callback(client, interaction);
+      },
+      label: object.default.label || "nolabel",
+      style: object.default.style || ButtonStyle.Primary,
+      emoji: object.default.emoji || null,
+    } as buttonobject;
+
+    buttons.push(subcommand);
+  });
+
+  return buttons;
+}
+
+export function Setup_SelectMenus(folder: fs.PathLike): selectMenuobject[] {
+  const subcommandfiles = fs
+    .readdirSync(folder)
+    .filter((file) => file.endsWith(".ts"));
+  let selectMenus: selectMenuobject[] = new Array();
+
+  subcommandfiles.forEach((file) => {
+    const name = file.split(".")[0];
+    const path = `${folder}${file}`;
+    const object = require(`.${path}`);
+
+    const subcommand = {
+      name: name,
+      path: path,
+      callback: function (client: Client, interaction: CommandInteraction) {
+        object.default.callback(client, interaction);
+      },
+      create: function (
+        client: Client,
+        interaction: CommandInteraction
+      ): ActionRowBuilder<SelectMenuBuilder> {
+        return object.default.callback(client, interaction);
+      },
+    } as selectMenuobject;
+
+    selectMenus.push(subcommand);
+  });
+
+  return selectMenus;
+}
+
 export const commandsExport = commands;
+export const menusExport = menus;
 
 export default class CommandHandler {
   testServers!: String[];
@@ -146,6 +244,12 @@ export default class CommandHandler {
     //     "  "
     //   )}`
     // );
+    /*console.log(menus);
+    let test = menus.find(
+      (menu) =>
+        menu.name == "deleteVcGeneratorSelector"
+    );
+    console.log(test)*/
     testServers.forEach(async (testServer) => {
       let guild = await client.guilds.fetch(testServer);
       if (!guild) {
@@ -155,4 +259,15 @@ export default class CommandHandler {
     });
     client.application?.commands.set(globalCommands);
   }
+  /*generateMessage(
+    client: Client,
+    interaction: CommandInteraction,
+    Save: boolean,
+    content: string,
+    embeds: EmbedBuilder[],
+    rows: Array<String[]>
+
+  ):returnMenu {
+    return 
+  }*/
 }

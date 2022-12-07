@@ -4,6 +4,7 @@ import {
   ChatInputCommandInteraction,
   ApplicationCommandOption,
   BaseMessageOptions,
+  ButtonStyle,
 } from "discord.js";
 import fs from "fs";
 import { model } from "mongoose";
@@ -68,23 +69,31 @@ export type returnMenu = {
 };
 
 export interface button {
-  callback(client: Client, interaction: ChatInputCommandInteraction): string;
-  create(client: Client, interaction: ChatInputCommandInteraction): returnMenu;
-  buttonCustomIds?: string[];
-  selectMenuCustomIds?: string[];
-  allowInDMs?: boolean;
-  ownerOnly?: boolean;
+  callback(client: Client, interaction: ChatInputCommandInteraction);
+  label: string;
+  style: ButtonStyle;
+  emoji?: ComponentEmojiResolvable;
 }
 
 export interface buttonobject {
   path: fs.PathLike;
   name: string;
-  callback(client: Client, interaction: ChatInputCommandInteraction): string;
-  create(client: Client, interaction: ChatInputCommandInteraction): returnMenu;
-  buttonCustomIds?: string[];
-  selectMenuCustomIds?: string[];
-  allowInDMs?: boolean;
-  ownerOnly?: boolean;
+  label: string;
+  style: ButtonStyle;
+  emoji?: ComponentEmojiResolvable;
+  callback(client: Client, interaction: ChatInputCommandInteraction);
+}
+
+export interface selectMenu {
+  callback(client: Client, interaction: ChatInputCommandInteraction);
+  create(client: Client, interaction: ChatInputCommandInteraction): ActionRowBuilder<SelectMenuBuilder>;
+}
+
+export interface selectMenuobject {
+  path: fs.PathLike;
+  name: string;
+  callback(client: Client, interaction: ChatInputCommandInteraction);
+  create(client: Client, interaction: ChatInputCommandInteraction): ActionRowBuilder<SelectMenuBuilder>;
 }
 
 export type menuInfo = {
@@ -102,5 +111,17 @@ export type menuSchema = {
   MessageId?: String;
   currentMenu: menuInfo;
   prevMenus: menuInfo[];
+}
+
+export interface menu {
+  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean);
+}
+
+export type menuobject = {
+  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean);
+  name: string;
+  //buttons: buttonobject[];
+  //selectMenus: selectMenuobject[];
+  path: fs.PathLike;
 }
 
