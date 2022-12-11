@@ -54,9 +54,9 @@ export type subcommandobject = {
 export type subcommandArray = Array<subcommandobject>;
 
 export type returnMenu = {
-  content: string | undefined;
-  embeds: (APIEmbed | JSONEncodable<APIEmbed>)[] | undefined;
-  components:
+  content?: string | undefined;
+  embeds?: (APIEmbed | JSONEncodable<APIEmbed>)[] | undefined;
+  components?:
     | (
         | JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>
         | ActionRowData<
@@ -65,10 +65,10 @@ export type returnMenu = {
         | APIActionRowComponent<APIMessageActionRowComponent>
       )[]
     | undefined;
-  ephemeral: boolean | undefined;
+  ephemeral?: boolean | undefined;
 };
 
-export interface button {
+/*export interface button {
   callback(client: Client, interaction: ChatInputCommandInteraction);
   label: string;
   style: ButtonStyle;
@@ -82,18 +82,18 @@ export interface buttonobject {
   style: ButtonStyle;
   emoji?: ComponentEmojiResolvable;
   callback(client: Client, interaction: ChatInputCommandInteraction);
-}
+}*/
 
-export interface selectMenu {
+export interface button {
   callback(client: Client, interaction: ChatInputCommandInteraction);
-  create(client: Client, interaction: ChatInputCommandInteraction): ActionRowBuilder<SelectMenuBuilder>;
+  create(client: Client, interaction: ChatInputCommandInteraction): AnyComponentBuilder;
 }
 
-export interface selectMenuobject {
+export interface buttonobject {
   path: fs.PathLike;
   name: string;
   callback(client: Client, interaction: ChatInputCommandInteraction);
-  create(client: Client, interaction: ChatInputCommandInteraction): ActionRowBuilder<SelectMenuBuilder>;
+  create(): AnyComponentBuilder;
 }
 
 export type menuInfo = {
@@ -114,14 +114,17 @@ export type menuSchema = {
 }
 
 export interface menu {
-  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean);
+  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean):returnMenu;
 }
 
 export type menuobject = {
-  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean);
+  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean):returnMenu;
   name: string;
   //buttons: buttonobject[];
   //selectMenus: selectMenuobject[];
   path: fs.PathLike;
+  //buttons: buttonobject[];
 }
+
+export type buttonArray = buttonobject[]
 

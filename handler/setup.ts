@@ -1,5 +1,6 @@
 import {
   ActionRowBuilder,
+  AnyComponentBuilder,
   ApplicationCommandOption,
   ApplicationCommandOptionType,
   ButtonStyle,
@@ -7,6 +8,8 @@ import {
   Client,
   CommandInteraction,
   EmbedBuilder,
+  MessageActionRowComponentBuilder,
+  MessagePayload,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   SelectMenuBuilder,
   SlashCommandBuilder,
@@ -22,7 +25,7 @@ import {
   returnMenu,
   menuobject,
   buttonobject,
-  selectMenuobject,
+  buttonArray,
 } from "./typings";
 
 const commandfolders = fs.readdirSync("./commanddirs");
@@ -57,8 +60,7 @@ menufolders.forEach((folder) => {
   const name = folder;
   const path = `./menus/${folder}/`;
   const object = require(`.${path}menu.ts`);
-  const buttons = Setup_Buttons(`${path}buttons/`);
-  const selectMenus = Setup_SelectMenus(`${path}selectMenus/`);
+  //const buttons = Setup_Buttons(`${path}buttons/`);
   const menu = {
     path: path,
     create: function (
@@ -69,11 +71,37 @@ menufolders.forEach((folder) => {
       object.default.create(client, interaction, Save);
     },
     name: name,
-    buttons: buttons,
-    selectMenus: selectMenus,
+    //buttons: buttons,
   } as menuobject;
 
   menus.push(menu);
+});
+
+let buttons: buttonArray = new Array();
+menus.forEach((menu) => {
+  const buttonfiles = fs
+    .readdirSync(`${menu.path}buttons/`)
+    .filter((file) => file.endsWith(".ts"));
+  buttonfiles.forEach((file) => {
+    const name = file.split(".")[0];
+    const path = `${menu.path}buttons/${file}`;
+    const object = require(`.${path}`);
+    const button: buttonobject = {
+      name: name,
+      path: path,
+      create: function (
+      ):AnyComponentBuilder {
+        return object.default.create();
+      },
+      callback: function (
+        client: Client,
+        interaction: ChatInputCommandInteraction
+      ) {
+        object.default.create(client, interaction);
+      },
+    };
+    buttons.push(button);
+  });
 });
 
 export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
@@ -103,7 +131,7 @@ export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
   return subcommands;
 }
 
-export function Setup_Buttons(folder: fs.PathLike): buttonobject[] {
+/*export function Setup_Buttons(folder: fs.PathLike): buttonobject[] {
   const buttonfiles = fs
     .readdirSync(folder)
     .filter((file) => file.endsWith(".ts"));
@@ -129,43 +157,35 @@ export function Setup_Buttons(folder: fs.PathLike): buttonobject[] {
   });
 
   return buttons;
-}
+}*/
 
-export function Setup_SelectMenus(folder: fs.PathLike): selectMenuobject[] {
-  const subcommandfiles = fs
-    .readdirSync(folder)
-    .filter((file) => file.endsWith(".ts"));
-  let selectMenus: selectMenuobject[] = new Array();
+export function Setup_Button(file: String, folder: fs.PathLike): buttonobject {
+  const name = file.split(".")[0];
+  const path = `${folder}${file}`;
+  const object = require(`.${path}`);
 
-  subcommandfiles.forEach((file) => {
-    const name = file.split(".")[0];
-    const path = `${folder}${file}`;
-    const object = require(`.${path}`);
+  const button: buttonobject = {
+    name: name,
+    path: path,
+    callback: function (client: Client, interaction: CommandInteraction) {
+      object.default.callback(client, interaction);
+    },
+    create: function (
+      client: Client,
+      interaction: CommandInteraction
+    ): AnyComponentBuilder {
+      return object.default.callback(client, interaction);
+    },
+  } as buttonobject;
 
-    const subcommand = {
-      name: name,
-      path: path,
-      callback: function (client: Client, interaction: CommandInteraction) {
-        object.default.callback(client, interaction);
-      },
-      create: function (
-        client: Client,
-        interaction: CommandInteraction
-      ): ActionRowBuilder<SelectMenuBuilder> {
-        return object.default.callback(client, interaction);
-      },
-    } as selectMenuobject;
-
-    selectMenus.push(subcommand);
-  });
-
-  return selectMenus;
+  return button;
 }
 
 export const commandsExport = commands;
 export const menusExport = menus;
+export const buttonsExport = buttons;
 
-export default class CommandHandler {
+export default class Handler {
   testServers!: String[];
   client!: Client<boolean>;
   botOwners!: String[];
@@ -259,15 +279,66 @@ export default class CommandHandler {
     });
     client.application?.commands.set(globalCommands);
   }
-  /*generateMessage(
-    client: Client,
-    interaction: CommandInteraction,
-    Save: boolean,
-    content: string,
-    embeds: EmbedBuilder[],
-    rows: Array<String[]>
+  generateMessage(options: {
+    content?: string;
+    embeds?: EmbedBuilder[];
+    rows?: Array<String[]>;
+  }) {
+    let menu: returnMenu = {};
+    menu.content = options.content;
+    menu.embeds = options.embeds;
+    
+    options.rows?.forEach((buttons) => {
+      let row:AnyComponentBuilder[] = new Array()
+      buttons.forEach(async (buttonName) => {
+        let buttonobject = (await buttonsExport).find(
+          (button) => button.name == buttonName
+        );
+        //if (buttonobject)
+        let button:AnyComponentBuilder = buttonobject?.create()
+        row.push(button)
+      });
+    });
+  }
+}
 
-  ):returnMenu {
-    return 
-  }*/
+export class UkMessageBuilder {
+  content?: string;
+  embeds?: EmbedBuilder[];
+  rows?: Array<String[]>;
+  constructor(options: {
+    content?: string;
+    embeds?: EmbedBuilder[];
+    rows?: Array<String[]>;
+  }) {
+    this.init(options);
+  }
+  async init(options: {
+    content?: string;
+    embeds?: EmbedBuilder[];
+    rows?: Array<String[]>;
+  }):Promise<returnMenu> {
+    let { content = '', embeds = [], rows = [] } = options;
+    this.rows = rows;
+    this.embeds = embeds;
+    this.content = content;
+
+    let menu: returnMenu = {};
+    menu.content = options.content;
+    menu.embeds = options.embeds;
+    
+    options.rows?.forEach((buttons) => {
+      let row:AnyComponentBuilder[] = new Array()
+      buttons.forEach(async (buttonName) => {
+        let buttonobject = (await buttonsExport).find(
+          (button) => button.name == buttonName
+        );
+        let button:AnyComponentBuilder = buttonobject?.create()
+        row.push(button)
+      });
+    });
+
+    return menu
+
+  }
 }

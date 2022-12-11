@@ -1,6 +1,6 @@
-import { ActionRowBuilder, ChatInputCommandInteraction, Client, EmbedBuilder, SelectMenuBuilder, VoiceChannel } from "discord.js";
+import { ActionRowBuilder, AnyComponentBuilder, ChatInputCommandInteraction, Client, EmbedBuilder, SelectMenuBuilder, VoiceChannel } from "discord.js";
 import generatorSchema from "../../../commanddirs/generator/models/generatorSchema";
-import { selectMenu } from "../../../handler/typings";
+import { button } from "../../../handler/typings";
 
 export default {
   callback: async (
@@ -12,9 +12,8 @@ export default {
   create: async (
     client: Client,
     interaction: ChatInputCommandInteraction
-  ) => {
+  ):Promise<AnyComponentBuilder> => {
     const generators = await generatorSchema.find({ guildId: interaction.guild!.id });
-    const row = new ActionRowBuilder<SelectMenuBuilder>();
     const selectMenu = new SelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)
@@ -41,7 +40,6 @@ export default {
         ]);
       }
     });
-    row.addComponents(selectMenu);
-    return row;
+    return selectMenu;
   },
-} as selectMenu;
+} as button;

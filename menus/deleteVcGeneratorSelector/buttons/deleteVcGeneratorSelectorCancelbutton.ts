@@ -1,13 +1,23 @@
-import { ButtonStyle, ChatInputCommandInteraction, Client } from "discord.js";
+import {
+  AnyComponentBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChatInputCommandInteraction,
+  Client,
+} from "discord.js";
 import { button } from "../../../handler/typings";
 
 export default {
-  label: "Cancel",
-  style: ButtonStyle.Secondary,
   callback: async (
     client: Client,
     interaction: ChatInputCommandInteraction
   ) => {
     //code
+  },
+  create: async (): Promise<AnyComponentBuilder> => {
+    const button = new ButtonBuilder();
+    button.setLabel("Cancel");
+    button.setStyle(ButtonStyle.Secondary);
+    return button;
   },
 } as button;

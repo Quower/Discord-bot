@@ -3,7 +3,7 @@ import DiscordJS, {
   IntentsBitField,
 } from "discord.js";
 import dotenv from "dotenv";
-import CommandHandler from "./handler/setup";
+import Handler from "./handler/setup";
 import CommandInteractionCreate from "./handler/events/CommandInteractionCreate";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
@@ -37,7 +37,7 @@ client.on("ready", async () => {
     client.users.cache.get("424279456031703041")!.send("bot started");
   }
 
-  new CommandHandler({
+  new Handler({
     testServers: ["966345190480687167"],
     botOwners: botOwners,
     mongoUri: process.env.MONGODB || "",
