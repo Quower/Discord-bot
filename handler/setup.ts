@@ -1,23 +1,22 @@
 import {
-  ActionRowBuilder,
   AnyComponentBuilder,
   ApplicationCommandOption,
   ApplicationCommandOptionType,
-  ButtonStyle,
+  ButtonInteraction,
   ChatInputCommandInteraction,
   Client,
   CommandInteraction,
+  DMChannel,
   EmbedBuilder,
-  MessageActionRowComponentBuilder,
-  MessagePayload,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
-  SelectMenuBuilder,
+  SelectMenuInteraction,
   SlashCommandBuilder,
+  TextChannel,
 } from "discord.js";
 import fs from "fs";
-import mongoose from "mongoose";
-import test from "../commands.old/test";
+import mongoose, { Model } from "mongoose";
 import { client } from "../index";
+import menuSchema from "./models/menuSchema";
 import {
   commandobject,
   subcommandobject,
@@ -65,10 +64,12 @@ menufolders.forEach((folder) => {
     path: path,
     create: function (
       client: Client,
-      interaction: ChatInputCommandInteraction,
-      Save: boolean
+      guildId?: String,
+      channelId?: String,
+      userId?: String,
+      Indms?: Boolean
     ) {
-      object.default.create(client, interaction, Save);
+      object.default.create(client, guildId, channelId, userId, Indms);
     },
     name: name,
     //buttons: buttons,
@@ -86,20 +87,34 @@ menus.forEach((menu) => {
     const name = file.split(".")[0];
     const path = `${menu.path}buttons/${file}`;
     const object = require(`.${path}`);
+
     const button: buttonobject = {
       name: name,
       path: path,
-      create: function (
-      ):AnyComponentBuilder {
-        return object.default.create();
-      },
       callback: function (
         client: Client,
-        interaction: ChatInputCommandInteraction
+        interaction: ButtonInteraction | SelectMenuInteraction,
+        model: Model<any>
       ) {
-        object.default.create(client, interaction);
+        object.default.callback(client, interaction, model);
       },
-    };
+      create: function (
+        client: Client,
+        guildId?: String,
+        channelId?: String,
+        userId?: String,
+        Indms?: Boolean
+      ): AnyComponentBuilder {
+        return object.default.callback(
+          client,
+          guildId,
+          channelId,
+          userId,
+          Indms
+        );
+      },
+    } as buttonobject;
+
     buttons.push(button);
   });
 });
@@ -158,28 +173,6 @@ export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
 
   return buttons;
 }*/
-
-export function Setup_Button(file: String, folder: fs.PathLike): buttonobject {
-  const name = file.split(".")[0];
-  const path = `${folder}${file}`;
-  const object = require(`.${path}`);
-
-  const button: buttonobject = {
-    name: name,
-    path: path,
-    callback: function (client: Client, interaction: CommandInteraction) {
-      object.default.callback(client, interaction);
-    },
-    create: function (
-      client: Client,
-      interaction: CommandInteraction
-    ): AnyComponentBuilder {
-      return object.default.callback(client, interaction);
-    },
-  } as buttonobject;
-
-  return button;
-}
 
 export const commandsExport = commands;
 export const menusExport = menus;
@@ -279,37 +272,36 @@ export default class Handler {
     });
     client.application?.commands.set(globalCommands);
   }
-  generateMessage(options: {
+  async testfunction(options: {
     content?: string;
     embeds?: EmbedBuilder[];
     rows?: Array<String[]>;
-  }) {
-    let menu: returnMenu = {};
-    menu.content = options.content;
-    menu.embeds = options.embeds;
-    
-    options.rows?.forEach((buttons) => {
-      let row:AnyComponentBuilder[] = new Array()
-      buttons.forEach(async (buttonName) => {
-        let buttonobject = (await buttonsExport).find(
-          (button) => button.name == buttonName
-        );
-        //if (buttonobject)
-        let button:AnyComponentBuilder = buttonobject?.create()
-        row.push(button)
-      });
-    });
-  }
+    client: Client;
+    guildId?: String;
+    channelId?: String;
+    userId?: String;
+    Indms?: Boolean;
+  }) {}
 }
 
 export class UkMessageBuilder {
   content?: string;
   embeds?: EmbedBuilder[];
   rows?: Array<String[]>;
+  client!: Client;
+  guildId?: String;
+  channelId?: String;
+  userId?: String;
+  Indms?: Boolean;
   constructor(options: {
     content?: string;
     embeds?: EmbedBuilder[];
     rows?: Array<String[]>;
+    client: Client;
+    guildId?: String;
+    channelId?: String;
+    userId?: String;
+    Indms?: Boolean;
   }) {
     this.init(options);
   }
@@ -317,28 +309,53 @@ export class UkMessageBuilder {
     content?: string;
     embeds?: EmbedBuilder[];
     rows?: Array<String[]>;
-  }):Promise<returnMenu> {
-    let { content = '', embeds = [], rows = [] } = options;
-    this.rows = rows;
-    this.embeds = embeds;
-    this.content = content;
-
+    client: Client;
+    guildId?: String;
+    channelId?: String;
+    userId?: String;
+    Indms?: Boolean;
+  }): Promise<returnMenu> {
     let menu: returnMenu = {};
     menu.content = options.content;
     menu.embeds = options.embeds;
-    
+    this.Indms;
+
     options.rows?.forEach((buttons) => {
-      let row:AnyComponentBuilder[] = new Array()
+      let row: AnyComponentBuilder[] = new Array();
       buttons.forEach(async (buttonName) => {
         let buttonobject = (await buttonsExport).find(
           (button) => button.name == buttonName
         );
-        let button:AnyComponentBuilder = buttonobject?.create()
-        row.push(button)
+        let button: AnyComponentBuilder = buttonobject?.create(
+          this.client,
+          this.guildId,
+          this.channelId,
+          this.userId,
+          this.Indms
+        );
+        row.push(button);
       });
     });
 
-    return menu
-
+    return menu;
   }
 }
+
+setInterval(async () => {
+  let menus = await menuSchema.find();
+  menus.forEach(async (menu) => {
+    if (menu.deleteAfter != 0) {
+      if (menu.lastInteraction && menu.deleteAfter) {
+        if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 60000) > 1) {
+          let channel = await client.channels.fetch(menu.channelId || '')
+          if (channel instanceof DMChannel || channel instanceof TextChannel){
+            channel.messages.fetch(menu.messageId || '').then(message => {
+              message.delete()
+            })
+          }
+          menu.delete()
+        }
+      }
+    }
+  });
+}, 60000);

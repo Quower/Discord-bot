@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const generatorSchema = new mongoose.Schema({
   channelId: {
     type: mongoose.SchemaTypes.String,
-    required: true,
+    require: true,
   },
   guildId: {
     type: mongoose.SchemaTypes.String,
-    required: true,
+    require: true,
   },
 });
 

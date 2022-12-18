@@ -5,9 +5,11 @@ import {
   ApplicationCommandOption,
   BaseMessageOptions,
   ButtonStyle,
+  ButtonInteraction,
+  SelectMenuInteraction,
 } from "discord.js";
 import fs from "fs";
-import { model } from "mongoose";
+import { Model, model } from "mongoose";
 import menuSchema from "./models/menuSchema";
 
 export interface command {
@@ -85,22 +87,42 @@ export interface buttonobject {
 }*/
 
 export interface button {
-  callback(client: Client, interaction: ChatInputCommandInteraction);
-  create(client: Client, interaction: ChatInputCommandInteraction): AnyComponentBuilder;
+  callback(
+    client: Client,
+    interaction: ButtonInteraction | SelectMenuInteraction,
+    model: Model
+  );
+  create(
+    client: Client,
+    guildId?: String,
+    channelId?: String,
+    userId?: String,
+    Indms?: Boolean
+  ): AnyComponentBuilder;
 }
 
 export interface buttonobject {
   path: fs.PathLike;
   name: string;
-  callback(client: Client, interaction: ChatInputCommandInteraction);
-  create(): AnyComponentBuilder;
+  model: Model;
+  callback(
+    client: Client,
+    interaction: ButtonInteraction | SelectMenuInteraction,
+    model: mongoose.model
+  );
+  create(
+    client: Client,
+    guildId?: String,
+    channelId?: String,
+    userId?: String,
+    Indms?: Boolean
+  ): AnyComponentBuilder;
 }
 
-export type menuInfo = {
+/*export type menuInfo = {
   name: string;
   options: any;
 };
-
 
 export type menuSchema = {
   permenent: boolean;
@@ -111,20 +133,31 @@ export type menuSchema = {
   MessageId?: String;
   currentMenu: menuInfo;
   prevMenus: menuInfo[];
-}
+};*/
 
 export interface menu {
-  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean):returnMenu;
+  create(
+    client: Client,
+    guildId?: String,
+    channelId?: String,
+    userId?: String,
+    Indms?: Boolean
+  ): returnMenu;
 }
 
 export type menuobject = {
-  create(client: Client, interaction: ChatInputCommandInteraction, Save: boolean):returnMenu;
+  create(
+    client: Client,
+    guildId?: String,
+    channelId?: String,
+    userId?: String,
+    Indms?: Boolean
+  ): returnMenu;
   name: string;
   //buttons: buttonobject[];
   //selectMenus: selectMenuobject[];
   path: fs.PathLike;
   //buttons: buttonobject[];
-}
+};
 
-export type buttonArray = buttonobject[]
-
+export type buttonArray = buttonobject[];

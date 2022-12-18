@@ -5,7 +5,10 @@ import { menu, returnMenu } from "../../handler/typings";
 export default {
   create: async (
     client: Client,
-    interaction: ChatInputCommandInteraction,
+    guildId?: String,
+    channelId?: String,
+    userId?: String,
+    Indms?: Boolean
   ):Promise<returnMenu> => {
     const embed = new EmbedBuilder();
     embed.setTitle("Delete Vc generator!");
@@ -14,7 +17,12 @@ export default {
     let menu = await new UkMessageBuilder({
       content: 'weed',
       rows: [['deleteVcGeneratorConfirmbutton']],
-      embeds: [embed]
+      embeds: [embed],
+      client: client,
+      guildId: guildId,
+      channelId: channelId,
+      userId: userId,
+      Indms: Indms
 
     })
     return menu

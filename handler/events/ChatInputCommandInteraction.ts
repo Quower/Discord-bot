@@ -1,25 +1,21 @@
-import {
-  Client,
-  CommandInteraction,
-  Interaction,
-  InteractionCollector,
+import DiscordJS, {
+  Events,
   PermissionsBitField,
   ChatInputCommandInteraction,
 } from "discord.js";
 import { botOwners } from "../../index";
 import { commandsExport } from "../setup";
+import { client } from "../../index";
 
-export default async (
-  client: Client,
-  interaction: ChatInputCommandInteraction
-) => {
-  let commandObject = (await commandsExport).find(
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (interaction instanceof ChatInputCommandInteraction) {
+    let commandObject = (await commandsExport).find(
     (comannd) => comannd.command == interaction.commandName
   );
 
   if (interaction.member?.permissions instanceof PermissionsBitField) {
     if (commandObject?.ownerOnly) {
-      if (botOwners.includes(interaction.member.user.id) == false) {
+      if (botOwners.includes(interaction.user.id) == false) {
         await interaction.reply({
           content: `This command is for the bot owner only`,
           ephemeral: true,
@@ -34,9 +30,7 @@ export default async (
         interaction.member?.permissions.has(commandObject?.permissions)) ||
       botOwners.includes(interaction.member.user.id)
     ) {
-
       if (interaction.options.getSubcommand()) {
-
         let subcommandObject = commandObject?.subcommands.find(
           (subcommand) =>
             subcommand.command == interaction.options.getSubcommand()
@@ -44,7 +38,6 @@ export default async (
 
         subcommandObject?.callback(client, interaction);
       } else {
-
         commandObject?.callback(client, interaction);
       }
     } else {
@@ -54,4 +47,6 @@ export default async (
       });
     }
   }
-};
+  }
+});
+

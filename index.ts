@@ -1,10 +1,12 @@
 import DiscordJS, {
+  ButtonInteraction,
   ChatInputCommandInteraction,
   IntentsBitField,
+  Message,
+  SelectMenuInteraction,
 } from "discord.js";
 import dotenv from "dotenv";
 import Handler from "./handler/setup";
-import CommandInteractionCreate from "./handler/events/CommandInteractionCreate";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 export const botOwners = ["424279456031703041"];
@@ -28,8 +30,8 @@ export const client = new DiscordJS.Client({
     IntentsBitField.Flags.GuildVoiceStates,
     //IntentsBitField.Flags.GuildWebhooks
   ],
+  
 });
-
 client.on("ready", async () => {
   console.log(`Logged in as: ${client.user?.tag}`);
 
@@ -86,9 +88,3 @@ for (const file of events) {
   console.log("test");
   client.on(eventName, event.bind(null, client));
 }***/
-
-client.on(DiscordJS.Events.InteractionCreate, (interaction) => {
-  if (interaction instanceof ChatInputCommandInteraction) {
-    CommandInteractionCreate(client, interaction);
-  }
-});

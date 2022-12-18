@@ -1,16 +1,20 @@
 import {
   AnyComponentBuilder,
   ButtonBuilder,
+  ButtonInteraction,
   ButtonStyle,
   ChatInputCommandInteraction,
   Client,
 } from "discord.js";
 import { button } from "../../../handler/typings";
+import menuSchema from "../../../handler/models/menuSchema";
+import { Model } from "mongoose";
 
 export default {
   callback: async (
     client: Client,
-    interaction: ChatInputCommandInteraction
+    interaction: ButtonInteraction,
+    model: Model<any>
   ) => {
     //code
   },

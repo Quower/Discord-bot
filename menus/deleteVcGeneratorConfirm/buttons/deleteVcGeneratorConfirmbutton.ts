@@ -1,16 +1,21 @@
-import { AnyComponentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Client } from "discord.js";
+import { AnyComponentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client } from "discord.js";
+import { Model } from "mongoose";
 import { button } from "../../../handler/typings";
 
 export default {
   callback: async (
     client: Client,
-    interaction: ChatInputCommandInteraction
+    interaction: ButtonInteraction,
+    model: Model<any>
   ) => {
     //code
   },
   create: async (
     client: Client,
-    interaction: ChatInputCommandInteraction
+    guildId?: String,
+    channelId?: String,
+    userId?: String,
+    Indms?: Boolean
   ):Promise<AnyComponentBuilder> => {
     const button = new ButtonBuilder()
     button.setLabel('Cancel')
