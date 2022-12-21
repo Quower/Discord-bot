@@ -1,1 +1,1 @@
-hiina on parim
+hiina on pari
