@@ -3,11 +3,13 @@ import {
   ApplicationCommandOption,
   ApplicationCommandOptionType,
   ButtonInteraction,
+  Channel,
   ChatInputCommandInteraction,
   Client,
   CommandInteraction,
   DMChannel,
   EmbedBuilder,
+  Interaction,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   SelectMenuInteraction,
   SlashCommandBuilder,
@@ -15,6 +17,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import mongoose, { Model } from "mongoose";
+import { createMethodSignature } from "typescript";
 import { client } from "../index";
 import menuSchema from "./models/menuSchema";
 import {
@@ -340,6 +343,35 @@ export class UkMessageBuilder {
     return menu;
   }
 }
+
+export const Menus = {
+  create: async (options: {
+    menu: string,
+    where: Interaction | DMChannel | TextChannel,
+    save?: boolean,
+    deleteAfter: Number,
+    userIds?: string[]
+
+  }) => {
+
+  },
+  update: async (options: {
+    menu: string | 'back',
+    messageId: string,
+    save?: boolean,
+    deleteAfter?: Number,
+    userIds?: string[]
+
+  }) => {
+
+  },
+  delete: async (ptions: {
+    messageId: string,
+  }) => {
+
+  },
+}
+
 
 setInterval(async () => {
   let menus = await menuSchema.find();

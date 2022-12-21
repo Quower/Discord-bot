@@ -11,7 +11,7 @@ client.on(Events.MessageCreate, async (message) => {
   }
   let menuschema = await menuSchema.findOne({
     channelId: message.channel.id,
-    waitinForResponse: true,
+    waitingForResponse: true,
   });
   let menuobject = (await menusExport).find(
     (menu) => menu.name == menuschema?.currentMenu

@@ -101,7 +101,7 @@ export interface button {
   ): AnyComponentBuilder;
 }
 
-export interface buttonobject {
+export type buttonobject = {
   path: fs.PathLike;
   name: string;
   model: Model;

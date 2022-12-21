@@ -37,7 +37,7 @@ const menuSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    waitinForResponse: {
+    waitingForResponse: {
         type: Boolean,
         require: true
     },
