@@ -1,1 +1,1 @@
-hiina on pari
+hiina on parii
