@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-
+import { menuInfo } from "../typings";
 const menuSchema = new mongoose.Schema({
     channelId: {
       type: String,
-      require: false,
+      require: true,
     },
     messageId: {
         type: String,
@@ -22,23 +22,27 @@ const menuSchema = new mongoose.Schema({
         requere: true
     },
     prevMenus: {
-        type: Array<string>,
-        require: true
+        type: Array<menuInfo>,
+        require: false
     },
     currentMenu: {
         type: String,
         require: true
     },
-    SaveMenu: {
+    waitingForResponse: {
+        type: Boolean,
+        require: true
+    },
+    saveMenu: {
+        type: Boolean,
+        require: true
+    },
+    saveState: {
         type: Boolean,
         require: true
     },
     deleteAfter: {
         type: Number,
-        require: true
-    },
-    waitingForResponse: {
-        type: Boolean,
         require: true
     },
     lastInteraction: {
@@ -48,3 +52,4 @@ const menuSchema = new mongoose.Schema({
   });
   
   export default mongoose.model("menu", menuSchema);
+

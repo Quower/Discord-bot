@@ -6,6 +6,7 @@ import DiscordJS, {
   SelectMenuInteraction,
 } from "discord.js";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import Handler from "./handler/setup";
 //import testSchema from './mongodb/testschema'
 dotenv.config();

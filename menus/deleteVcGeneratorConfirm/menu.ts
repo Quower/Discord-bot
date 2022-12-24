@@ -4,11 +4,14 @@ import { menu, returnMenu } from "../../handler/typings";
 
 export default {
   create: async (
-    client: Client,
-    guildId?: String,
-    channelId?: String,
-    userId?: String,
-    Indms?: Boolean
+    options: {
+      client: Client;
+      waitingForResponse: boolean;
+      guildId?: String;
+      channelId?: String;
+      userId?: String;
+      Indms?: Boolean;
+    }
   ):Promise<returnMenu> => {
     const embed = new EmbedBuilder();
     embed.setTitle("Delete Vc generator!");
@@ -18,11 +21,11 @@ export default {
       content: 'weed',
       rows: [['deleteVcGeneratorConfirmbutton']],
       embeds: [embed],
-      client: client,
-      guildId: guildId,
-      channelId: channelId,
-      userId: userId,
-      Indms: Indms
+      client: options.client,
+      guildId: options.guildId,
+      channelId: options.channelId,
+      userId: options.userId,
+      Indms: options.Indms
 
     })
     return menu

@@ -10,6 +10,7 @@ import {
   DMChannel,
   EmbedBuilder,
   Interaction,
+  InteractionCollector,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   SelectMenuInteraction,
   SlashCommandBuilder,
@@ -17,7 +18,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import mongoose, { Model } from "mongoose";
-import { createMethodSignature } from "typescript";
+import { menuInfo } from "./typings";
 import { client } from "../index";
 import menuSchema from "./models/menuSchema";
 import {
@@ -65,14 +66,22 @@ menufolders.forEach((folder) => {
   //const buttons = Setup_Buttons(`${path}buttons/`);
   const menu = {
     path: path,
-    create: function (
-      client: Client,
-      guildId?: String,
-      channelId?: String,
-      userId?: String,
-      Indms?: Boolean
-    ) {
-      object.default.create(client, guildId, channelId, userId, Indms);
+    create: function (options: {
+      client: Client;
+      waitingForResponse: boolean;
+      guildId?: String;
+      channelId?: String;
+      userId?: String;
+      Indms?: Boolean;
+    }): returnMenu {
+      return object.default.create({
+        client: options.client,
+        waitingForResponse: options.waitingForResponse,
+        guildId: options.guildId,
+        channelId: options.channelId,
+        userId: options.userId,
+        Indms: options.Indms,
+      });
     },
     name: name,
     //buttons: buttons,
@@ -346,46 +355,74 @@ export class UkMessageBuilder {
 
 export const Menus = {
   create: async (options: {
-    menu: string,
-    where: Interaction | DMChannel | TextChannel,
-    save?: boolean,
-    deleteAfter: Number,
-    userIds?: string[]
-
+    menu: string;
+    where: CommandInteraction | DMChannel | TextChannel | String;
+    saveMenu?: boolean;
+    deleteAfter: number;
+    waitingForResponse?: boolean;
+    userIds?: string[];
+    saveState?: boolean;
+    ephemeral?: boolean
   }) => {
+    let menu = new menuSchema();
+    if (menu.waitingForResponse) {
+      menu.waitingForResponse = options.waitingForResponse;
+    } else {
+      menu.waitingForResponse = false;
+    }
+    if (options.saveMenu) {
+      menu.saveMenu = options.saveMenu;
+    } else {
+      menu.saveMenu = false;
+    }
+    menu.deleteAfter = options.deleteAfter;
+    if (options.saveState) {
+      menu.saveState = options.saveState;
+    } else {
+      menu.saveState = false;
+    }
+    menu.currentMenu = options.menu;
+    if (
+      options.where instanceof DMChannel ||
+      options.where instanceof TextChannel
+    ) {
 
+
+    } else if (options.where instanceof CommandInteraction) {
+
+    } else if (options.where instanceof String) {
+
+    }
+    //code here coninuuue
   },
   update: async (options: {
-    menu: string | 'back',
-    messageId: string,
-    save?: boolean,
-    deleteAfter?: Number,
-    userIds?: string[]
-
-  }) => {
-
-  },
-  delete: async (ptions: {
-    messageId: string,
-  }) => {
-
-  },
-}
-
+    menu?: string | "back";
+    messageId: string;
+    saveMenu?: boolean;
+    deleteAfter?: Number;
+    waitingForResponse?: boolean;
+    userIds?: { ids: string[]; mode: "set" | "add" | "remove" };
+    saveState?: boolean;
+  }) => {},
+  delete: async (ptions: { messageId: string }) => {},
+};
 
 setInterval(async () => {
   let menus = await menuSchema.find();
   menus.forEach(async (menu) => {
     if (menu.deleteAfter != 0) {
       if (menu.lastInteraction && menu.deleteAfter) {
-        if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 60000) > 1) {
-          let channel = await client.channels.fetch(menu.channelId || '')
-          if (channel instanceof DMChannel || channel instanceof TextChannel){
-            channel.messages.fetch(menu.messageId || '').then(message => {
-              message.delete()
-            })
+        if (
+          Date.now() - (menu.lastInteraction + menu.deleteAfter * 60000) >
+          1
+        ) {
+          let channel = await client.channels.fetch(menu.channelId || "");
+          if (channel instanceof DMChannel || channel instanceof TextChannel) {
+            channel.messages.fetch(menu.messageId || "").then((message) => {
+              message.delete();
+            });
           }
-          menu.delete()
+          menu.delete();
         }
       }
     }

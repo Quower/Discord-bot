@@ -117,14 +117,14 @@ export type buttonobject = {
     userId?: String,
     Indms?: Boolean
   ): AnyComponentBuilder;
-}
-
-/*export type menuInfo = {
-  name: string;
-  options: any;
 };
 
-export type menuSchema = {
+export type menuInfo = {
+  name: string;
+  waitingForResponse: boolean;
+};
+
+/*export type menuSchema = {
   permenent: boolean;
   menuInDms: boolean;
   guildId?: string;
@@ -136,23 +136,25 @@ export type menuSchema = {
 };*/
 
 export interface menu {
-  create(
-    client: Client,
-    guildId?: String,
-    channelId?: String,
-    userId?: String,
-    Indms?: Boolean
-  ): returnMenu;
+  create(options: {
+    client: Client;
+    waitingForResponse: boolean;
+    guildId?: String;
+    channelId?: String;
+    userId?: String;
+    Indms?: Boolean;
+  }): returnMenu;
 }
 
 export type menuobject = {
-  create(
-    client: Client,
-    guildId?: String,
-    channelId?: String,
-    userId?: String,
-    Indms?: Boolean
-  ): returnMenu;
+  create(options: {
+    client: Client;
+    waitingForResponse: boolean;
+    guildId?: String;
+    channelId?: String;
+    userId?: String;
+    Indms?: Boolean;
+  }): returnMenu;
   name: string;
   //buttons: buttonobject[];
   //selectMenus: selectMenuobject[];
