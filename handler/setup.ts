@@ -389,11 +389,14 @@ export const Menus = {
 
 
     } else if (options.where instanceof CommandInteraction) {
+      const channel = options.where.channel
 
-    } else if (options.where instanceof String) {
+    } else if (typeof options.where === 'string') {
+      const channel = await client.channels.fetch(options.where)
 
     }
     //code here coninuuue
+    
   },
   update: async (options: {
     menu?: string | "back";
