@@ -366,7 +366,12 @@ export const Menus = {
   }) => {
     let menu = new menuSchema();
     if (menu.waitingForResponse) {
-      menu.waitingForResponse = options.waitingForResponse;
+      const generators = await menuSchema.find({waitingForResponse: true});
+      if (generators) {
+        menu.waitingForResponse = false
+      } else {
+        menu.waitingForResponse = true
+      }
     } else {
       menu.waitingForResponse = false;
     }
@@ -382,18 +387,42 @@ export const Menus = {
       menu.saveState = false;
     }
     menu.currentMenu = options.menu;
+    menu.prevMenus = new Array
+    if (options.userIds) {
+      menu.userIds = options.userIds
+    } else {
+      menu.userIds = []
+    }
     if (
       options.where instanceof DMChannel ||
       options.where instanceof TextChannel
     ) {
+      if (options.where instanceof DMChannel) {menu.inDms = true}
+      else {menu.inDms = false}
+      //options.where.send()
 
 
     } else if (options.where instanceof CommandInteraction) {
       const channel = options.where.channel
+      if (
+        channel instanceof DMChannel ||
+        channel instanceof TextChannel
+      ) {
+        if (channel instanceof DMChannel) {menu.inDms = true}
+        else {menu.inDms = false}
+        //code heeeeeeeeeeeeeeeeeeeeeeeeeeere
 
+      }
     } else if (typeof options.where === 'string') {
       const channel = await client.channels.fetch(options.where)
+      if (
+        channel instanceof DMChannel ||
+        channel instanceof TextChannel
+      ) {
+        if (channel instanceof DMChannel) {menu.inDms = true}
+        else {menu.inDms = false}
 
+      }
     }
     //code here coninuuue
     
@@ -407,7 +436,7 @@ export const Menus = {
     userIds?: { ids: string[]; mode: "set" | "add" | "remove" };
     saveState?: boolean;
   }) => {},
-  delete: async (ptions: { messageId: string }) => {},
+  delete: async (options: { messageId: string }) => {},
 };
 
 setInterval(async () => {
