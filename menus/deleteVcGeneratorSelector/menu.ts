@@ -9,7 +9,7 @@ export default {
     waitingForResponse: boolean;
     guildId?: String;
     channelId?: String;
-    userId?: String;
+    userIds?: String[];
     Indms?: Boolean;
   }): Promise<returnMenu> => {
     const embed = new EmbedBuilder();
@@ -28,7 +28,7 @@ export default {
       client: options.client,
       guildId: options.guildId,
       channelId: options.channelId,
-      userId: options.userId,
+      userIds: options.userIds,
       Indms: options.Indms,
     });
     return menu;

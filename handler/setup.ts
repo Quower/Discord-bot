@@ -303,7 +303,7 @@ export class UkMessageBuilder {
   client!: Client;
   guildId?: String;
   channelId?: String;
-  userId?: String;
+  userIds?: String[];
   Indms?: Boolean;
   constructor(options: {
     content?: string;
@@ -312,7 +312,7 @@ export class UkMessageBuilder {
     client: Client;
     guildId?: String;
     channelId?: String;
-    userId?: String;
+    userIds?: String[];
     Indms?: Boolean;
   }) {
     this.init(options);
@@ -324,7 +324,7 @@ export class UkMessageBuilder {
     client: Client;
     guildId?: String;
     channelId?: String;
-    userId?: String;
+    userIds?: String[];
     Indms?: Boolean;
   }): Promise<returnMenu> {
     let menu: returnMenu = {};
@@ -342,7 +342,7 @@ export class UkMessageBuilder {
           this.client,
           this.guildId,
           this.channelId,
-          this.userId,
+          this.userIds,
           this.Indms
         );
         row.push(button);
@@ -356,21 +356,22 @@ export class UkMessageBuilder {
 export const Menus = {
   create: async (options: {
     menu: string;
-    where: CommandInteraction | DMChannel | TextChannel | String;
+    client: Client;
+    where: ChatInputCommandInteraction | DMChannel | TextChannel | String;
     saveMenu?: boolean;
     deleteAfter: number;
     waitingForResponse?: boolean;
     userIds?: string[];
     saveState?: boolean;
-    ephemeral?: boolean
+    ephemeral?: boolean;
   }) => {
     let menu = new menuSchema();
     if (menu.waitingForResponse) {
-      const generators = await menuSchema.find({waitingForResponse: true});
+      const generators = await menuSchema.find({ waitingForResponse: true });
       if (generators) {
-        menu.waitingForResponse = false
+        menu.waitingForResponse = false;
       } else {
-        menu.waitingForResponse = true
+        menu.waitingForResponse = true;
       }
     } else {
       menu.waitingForResponse = false;
@@ -387,56 +388,85 @@ export const Menus = {
       menu.saveState = false;
     }
     menu.currentMenu = options.menu;
-    menu.prevMenus = new Array
+    menu.prevMenus = new Array();
     if (options.userIds) {
-      menu.userIds = options.userIds
+      menu.userIds = options.userIds;
     } else {
-      menu.userIds = []
+      menu.userIds = [];
     }
+    let menuObject = (await menusExport).find(
+      (menu) => menu.name == options.menu
+    );
+    if (!menuObject) {
+      console.log("no menu found");
+      return;
+    }
+    options.client;
+    let sendplace: DMChannel | TextChannel | CommandInteraction | undefined = undefined;
     if (
       options.where instanceof DMChannel ||
       options.where instanceof TextChannel
     ) {
-      if (options.where instanceof DMChannel) {menu.inDms = true}
-      else {menu.inDms = false}
-      //options.where.send()
-
-
-    } else if (options.where instanceof CommandInteraction) {
-      const channel = options.where.channel
-      if (
-        channel instanceof DMChannel ||
-        channel instanceof TextChannel
-      ) {
-        if (channel instanceof DMChannel) {menu.inDms = true}
-        else {menu.inDms = false}
-        //code heeeeeeeeeeeeeeeeeeeeeeeeeeere
-
+      if (options.where instanceof DMChannel) {
+        menu.inDms = true;
+      } else {
+        menu.inDms = false;
       }
-    } else if (typeof options.where === 'string') {
-      const channel = await client.channels.fetch(options.where)
-      if (
-        channel instanceof DMChannel ||
-        channel instanceof TextChannel
-      ) {
-        if (channel instanceof DMChannel) {menu.inDms = true}
-        else {menu.inDms = false}
-
+      sendplace = options.where;
+    } else if (options.where instanceof CommandInteraction) {
+      const channel = options.where.channel;
+      if (channel instanceof DMChannel) {
+        menu.inDms = true;
+      } else {
+        menu.inDms = false;
+      }
+      sendplace = options.where;
+    } else if (typeof options.where === "string") {
+      const channel = await client.channels.fetch(options.where);
+      if (channel instanceof DMChannel || channel instanceof TextChannel) {
+        if (channel instanceof DMChannel) {
+          menu.inDms = true;
+        } else {
+          menu.inDms = false;
+        }
+        sendplace = channel;
       }
     }
-    //code here coninuuue
-    
+    const message = menuObject.create({
+      client: options.client,
+      waitingForResponse: menu.waitingForResponse,
+      userIds: options.userIds,
+      Indms: menu.inDms,
+    });
+    if (sendplace instanceof DMChannel || sendplace instanceof TextChannel) {
+      sendplace.send(message).then(msg => {
+        menu.messageId = msg.id
+        menu.guildId = msg.guildId || undefined
+        menu.channelId = msg.channelId
+      })
+    } 
+    else if (sendplace instanceof CommandInteraction) {
+      message.ephemeral = options.ephemeral
+      sendplace.reply(message)
+      const msg = await sendplace.fetchReply()
+      menu.messageId = msg.id
+      menu.guildId = msg.guildId || undefined
+      menu.channelId = msg.channelId
+    }
+    menu.lastInteraction = Date.now()
+    menu.save()
   },
   update: async (options: {
     menu?: string | "back";
     messageId: string;
     saveMenu?: boolean;
+    client: Client;
     deleteAfter?: Number;
     waitingForResponse?: boolean;
     userIds?: { ids: string[]; mode: "set" | "add" | "remove" };
     saveState?: boolean;
   }) => {},
-  delete: async (options: { messageId: string }) => {},
+  delete: async (options: { messageId: string; client: Client }) => {},
 };
 
 setInterval(async () => {

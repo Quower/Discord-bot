@@ -96,7 +96,7 @@ export interface button {
     client: Client,
     guildId?: String,
     channelId?: String,
-    userId?: String,
+    userIds?: String[],
     Indms?: Boolean
   ): AnyComponentBuilder;
 }
@@ -114,7 +114,7 @@ export type buttonobject = {
     client: Client,
     guildId?: String,
     channelId?: String,
-    userId?: String,
+    userIds?: String[],
     Indms?: Boolean
   ): AnyComponentBuilder;
 };
@@ -141,7 +141,7 @@ export interface menu {
     waitingForResponse: boolean;
     guildId?: String;
     channelId?: String;
-    userId?: String;
+    userIds?: String[];
     Indms?: Boolean;
   }): returnMenu;
 }
@@ -152,7 +152,7 @@ export type menuobject = {
     waitingForResponse: boolean;
     guildId?: String;
     channelId?: String;
-    userId?: String;
+    userIds?: String[];
     Indms?: Boolean;
   }): returnMenu;
   name: string;

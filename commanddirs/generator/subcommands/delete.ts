@@ -6,6 +6,7 @@ import {
   EmbedBuilder,
   ChatInputCommandInteraction,
 } from "discord.js";
+import { Menus } from "../../../handler/setup";
 import { subcommand } from "../../../handler/typings";
 import { Select_Generator } from "../funtions/generator_selector";
 
@@ -15,7 +16,14 @@ export default {
     if (client == undefined && interaction == undefined) {
       return;
     }
-    const row = await Select_Generator(
+    Menus.create({
+      menu: 'deleteVcGeneratorSelector',
+      client: client,
+      where: interaction,
+      deleteAfter: 5,
+      ephemeral: true
+    })
+    /*const row = await Select_Generator(
       interaction.guild,
       "deletechannel",
       1,
@@ -35,6 +43,6 @@ export default {
       embeds: [embed2],
       components: [row, row2],
       ephemeral: true
-    });
+    });*/
   },
 } as subcommand;
