@@ -20,10 +20,8 @@ export default {
 
     let menu = await new UkMessageBuilder({
       content: "weed",
-      rows: [
-        ["deleteVcGeneratorSelectorSelectMenu"],
-        ["deleteVcGeneratorSelectorCancelbutton"],
-      ],
+      row1: ["deleteVcGeneratorSelectorSelectMenu"],
+      row2: ["deleteVcGeneratorSelectorSelectMenu"],
       embeds: [embed],
       client: options.client,
       guildId: options.guildId,
@@ -31,6 +29,11 @@ export default {
       userIds: options.userIds,
       Indms: options.Indms,
     });
+    console.log(JSON.stringify(
+      menu,
+      null,
+      "  "
+    ))
     return menu;
   },
 } as menu;

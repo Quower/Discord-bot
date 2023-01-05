@@ -1,6 +1,7 @@
 import DiscordJS, {
   ButtonInteraction,
   ChatInputCommandInteraction,
+  Events,
   IntentsBitField,
   Message,
   SelectMenuInteraction,
@@ -8,6 +9,10 @@ import DiscordJS, {
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Handler from "./handler/setup";
+import ChatInputCommandInteractionrun from "./handler/events/ChatInputCommandInteraction";
+import ButtonInteractionrun from "./handler/events/ButtonInteraction";
+import SelectMenuInteractionrun from "./handler/events/SelectMenuInteraction";
+import messageCreaterun from "./handler/events/messageCreate";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 export const botOwners = ["424279456031703041"];
@@ -73,7 +78,10 @@ client.on("ready", async () => {
 });
 
 client.login(process.env.TOKEN);
-
+client.on(Events.InteractionCreate, async (interaction) => {ChatInputCommandInteractionrun(interaction)})
+client.on(Events.InteractionCreate, async (interaction) => {ButtonInteractionrun(interaction)})
+client.on(Events.InteractionCreate, async (interaction) => {SelectMenuInteractionrun(interaction)})
+client.on(Events.MessageCreate, async (message) => {messageCreaterun(message)})
 // client.on("messageCreate", async (Message) => {
 //   if (Message.author.id === "282859044593598464") {
 //     Message.delete();

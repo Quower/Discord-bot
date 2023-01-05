@@ -4,6 +4,7 @@ import {
   PermissionsBitField,
 } from "discord.js";
 import { command } from "../../handler/typings";
+// const deleteVcGeneratorSelectorCancelbutton = require('../menus/deleteVcGeneratorSelector/buttons/deleteVcGeneratorSelectorSelectMenu.ts')
 
 export default {
   description: "command",

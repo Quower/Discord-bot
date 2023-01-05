@@ -1,10 +1,8 @@
-import {
-  Events,
-} from "discord.js";
+import DiscordJS from "discord.js";
 import { botOwners, client } from "../../index";
 import menuSchema from "../models/menuSchema";
 import { menusExport } from "../setup";
-client.on(Events.MessageCreate, async (message) => {
+export default async function (message: DiscordJS.Message<boolean>) {
   if (client == undefined || message == undefined) {
     console.log("no client or interaction");
     return;
@@ -42,4 +40,4 @@ client.on(Events.MessageCreate, async (message) => {
 
   let run = require(`${menuobject?.path}input.ts`);
   run(client, message, menuSchema);
-});
+}

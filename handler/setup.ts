@@ -1,5 +1,8 @@
 import {
+  ActionRowData,
   AnyComponentBuilder,
+  APIActionRowComponent,
+  APIMessageActionRowComponent,
   ApplicationCommandOption,
   ApplicationCommandOptionType,
   ButtonInteraction,
@@ -11,6 +14,9 @@ import {
   EmbedBuilder,
   Interaction,
   InteractionCollector,
+  JSONEncodable,
+  MessageActionRowComponentBuilder,
+  MessageActionRowComponentData,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   SelectMenuInteraction,
   SlashCommandBuilder,
@@ -99,7 +105,6 @@ menus.forEach((menu) => {
     const name = file.split(".")[0];
     const path = `${menu.path}buttons/${file}`;
     const object = require(`.${path}`);
-
     const button: buttonobject = {
       name: name,
       path: path,
@@ -117,7 +122,7 @@ menus.forEach((menu) => {
         userId?: String,
         Indms?: Boolean
       ): AnyComponentBuilder {
-        return object.default.callback(
+        return object.default.create(
           client,
           guildId,
           channelId,
@@ -327,18 +332,18 @@ export class UkMessageBuilder {
     userIds?: String[];
     Indms?: Boolean;
   }): Promise<returnMenu> {
-    let menu: returnMenu = {};
-    menu.content = options.content;
-    menu.embeds = options.embeds;
+    const content = options.content;
+    const embeds = options.embeds;
     this.Indms;
+    let components:(AnyComponentBuilder[])[] = []
 
-    options.rows?.forEach((buttons) => {
+    await options.rows?.forEach(async (buttons) => {
       let row: AnyComponentBuilder[] = new Array();
-      buttons.forEach(async (buttonName) => {
-        let buttonobject = (await buttonsExport).find(
+      await buttons.forEach(async (buttonName) => {
+        let buttonobject = await buttonsExport.find(
           (button) => button.name == buttonName
         );
-        let button: AnyComponentBuilder = buttonobject?.create(
+        let button: AnyComponentBuilder = await buttonobject?.create(
           this.client,
           this.guildId,
           this.channelId,
@@ -346,8 +351,23 @@ export class UkMessageBuilder {
           this.Indms
         );
         row.push(button);
+        console.log(button)
       });
+      console.log(row)
+      components.push(row)
     });
+    
+    /*console.log(JSON.stringify(
+      menu,
+      null,
+      "  "
+    ))*/
+    const menu:returnMenu = {
+      content: content,
+      embeds: embeds,
+      components: components
+
+    }
 
     return menu;
   }
@@ -432,7 +452,7 @@ export const Menus = {
         sendplace = channel;
       }
     }
-    const message = menuObject.create({
+    const message = await menuObject.create({
       client: options.client,
       waitingForResponse: menu.waitingForResponse,
       userIds: options.userIds,
@@ -455,6 +475,7 @@ export const Menus = {
     }
     menu.lastInteraction = Date.now()
     menu.save()
+    
   },
   update: async (options: {
     menu?: string | "back";

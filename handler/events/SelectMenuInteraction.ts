@@ -2,7 +2,7 @@ import DiscordJS, { Events, SelectMenuInteraction } from "discord.js";
 import { botOwners, client } from "../../index";
 import menuSchema from "../models/menuSchema";
 import { buttonsExport } from "../setup";
-client.on(Events.InteractionCreate, async (interaction) => {
+export default async function (interaction: DiscordJS.Interaction<DiscordJS.CacheType>) {
   if (interaction instanceof SelectMenuInteraction) {
     if (client == undefined || interaction == undefined) {
       console.log("no client or interaction");
@@ -33,4 +33,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
     buttonObject.callback(client, interaction, menuschema);
   }
-});
+}

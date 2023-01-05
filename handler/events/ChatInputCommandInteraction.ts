@@ -7,7 +7,7 @@ import { botOwners } from "../../index";
 import { commandsExport } from "../setup";
 import { client } from "../../index";
 
-client.on(Events.InteractionCreate, async (interaction) => {
+export default async function (interaction: DiscordJS.Interaction<DiscordJS.CacheType>) {
   if (interaction instanceof ChatInputCommandInteraction) {
     let commandObject = (await commandsExport).find(
     (comannd) => comannd.command == interaction.commandName
@@ -48,5 +48,5 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   }
   }
-});
+};
 
