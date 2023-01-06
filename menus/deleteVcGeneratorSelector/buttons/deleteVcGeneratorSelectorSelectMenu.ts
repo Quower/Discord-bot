@@ -4,6 +4,7 @@ import {
   ChatInputCommandInteraction,
   Client,
   EmbedBuilder,
+  MessageActionRowComponentBuilder,
   SelectMenuBuilder,
   SelectMenuInteraction,
   VoiceChannel,
@@ -22,13 +23,13 @@ export default {
     channelId?: String,
     userId?: String,
     Indms?: Boolean
-  ): Promise<AnyComponentBuilder> => {
+  ): Promise<MessageActionRowComponentBuilder> => {
     const generators = await generatorSchema.find({ guildId: guildId });
     const selectMenu = new SelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)
-      .setPlaceholder("Nothing Selected");
-    await generators.forEach((generator) => {
+      .setPlaceholder("Nothing Selected")
+    await generators.forEach( (generator) => {
       if (generator.channelId) {
         const channel = client.channels.cache.get(generator.channelId);
         if (channel instanceof VoiceChannel) {
@@ -52,6 +53,9 @@ export default {
         }
       }
     });
+    console.log('test')
+    
+
     return selectMenu;
   },
 } as button;

@@ -17,7 +17,7 @@ export default {
     embed.setTitle("Delete Vc generator!");
     embed.setDescription("interesting information about deleteing vc generator");
 
-    let menu = await new UkMessageBuilder({
+    let menu = await new UkMessageBuilder().build({
       content: 'weed',
       rows: [['deleteVcGeneratorConfirmbutton']],
       embeds: [embed],

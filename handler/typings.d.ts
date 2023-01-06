@@ -7,6 +7,7 @@ import {
   ButtonStyle,
   ButtonInteraction,
   SelectMenuInteraction,
+  AnyComponentBuilder,
 } from "discord.js";
 import fs from "fs";
 import { Model, model } from "mongoose";
@@ -58,15 +59,7 @@ export type subcommandArray = Array<subcommandobject>;
 export type returnMenu = {
   content?: string | undefined;
   embeds?: (APIEmbed | JSONEncodable<APIEmbed>)[] | undefined;
-  components?:
-    | (
-        | JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>
-        | ActionRowData<
-            MessageActionRowComponentData | MessageActionRowComponentBuilder
-          >
-        | APIActionRowComponent<APIMessageActionRowComponent>
-      )[]
-    | undefined;
+  components?: (MessageActionRowComponentBuilder[]);
   ephemeral?: boolean | undefined;
 };
 
@@ -98,7 +91,7 @@ export interface button {
     channelId?: String,
     userIds?: String[],
     Indms?: Boolean
-  ): AnyComponentBuilder;
+  ): Promise<MessageActionRowComponentBuilder>;
 }
 
 export type buttonobject = {
@@ -116,7 +109,7 @@ export type buttonobject = {
     channelId?: String,
     userIds?: String[],
     Indms?: Boolean
-  ): AnyComponentBuilder;
+  ): Promise<MessageActionRowComponentBuilder>;
 };
 
 export type menuInfo = {

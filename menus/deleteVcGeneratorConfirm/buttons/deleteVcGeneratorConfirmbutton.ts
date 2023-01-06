@@ -1,4 +1,4 @@
-import { AnyComponentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client } from "discord.js";
+import { AnyComponentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client, MessageActionRowComponentBuilder } from "discord.js";
 import { Model } from "mongoose";
 import { button } from "../../../handler/typings";
 
@@ -16,7 +16,7 @@ export default {
     channelId?: String,
     userId?: String,
     Indms?: Boolean
-  ):Promise<AnyComponentBuilder> => {
+  ):Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder()
     button.setLabel('Cancel')
     button.setStyle(ButtonStyle.Secondary)

@@ -5,6 +5,7 @@ import {
   APIMessageActionRowComponent,
   ApplicationCommandOption,
   ApplicationCommandOptionType,
+  BaseMessageOptions,
   ButtonInteraction,
   Channel,
   ChatInputCommandInteraction,
@@ -24,14 +25,13 @@ import {
 } from "discord.js";
 import fs from "fs";
 import mongoose, { Model } from "mongoose";
-import { menuInfo } from "./typings";
+import { menuInfo, returnMenu } from "./typings";
 import { client } from "../index";
 import menuSchema from "./models/menuSchema";
 import {
   commandobject,
   subcommandobject,
   subcommandArray,
-  returnMenu,
   menuobject,
   buttonobject,
   buttonArray,
@@ -79,7 +79,7 @@ menufolders.forEach((folder) => {
       channelId?: String;
       userId?: String;
       Indms?: Boolean;
-    }): returnMenu {
+    }): Promise<returnMenu> {
       return object.default.create({
         client: options.client,
         waitingForResponse: options.waitingForResponse,
@@ -121,14 +121,8 @@ menus.forEach((menu) => {
         channelId?: String,
         userId?: String,
         Indms?: Boolean
-      ): AnyComponentBuilder {
-        return object.default.create(
-          client,
-          guildId,
-          channelId,
-          userId,
-          Indms
-        );
+      ): Promise<AnyComponentBuilder> {
+        return object.default.create(client, guildId, channelId, userId, Indms);
       },
     } as buttonobject;
 
@@ -302,27 +296,7 @@ export default class Handler {
 }
 
 export class UkMessageBuilder {
-  content?: string;
-  embeds?: EmbedBuilder[];
-  rows?: Array<String[]>;
-  client!: Client;
-  guildId?: String;
-  channelId?: String;
-  userIds?: String[];
-  Indms?: Boolean;
-  constructor(options: {
-    content?: string;
-    embeds?: EmbedBuilder[];
-    rows?: Array<String[]>;
-    client: Client;
-    guildId?: String;
-    channelId?: String;
-    userIds?: String[];
-    Indms?: Boolean;
-  }) {
-    this.init(options);
-  }
-  async init(options: {
+  async build(options: {
     content?: string;
     embeds?: EmbedBuilder[];
     rows?: Array<String[]>;
@@ -332,42 +306,42 @@ export class UkMessageBuilder {
     userIds?: String[];
     Indms?: Boolean;
   }): Promise<returnMenu> {
-    const content = options.content;
-    const embeds = options.embeds;
-    this.Indms;
-    let components:(AnyComponentBuilder[])[] = []
-
-    await options.rows?.forEach(async (buttons) => {
-      let row: AnyComponentBuilder[] = new Array();
-      await buttons.forEach(async (buttonName) => {
-        let buttonobject = await buttonsExport.find(
-          (button) => button.name == buttonName
-        );
-        let button: AnyComponentBuilder = await buttonobject?.create(
-          this.client,
-          this.guildId,
-          this.channelId,
-          this.userIds,
-          this.Indms
-        );
-        row.push(button);
-        console.log(button)
-      });
-      console.log(row)
-      components.push(row)
-    });
-    
-    /*console.log(JSON.stringify(
-      menu,
+    let menu: returnMenu = {};
+    menu.content = options.content;
+    menu.embeds = options.embeds;
+    if (options.rows) {
+      for (const buttons of options.rows) {
+        let row: MessageActionRowComponentBuilder[] = new Array()
+        //console.log(buttons)
+        for (const buttonName of buttons) {
+          //console.log(buttonsExport)
+          let buttonobject = buttonsExport.find(
+            (button) => button.name == buttonName
+          );
+          let button = await buttonobject?.create(
+            options.client,
+            options.guildId,
+            options.channelId,
+            options.userIds,
+            options.Indms
+          );
+          if (button) {
+            button.setCustomId(buttonName)
+          row.push(button)
+        }
+        }
+        if (menu.components) {
+          menu.components?.push(row);
+        } else {
+          menu.components = [row]
+        }
+      }
+    }
+    console.log(JSON.stringify(
+      menu.components,
       null,
       "  "
-    ))*/
-    const menu:returnMenu = {
-      content: content,
-      embeds: embeds,
-      components: components
-
-    }
+    ))
 
     return menu;
   }
@@ -422,7 +396,8 @@ export const Menus = {
       return;
     }
     options.client;
-    let sendplace: DMChannel | TextChannel | CommandInteraction | undefined = undefined;
+    let sendplace: DMChannel | TextChannel | CommandInteraction | undefined =
+      undefined;
     if (
       options.where instanceof DMChannel ||
       options.where instanceof TextChannel
@@ -459,23 +434,31 @@ export const Menus = {
       Indms: menu.inDms,
     });
     if (sendplace instanceof DMChannel || sendplace instanceof TextChannel) {
-      sendplace.send(message).then(msg => {
-        menu.messageId = msg.id
-        menu.guildId = msg.guildId || undefined
-        menu.channelId = msg.channelId
-      })
-    } 
-    else if (sendplace instanceof CommandInteraction) {
-      message.ephemeral = options.ephemeral
-      sendplace.reply(message)
-      const msg = await sendplace.fetchReply()
-      menu.messageId = msg.id
-      menu.guildId = msg.guildId || undefined
-      menu.channelId = msg.channelId
+      sendplace.send({
+        components: message.components,
+        content: message.content,
+        embeds: message.embeds  
+      }).then((msg) => {
+        menu.messageId = msg.id;
+        menu.guildId = msg.guildId || undefined;
+        menu.channelId = msg.channelId;
+      });
+    } else if (sendplace instanceof CommandInteraction) {
+      message.ephemeral = options.ephemeral;
+      console.log(message.components)
+      sendplace.reply({
+        components: message.components,
+        content: message.content,
+        ephemeral: message.ephemeral,
+        embeds: message.embeds  
+      });
+      const msg = await sendplace.fetchReply();
+      menu.messageId = msg.id;
+      menu.guildId = msg.guildId || undefined;
+      menu.channelId = msg.channelId;
     }
-    menu.lastInteraction = Date.now()
-    menu.save()
-    
+    menu.lastInteraction = Date.now();
+    menu.save();
   },
   update: async (options: {
     menu?: string | "back";

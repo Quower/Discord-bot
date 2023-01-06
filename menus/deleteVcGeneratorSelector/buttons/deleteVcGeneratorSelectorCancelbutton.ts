@@ -5,6 +5,7 @@ import {
   ButtonStyle,
   ChatInputCommandInteraction,
   Client,
+  MessageActionRowComponentBuilder,
 } from "discord.js";
 import { button } from "../../../handler/typings";
 import menuSchema from "../../../handler/models/menuSchema";
@@ -18,7 +19,7 @@ export default {
   ) => {
     //code
   },
-  create: async (): Promise<AnyComponentBuilder> => {
+  create: async (): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     button.setLabel("Cancel");
     button.setStyle(ButtonStyle.Secondary);
