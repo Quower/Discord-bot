@@ -19,8 +19,8 @@ export default {
     data?: any
   ):Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder()
-    button.setLabel('Confirm')
-    button.setStyle(ButtonStyle.Danger)
+    button.setLabel('Cancel')
+    button.setStyle(ButtonStyle.Secondary)
     return button
   },
 } as button;

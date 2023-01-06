@@ -13,35 +13,35 @@ const menuSchema = new mongoose.Schema({
       type: String,
       require: false,
     },
-    userIds: {//llllllllllllllllll
+    userIds: {
         type: Array,
         require: false
     },
-    inDms: {//llllllllllllllllll
+    inDms: {
         type: Boolean,
         requere: true
     },
-    prevMenus: {//llllllllllllllllll
+    prevMenus: {
         type: Array,
         require: false
     },
-    currentMenu: {//llllllllllllllllll
+    currentMenu: {
         type: String,
         require: true
     },
-    waitingForResponse: {//llllllllllllllllll
+    waitingForResponse: {
         type: Boolean,
         require: true
     },
-    saveMenu: {//llllllllllllllllll
+    saveMenu: {
         type: Boolean,
         require: true
     },
-    saveState: {//llllllllllllllllll
+    saveState: {
         type: Boolean,
         require: true
     },
-    deleteAfter: {//llllllllllllllllll
+    deleteAfter: {
         type: Number,
         require: true
     },
@@ -49,6 +49,10 @@ const menuSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
+    data: {
+        type: mongoose.Schema.Types.Mixed,
+        require: false
+    }
   });
   
   export default mongoose.model("menu", menuSchema);

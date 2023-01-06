@@ -1,4 +1,5 @@
 import {
+  ActionRowBuilder,
   ActionRowData,
   AnyComponentBuilder,
   APIActionRowComponent,
@@ -79,6 +80,7 @@ menufolders.forEach((folder) => {
       channelId?: String;
       userId?: String;
       Indms?: Boolean;
+      data?: any;
     }): Promise<returnMenu> {
       return object.default.create({
         client: options.client,
@@ -87,6 +89,7 @@ menufolders.forEach((folder) => {
         channelId: options.channelId,
         userId: options.userId,
         Indms: options.Indms,
+        data: options.data
       });
     },
     name: name,
@@ -311,7 +314,7 @@ export class UkMessageBuilder {
     menu.embeds = options.embeds;
     if (options.rows) {
       for (const buttons of options.rows) {
-        let row: MessageActionRowComponentBuilder[] = new Array()
+        const row = new ActionRowBuilder();
         //console.log(buttons)
         for (const buttonName of buttons) {
           //console.log(buttonsExport)
@@ -325,9 +328,9 @@ export class UkMessageBuilder {
             options.userIds,
             options.Indms
           );
-          if (button) {
+          if (button) { 
             button.setCustomId(buttonName)
-          row.push(button)
+          row.addComponents(button)
         }
         }
         if (menu.components) {
@@ -337,11 +340,6 @@ export class UkMessageBuilder {
         }
       }
     }
-    console.log(JSON.stringify(
-      menu.components,
-      null,
-      "  "
-    ))
 
     return menu;
   }
@@ -358,6 +356,7 @@ export const Menus = {
     userIds?: string[];
     saveState?: boolean;
     ephemeral?: boolean;
+    data?: any
   }) => {
     let menu = new menuSchema();
     if (menu.waitingForResponse) {
@@ -375,6 +374,7 @@ export const Menus = {
     } else {
       menu.saveMenu = false;
     }
+    menu.data = options.data
     menu.deleteAfter = options.deleteAfter;
     if (options.saveState) {
       menu.saveState = options.saveState;
@@ -427,13 +427,21 @@ export const Menus = {
         sendplace = channel;
       }
     }
-    const message = await menuObject.create({
-      client: options.client,
-      waitingForResponse: menu.waitingForResponse,
-      userIds: options.userIds,
-      Indms: menu.inDms,
-    });
     if (sendplace instanceof DMChannel || sendplace instanceof TextChannel) {
+      let guildId:string | undefined
+      if (sendplace instanceof TextChannel) {
+        guildId = sendplace.guildId
+      }
+      const message = await menuObject.create({
+        client: options.client,
+        waitingForResponse: menu.waitingForResponse,
+        userIds: options.userIds,
+        Indms: menu.inDms,
+        data: options.data,
+        guildId: guildId,
+        channelId: sendplace.id
+      });
+      console.log(JSON.stringify(message,null,"  "))
       sendplace.send({
         components: message.components,
         content: message.content,
@@ -444,13 +452,26 @@ export const Menus = {
         menu.channelId = msg.channelId;
       });
     } else if (sendplace instanceof CommandInteraction) {
+      let guildId:string | undefined
+      if (sendplace.channel instanceof TextChannel) {
+        guildId = sendplace.channel.guildId
+      }
+      const message = await menuObject.create({
+        client: options.client,
+        waitingForResponse: menu.waitingForResponse,
+        userIds: options.userIds,
+        Indms: menu.inDms,
+        data: options.data,
+        guildId: guildId,
+        channelId: sendplace.id
+      });
       message.ephemeral = options.ephemeral;
-      console.log(message.components)
+      console.log(JSON.stringify(message,null,"  "))
       sendplace.reply({
         components: message.components,
         content: message.content,
         ephemeral: message.ephemeral,
-        embeds: message.embeds  
+        embeds: message.embeds,  
       });
       const msg = await sendplace.fetchReply();
       menu.messageId = msg.id;

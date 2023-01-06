@@ -11,6 +11,7 @@ export default {
     channelId?: String;
     userIds?: String[];
     Indms?: Boolean;
+    data?: any
   }): Promise<BaseMessageOptions> => {
     const embed = new EmbedBuilder();
     embed.setTitle("Delete Vc generator!");
@@ -30,7 +31,6 @@ export default {
       userIds: options.userIds,
       Indms: options.Indms,
     })
-    console.log(menu);
     return menu;
   },
 } as menu;

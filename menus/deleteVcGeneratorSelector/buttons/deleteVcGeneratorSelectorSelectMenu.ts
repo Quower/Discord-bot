@@ -14,7 +14,7 @@ import generatorSchema from "../../../commanddirs/generator/models/generatorSche
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (client: Client, interaction: SelectMenuInteraction, model: Model<any>) => {
+  callback: async (client: Client, interaction: SelectMenuInteraction, model: Model<any>, data?: any) => {
     //code
   },
   create: async (
@@ -22,13 +22,16 @@ export default {
     guildId?: String,
     channelId?: String,
     userId?: String,
-    Indms?: Boolean
+    Indms?: Boolean,
+    data?: any
   ): Promise<MessageActionRowComponentBuilder> => {
     const generators = await generatorSchema.find({ guildId: guildId });
     const selectMenu = new SelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)
       .setPlaceholder("Nothing Selected")
+    if(!generators) {selectMenu.setDisabled
+    selectMenu.setPlaceholder("This guild doesn't have any generators")}
     await generators.forEach( (generator) => {
       if (generator.channelId) {
         const channel = client.channels.cache.get(generator.channelId);
@@ -53,7 +56,6 @@ export default {
         }
       }
     });
-    console.log('test')
     
 
     return selectMenu;

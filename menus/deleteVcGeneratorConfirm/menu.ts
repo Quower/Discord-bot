@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, Client, EmbedBuilder } from "discord.js";
+import { BaseMessageOptions, ChatInputCommandInteraction, Client, EmbedBuilder } from "discord.js";
 import Handler, { UkMessageBuilder } from "../../handler/setup";
-import { menu, returnMenu } from "../../handler/typings";
+import { menu } from "../../handler/typings";
 
 export default {
   create: async (
@@ -11,15 +11,16 @@ export default {
       channelId?: String;
       userIds?: String[];
       Indms?: Boolean;
+      data?: any
     }
-  ):Promise<returnMenu> => {
+  ):Promise<BaseMessageOptions> => {
     const embed = new EmbedBuilder();
     embed.setTitle("Delete Vc generator!");
     embed.setDescription("interesting information about deleteing vc generator");
 
     let menu = await new UkMessageBuilder().build({
       content: 'weed',
-      rows: [['deleteVcGeneratorConfirmbutton']],
+      rows: [['deleteVcGeneratorConfirmbutton'],['deleteVcGeneratorCancelmbutton']],
       embeds: [embed],
       client: options.client,
       guildId: options.guildId,

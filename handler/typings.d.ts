@@ -59,7 +59,7 @@ export type subcommandArray = Array<subcommandobject>;
 export type returnMenu = {
   content?: string | undefined;
   embeds?: (APIEmbed | JSONEncodable<APIEmbed>)[] | undefined;
-  components?: (MessageActionRowComponentBuilder[]);
+  components?: ActionRowBuilder[];
   ephemeral?: boolean | undefined;
 };
 
@@ -101,20 +101,23 @@ export type buttonobject = {
   callback(
     client: Client,
     interaction: ButtonInteraction | SelectMenuInteraction,
-    model: mongoose.model
+    model: mongoose.model,
+    data?: any
   );
   create(
     client: Client,
     guildId?: String,
     channelId?: String,
     userIds?: String[],
-    Indms?: Boolean
+    Indms?: Boolean,
+    data?: any
   ): Promise<MessageActionRowComponentBuilder>;
 };
 
 export type menuInfo = {
   name: string;
   waitingForResponse: boolean;
+  data: any;
 };
 
 /*export type menuSchema = {
@@ -136,6 +139,7 @@ export interface menu {
     channelId?: String;
     userIds?: String[];
     Indms?: Boolean;
+    data?: any
   }): returnMenu;
 }
 
@@ -147,6 +151,7 @@ export type menuobject = {
     channelId?: String;
     userIds?: String[];
     Indms?: Boolean;
+    data?: any
   }): returnMenu;
   name: string;
   //buttons: buttonobject[];
