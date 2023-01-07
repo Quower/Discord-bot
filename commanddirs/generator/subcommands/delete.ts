@@ -21,7 +21,8 @@ export default {
       client: client,
       where: interaction,
       deleteAfter: 5,
-      ephemeral: true
+      ephemeral: true,
+      saveMenu: false
     })
     /*const row = await Select_Generator(
       interaction.guild,
