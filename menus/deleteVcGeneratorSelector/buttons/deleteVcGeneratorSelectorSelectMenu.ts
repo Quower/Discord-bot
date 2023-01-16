@@ -11,11 +11,19 @@ import {
 } from "discord.js";
 import { Model } from "mongoose";
 import generatorSchema from "../../../commanddirs/generator/models/generatorSchema";
+import { Menus } from "../../../handler/setup";
 import { button } from "../../../handler/typings";
 
 export default {
   callback: async (client: Client, interaction: SelectMenuInteraction, model: Model<any>, data?: any) => {
-    //code
+    interaction.deferUpdate()
+    console.log(interaction.values[0])
+    Menus.update({
+      messageId: interaction.message.id,
+      client: client,
+      menu: 'deleteVcGeneratorConfirm',
+      data: interaction.values[0]
+    })
   },
   create: async (
     client: Client,

@@ -21,8 +21,8 @@ export default {
     let menu = await new UkMessageBuilder().build({
       content: "weed",
       rows: [
-        ["deleteVcGeneratorSelectorCancelbutton"],
         ["deleteVcGeneratorSelectorSelectMenu"],
+        ["deleteVcGeneratorSelectorCancelbutton"],
       ],
       embeds: [embed],
       client: options.client,
@@ -30,6 +30,7 @@ export default {
       channelId: options.channelId,
       userIds: options.userIds,
       Indms: options.Indms,
+      data: options.data
     })
     return menu;
   },

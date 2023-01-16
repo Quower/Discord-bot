@@ -12,13 +12,18 @@ export default async function (interaction: DiscordJS.Interaction<DiscordJS.Cach
     let menuschema = await menuSchema.findOne({
       messageId: interaction.message.id,
     });
-    let buttonObject = (await buttonsExport).find(
+    let buttonObject = await buttonsExport.find(
       (button) => button.name == interaction.customId
     );
-    if (menuschema == undefined || buttonObject == undefined) {
-      console.log("no menuschema or buttonobject");
+    if (menuschema == undefined) {
+      console.log("no menuschema 2");
       return;
     }
+    if (buttonObject == undefined) {
+      console.log("no buttonobject");
+      return;
+    }
+
     if (menuschema.userIds instanceof Array<String>) {
       const userIds: Array<String> = menuschema.userIds;
       if (
@@ -32,7 +37,8 @@ export default async function (interaction: DiscordJS.Interaction<DiscordJS.Cach
         return;
       }
     }
-    buttonObject.callback(client, interaction, menuschema);
+    console.log(`${menuschema.data}    hhhwwwh`)
+    buttonObject.callback(client, interaction, menuschema, menuschema.data);
   }
 }
 

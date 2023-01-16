@@ -1,20 +1,13 @@
 import {
-  ActionRowData,
-  AnyComponentBuilder,
-  APIActionRowComponent,
-  APIMessageActionRowComponent,
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  ChatInputCommandInteraction,
   Client,
-  JSONEncodable,
   MessageActionRowComponentBuilder,
-  MessageActionRowComponentData,
 } from "discord.js";
 import { button } from "../../../handler/typings";
-import menuSchema from "../../../handler/models/menuSchema";
 import { Model } from "mongoose";
+import { Menus } from "../../../handler/setup";
 
 export default {
   callback: async (
@@ -23,7 +16,12 @@ export default {
     model: Model<any>,
     data?: any
   ) => {
-    //code
+    interaction.deferUpdate();
+    Menus.update({
+      messageId: interaction.message.id,
+      client: client,
+      menu: "back",
+    });
   },
   create: async (
     client: Client,
@@ -31,7 +29,8 @@ export default {
     channelId?: String,
     userIds?: String[],
     Indms?: Boolean,
-    data?: any): Promise<MessageActionRowComponentBuilder> => {
+    data?: any
+  ): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     button.setLabel("Cancel");
     button.setStyle(ButtonStyle.Secondary);

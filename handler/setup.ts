@@ -37,6 +37,8 @@ import {
   buttonobject,
   buttonArray,
 } from "./typings";
+import menu from "../menus/deleteVcGeneratorConfirm/menu";
+import { ExitStatus } from "typescript";
 
 const commandfolders = fs.readdirSync("./commanddirs");
 let commands = new Array<commandobject>();
@@ -308,6 +310,7 @@ export class UkMessageBuilder {
     channelId?: String;
     userIds?: String[];
     Indms?: Boolean;
+    data: any;
   }): Promise<returnMenu> {
     let menu: returnMenu = {};
     menu.content = options.content;
@@ -321,12 +324,16 @@ export class UkMessageBuilder {
           let buttonobject = buttonsExport.find(
             (button) => button.name == buttonName
           );
+          if (!buttonobject) {
+          throw console.error(`button "${buttonName}" not found`);
+          }
           let button = await buttonobject?.create(
             options.client,
             options.guildId,
             options.channelId,
             options.userIds,
-            options.Indms
+            options.Indms,
+            options.data
           );
           if (button) {
             button.setCustomId(buttonName);
@@ -344,7 +351,6 @@ export class UkMessageBuilder {
     return menu;
   }
 }
-
 export const Menus = {
   create: async (options: {
     menu: string;
@@ -442,7 +448,7 @@ export const Menus = {
         channelId: sendplace.id,
       });
       console.log(JSON.stringify(message, null, "  "));
-      sendplace
+      await sendplace
         .send({
           components: message.components,
           content: message.content,
@@ -469,7 +475,7 @@ export const Menus = {
       });
       message.ephemeral = options.ephemeral;
       console.log(JSON.stringify(message, null, "  "));
-      sendplace.reply({
+      await sendplace.reply({
         components: message.components,
         content: message.content,
         ephemeral: message.ephemeral,
@@ -489,7 +495,7 @@ export const Menus = {
     messageId: string;
     saveMenu?: boolean;
     client: Client;
-    deleteAfter?: Number;
+    deleteAfter?: number;
     waitingForResponse?: boolean;
     userIds?: { ids: string[]; mode: "set" | "add" | "remove" };
     saveState?: boolean;
@@ -519,9 +525,31 @@ export const Menus = {
         waitingForResponse = last.data;
       } else {
         menuName = options.menu;
+        if (options.waitingForResponse) {
+          waitingForResponse = options.waitingForResponse;
+        } else {
+          waitingForResponse = false;
+        }
+        if (options.data) {
+          console.log(options.data)
+          data = options.data;
+        }
       }
     } else {
       menuName = menudb?.currentMenu || "";
+      if (options.waitingForResponse) {
+        waitingForResponse = options.waitingForResponse;
+      } else {
+        waitingForResponse = menudb.waitingForResponse || false;
+      }
+      if (options.data) {
+        data = options.data;
+      } else {
+        data = menudb.data;
+      }
+    }
+    if (options.deleteAfter) {
+      menudb.deleteAfter = options.deleteAfter;
     }
     if (options.userIds) {
       switch (options.userIds.mode) {
@@ -543,7 +571,45 @@ export const Menus = {
     }
     if (back == true) {
       menudb?.prevMenus.pop();
+    } else if (menudb.saveMenu == true) {
+      const menuI: menuInfo = {
+        name: menuName,
+        waitingForResponse: waitingForResponse,
+        data: data,
+      };
+      menudb.prevMenus.push(menuI);
+    }
+    if (options.saveMenu) {
+      menudb.saveMenu = options.saveMenu
     } else {
+      menudb.saveMenu = true
+    }
+    let menuObject = (await menusExport).find(
+      (menu) => menu.name == menuName
+    );
+    if (!menuObject) {
+      console.log("no menu found and ur code is fucked");
+      return;
+    }
+    console.log(`${data}    hhhh`)
+    const message = await menuObject.create({
+      client: options.client,
+      waitingForResponse: waitingForResponse,
+      userIds: menudb.userIds,
+      Indms: menudb.inDms,
+      data: data,
+      guildId: menudb.guildId,
+      channelId: menudb.channelId,
+    });
+    const channel = await client.channels.fetch(menudb.channelId || '');
+    console.log(`${menudb.data}       fff`)
+    if (channel instanceof DMChannel || channel instanceof TextChannel) {
+      const msg = await channel.messages.fetch(options.messageId);
+      console.log(JSON.stringify(message, null, "  "));
+      msg.edit(message).then(() => {
+        menudb.lastInteraction = Date.now()
+        menudb.save()
+      })
     }
   },
   delete: async (options: { messageId: string; client: Client }) => {
@@ -570,9 +636,18 @@ setInterval(async () => {
         ) {
           let channel = await client.channels.fetch(menu.channelId || "");
           if (channel instanceof DMChannel || channel instanceof TextChannel) {
-            channel.messages.fetch(menu.messageId || "").then((message) => {
-              message.delete();
+            try {
+              channel.messages.fetch(menu.messageId || "").then((message) => {
+              try {
+                message.delete();
+              } catch (e) {
+                console.log('could not find message')
+              }
             });
+            } catch (e) {
+              console.log('could not find message')
+            }
+            
           }
           menu.delete();
         }

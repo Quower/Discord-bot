@@ -5,6 +5,7 @@ import {
   ButtonStyle,
   EmbedBuilder,
   ChatInputCommandInteraction,
+  TextChannel,
 } from "discord.js";
 import { Menus } from "../../../handler/setup";
 import { subcommand } from "../../../handler/typings";
@@ -16,12 +17,13 @@ export default {
     if (client == undefined && interaction == undefined) {
       return;
     }
+    if (interaction.channel instanceof TextChannel )
     Menus.create({
       menu: 'deleteVcGeneratorSelector',
       client: client,
-      where: interaction,
+      where: interaction.channel,
       deleteAfter: 5,
-      ephemeral: true,
+      ephemeral: false,
       saveMenu: false
     })
     /*const row = await Select_Generator(

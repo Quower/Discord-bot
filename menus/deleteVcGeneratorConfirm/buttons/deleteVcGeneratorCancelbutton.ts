@@ -1,14 +1,27 @@
-import { AnyComponentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client, MessageActionRowComponentBuilder } from "discord.js";
+import {
+  ButtonBuilder,
+  ButtonInteraction,
+  ButtonStyle,
+  Client,
+  MessageActionRowComponentBuilder,
+} from "discord.js";
 import { Model } from "mongoose";
+import { Menus } from "../../../handler/setup";
 import { button } from "../../../handler/typings";
 
 export default {
   callback: async (
     client: Client,
     interaction: ButtonInteraction,
-    model: Model<any>
+    model: Model<any>,
+    data?: any
   ) => {
-    //code
+    interaction.deferUpdate();
+    Menus.update({
+      messageId: interaction.message.id,
+      client: client,
+      menu: "back",
+    });
   },
   create: async (
     client: Client,
@@ -17,10 +30,10 @@ export default {
     userId?: String,
     Indms?: Boolean,
     data?: any
-  ):Promise<MessageActionRowComponentBuilder> => {
-    const button = new ButtonBuilder()
-    button.setLabel('Cancel')
-    button.setStyle(ButtonStyle.Secondary)
-    return button
+  ): Promise<MessageActionRowComponentBuilder> => {
+    const button = new ButtonBuilder();
+    button.setLabel("Cancel");
+    button.setStyle(ButtonStyle.Secondary);
+    return button;
   },
 } as button;

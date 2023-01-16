@@ -15,7 +15,7 @@ export default async function (message: DiscordJS.Message<boolean>) {
     (menu) => menu.name == menuschema?.currentMenu
   );
   if (menuschema == undefined) {
-    console.log("no menuschema");
+    //console.log("no menuschema");
     return;
   }
   if (menuschema.userIds instanceof Array<String>) {

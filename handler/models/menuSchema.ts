@@ -7,7 +7,7 @@ const menuSchema = new mongoose.Schema({
     },
     messageId: {
         type: String,
-        require: false,
+        require: true,
     },
     guildId: {
       type: String,
