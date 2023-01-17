@@ -26,6 +26,10 @@ export default {
       ephemeral: false,
       saveMenu: false
     })
+    interaction.reply({
+      content:'menu created',
+      ephemeral: true
+    })
     /*const row = await Select_Generator(
       interaction.guild,
       "deletechannel",

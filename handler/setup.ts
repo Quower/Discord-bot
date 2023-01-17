@@ -116,9 +116,9 @@ menus.forEach((menu) => {
       callback: function (
         client: Client,
         interaction: ButtonInteraction | SelectMenuInteraction,
-        model: Model<any>
+        data: any
       ) {
-        object.default.callback(client, interaction, model);
+        object.default.callback(client, interaction, data);
       },
       create: function (
         client: Client,
@@ -573,12 +573,15 @@ export const Menus = {
       menudb?.prevMenus.pop();
     } else if (menudb.saveMenu == true) {
       const menuI: menuInfo = {
-        name: menuName,
-        waitingForResponse: waitingForResponse,
-        data: data,
+        name: menudb.currentMenu || '',
+        waitingForResponse: menudb.waitingForResponse || false,
+        data: menudb.data,
       };
       menudb.prevMenus.push(menuI);
     }
+    menudb.currentMenu = menuName
+    menudb.waitingForResponse = waitingForResponse
+    menudb.data = data
     if (options.saveMenu) {
       menudb.saveMenu = options.saveMenu
     } else {

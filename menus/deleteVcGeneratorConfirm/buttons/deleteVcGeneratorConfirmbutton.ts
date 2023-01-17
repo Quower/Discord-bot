@@ -7,23 +7,25 @@ import {
 } from "discord.js";
 import { Model } from "mongoose";
 import generatorSchema from "../../../commanddirs/generator/models/generatorSchema";
+import { Menus } from "../../../handler/setup";
 import { button } from "../../../handler/typings";
 
 export default {
   callback: async (
     client: Client,
     interaction: ButtonInteraction,
-    model: Model<any>,
     data?: any
   ) => {
     interaction.deferUpdate();
-    console.log('got here')
-    console.log(data)
     let generator = await generatorSchema.findOne({ channelId: data });
-    console.log(generator)
     let channel = await client.channels.fetch(generator?.channelId || "");
     channel?.delete();
     generator?.delete();
+    Menus.update({
+      messageId: interaction.message.id,
+      client: client,
+      menu: "back",
+    });
   },
   create: async (
     client: Client,

@@ -15,7 +15,7 @@ import { Menus } from "../../../handler/setup";
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (client: Client, interaction: SelectMenuInteraction, model: Model<any>, data?: any) => {
+  callback: async (client: Client, interaction: SelectMenuInteraction, data?: any) => {
     interaction.deferUpdate()
     console.log(interaction.values[0])
     Menus.update({

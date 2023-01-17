@@ -13,7 +13,6 @@ export default {
   callback: async (
     client: Client,
     interaction: ButtonInteraction,
-    model: Model<any>,
     data?: any
   ) => {
     interaction.deferUpdate();

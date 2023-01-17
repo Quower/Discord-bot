@@ -83,7 +83,7 @@ export interface button {
   callback(
     client: Client,
     interaction: ButtonInteraction | SelectMenuInteraction,
-    model: Model
+    data?: any
   );
   create(
     client: Client,
@@ -101,7 +101,6 @@ export type buttonobject = {
   callback(
     client: Client,
     interaction: ButtonInteraction | SelectMenuInteraction,
-    model: mongoose.model,
     data?: any
   );
   create(
