@@ -473,7 +473,7 @@ export const Menus = {
         content: message.content,
         ephemeral: message.ephemeral,
         embeds: message.embeds,
-      });
+      })
       const msg = await sendplace.fetchReply();
       menu.messageId = msg.id;
       menu.guildId = msg.guildId || undefined;
@@ -482,6 +482,9 @@ export const Menus = {
     }
     menu.lastInteraction = Date.now();
     menu.save();
+    setTimeout(() => {
+
+    }, 10000)
     return;
   },
   update: async (options: {
@@ -666,3 +669,42 @@ export const Menus = {
     menu.delete();
   },
 };
+async function MenuDeleteCheck(options: { messageId: string; client: Client }) {
+  const menu = await menuSchema.findOne({ messageId: options.messageId });
+  if (!menu) {
+    console.log("the menu you are trying to delete was not found 2");
+    return;
+  }
+  if (menu.deleteAfter != 0) {
+      if (menu.lastInteraction && menu.deleteAfter) {
+        if (
+          Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 1
+        ) {
+          try {
+            let channel = await client.channels.fetch(menu.channelId || "");
+            if (
+              channel instanceof DMChannel ||
+              channel instanceof TextChannel
+            ) {
+              try {
+                channel.messages.fetch(menu.messageId || "").then((msg) => {
+                  if (msg.deletable == true) {
+                    msg.delete();
+                  }
+                });
+              } catch (e) {
+                console.log("could not find message");
+              }
+            } else {
+              console.log("something wrong with channel");
+            }
+          } catch (e) {
+            console.log("could not find channel");
+          }
+
+          menu.delete();
+        }
+      }
+    }
+
+}
