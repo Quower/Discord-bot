@@ -52,6 +52,10 @@ const menuSchema = new mongoose.Schema({
     data: {
         type: mongoose.Schema.Types.Mixed,
         require: false
+    },
+    interaction: {
+        type: mongoose.Schema.Types.Mixed,
+        require: false
     }
   });
   

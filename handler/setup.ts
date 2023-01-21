@@ -288,16 +288,6 @@ export default class Handler {
     });
     client.application?.commands.set(globalCommands);
   }
-  async testfunction(options: {
-    content?: string;
-    embeds?: EmbedBuilder[];
-    rows?: Array<String[]>;
-    client: Client;
-    guildId?: String;
-    channelId?: String;
-    userId?: String;
-    Indms?: Boolean;
-  }) {}
 }
 
 export class UkMessageBuilder {
@@ -325,7 +315,7 @@ export class UkMessageBuilder {
             (button) => button.name == buttonName
           );
           if (!buttonobject) {
-          throw console.error(`button "${buttonName}" not found`);
+            throw console.error(`button "${buttonName}" not found`);
           }
           let button = await buttonobject?.create(
             options.client,
@@ -365,7 +355,7 @@ export const Menus = {
     data?: any;
   }) => {
     let menu = new menuSchema();
-    if (menu.waitingForResponse) {
+    if ((menu.waitingForResponse = true)) {
       const generators = await menuSchema.find({ waitingForResponse: true });
       if (generators) {
         menu.waitingForResponse = false;
@@ -385,7 +375,7 @@ export const Menus = {
     if (options.saveState) {
       menu.saveState = options.saveState;
     } else {
-      menu.saveState = false;
+      menu.saveState = true;
     }
     menu.currentMenu = options.menu;
     menu.prevMenus = new Array();
@@ -398,7 +388,7 @@ export const Menus = {
       (menu) => menu.name == options.menu
     );
     if (!menuObject) {
-      console.log("no menu found");
+      console.log(`no menu found with name:${options.menu}`);
       return;
     }
     options.client;
@@ -431,6 +421,9 @@ export const Menus = {
           menu.inDms = false;
         }
         sendplace = channel;
+      } else {
+        console.log(`no channel found with using id`);
+        return;
       }
     }
     if (sendplace instanceof DMChannel || sendplace instanceof TextChannel) {
@@ -485,6 +478,7 @@ export const Menus = {
       menu.messageId = msg.id;
       menu.guildId = msg.guildId || undefined;
       menu.channelId = msg.channelId;
+      menu.interaction = sendplace;
     }
     menu.lastInteraction = Date.now();
     menu.save();
@@ -531,7 +525,7 @@ export const Menus = {
           waitingForResponse = false;
         }
         if (options.data) {
-          console.log(options.data)
+          console.log(options.data);
           data = options.data;
         }
       }
@@ -573,28 +567,26 @@ export const Menus = {
       menudb?.prevMenus.pop();
     } else if (menudb.saveMenu == true) {
       const menuI: menuInfo = {
-        name: menudb.currentMenu || '',
+        name: menudb.currentMenu || "",
         waitingForResponse: menudb.waitingForResponse || false,
         data: menudb.data,
       };
       menudb.prevMenus.push(menuI);
     }
-    menudb.currentMenu = menuName
-    menudb.waitingForResponse = waitingForResponse
-    menudb.data = data
+    menudb.currentMenu = menuName;
+    menudb.waitingForResponse = waitingForResponse;
+    menudb.data = data;
     if (options.saveMenu) {
-      menudb.saveMenu = options.saveMenu
+      menudb.saveMenu = options.saveMenu;
     } else {
-      menudb.saveMenu = true
+      menudb.saveMenu = true;
     }
-    let menuObject = (await menusExport).find(
-      (menu) => menu.name == menuName
-    );
+    let menuObject = (await menusExport).find((menu) => menu.name == menuName);
     if (!menuObject) {
       console.log("no menu found and ur code is fucked");
       return;
     }
-    console.log(`${data}    hhhh`)
+    console.log(`${data}    hhhh`);
     const message = await menuObject.create({
       client: options.client,
       waitingForResponse: waitingForResponse,
@@ -604,57 +596,73 @@ export const Menus = {
       guildId: menudb.guildId,
       channelId: menudb.channelId,
     });
-    const channel = await client.channels.fetch(menudb.channelId || '');
-    console.log(`${menudb.data}       fff`)
-    if (channel instanceof DMChannel || channel instanceof TextChannel) {
-      const msg = await channel.messages.fetch(options.messageId);
-      console.log(JSON.stringify(message, null, "  "));
-      msg.edit(message).then(() => {
-        menudb.lastInteraction = Date.now()
-        menudb.save()
-      })
+    if (menudb.interaction instanceof CommandInteraction) {
+      try {
+        menudb.interaction.editReply(message).then(() => {
+          menudb.lastInteraction = Date.now();
+          menudb.save();
+        });
+      } catch (e) {
+        console.log("something went wrong when editing interaction reply");
+      }
+      return;
+    }
+    try {
+      const channel = await client.channels.fetch(menudb.channelId || "");
+      console.log(`${menudb.data}       fff`);
+      if (channel instanceof DMChannel || channel instanceof TextChannel) {
+        try {
+          const msg = await channel.messages.fetch(options.messageId);
+          console.log(JSON.stringify(message, null, "  "));
+          msg.edit(message).then(() => {
+            menudb.lastInteraction = Date.now();
+            menudb.save();
+          });
+        } catch (e) {
+          console.log("could not find message");
+        }
+      } else {
+        console.log("something wrong with channel");
+        return;
+      }
+    } catch (e) {
+      console.log("could not find channel");
     }
   },
   delete: async (options: { messageId: string; client: Client }) => {
     const menu = await menuSchema.findOne({ messageId: options.messageId });
-    const channel = await client.channels.fetch(menu?.channelId || "");
-    if (channel instanceof DMChannel || channel instanceof TextChannel) {
-      const msg = await channel.messages.fetch(menu?.messageId || "");
-      if (msg.deletable == true) {
-        msg.delete();
-      }
+    if (!menu) {
+      console.log("the menu you are trying to delete was not found");
+      return;
     }
-    menu?.delete();
+    if (menu.interaction instanceof CommandInteraction) {
+      try {
+        menu.interaction.deleteReply();
+      } catch (e) {
+        console.log("something went wrong when deleting interaction reply");
+      }
+      menu.delete();
+      return;
+    }
+    try {
+      const channel = await client.channels.fetch(menu?.channelId || "");
+      if (channel instanceof DMChannel || channel instanceof TextChannel) {
+        try {
+          channel.messages.fetch(menu.messageId || "").then((msg) => {
+            if (msg.deletable == true) {
+              msg.delete();
+            }
+          });
+        } catch (e) {
+          console.log("could not find message");
+        }
+      } else {
+        console.log("something wrong with channel");
+      }
+    } catch (e) {
+      console.log("could not find channel");
+    }
+
+    menu.delete();
   },
 };
-
-setInterval(async () => {
-  let menus = await menuSchema.find();
-  menus.forEach(async (menu) => {
-    if (menu.deleteAfter != 0) {
-      if (menu.lastInteraction && menu.deleteAfter) {
-        if (
-          Date.now() - (menu.lastInteraction + menu.deleteAfter * 60000) >
-          1
-        ) {
-          let channel = await client.channels.fetch(menu.channelId || "");
-          if (channel instanceof DMChannel || channel instanceof TextChannel) {
-            try {
-              channel.messages.fetch(menu.messageId || "").then((message) => {
-              try {
-                message.delete();
-              } catch (e) {
-                console.log('could not find message')
-              }
-            });
-            } catch (e) {
-              console.log('could not find message')
-            }
-            
-          }
-          menu.delete();
-        }
-      }
-    }
-  });
-}, 60000);

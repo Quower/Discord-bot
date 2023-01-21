@@ -1,6 +1,6 @@
 import DiscordJS, {
-  ButtonInteraction,
-  ChatInputCommandInteraction,
+  DMChannel,
+  TextChannel,
   Events,
   IntentsBitField,
   Message,
@@ -13,9 +13,11 @@ import ChatInputCommandInteractionrun from "./handler/events/ChatInputCommandInt
 import ButtonInteractionrun from "./handler/events/ButtonInteraction";
 import SelectMenuInteractionrun from "./handler/events/SelectMenuInteraction";
 import messageCreaterun from "./handler/events/messageCreate";
+import menuSchema from "./handler/models/menuSchema";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 export const botOwners = ["424279456031703041"];
+const deleteAllMenusOnStart = true;
 
 export const client = new DiscordJS.Client({
   intents: [
@@ -36,7 +38,6 @@ export const client = new DiscordJS.Client({
     IntentsBitField.Flags.GuildVoiceStates,
     //IntentsBitField.Flags.GuildWebhooks
   ],
-  
 });
 client.on("ready", async () => {
   console.log(`Logged in as: ${client.user?.tag}`);
@@ -52,36 +53,56 @@ client.on("ready", async () => {
     client,
   });
 
-  /*new WOK({
-    testServers: ["966345190480687167"],
-    botOwners: ["424279456031703041"],
-    mongoUri: process.env.MONGODB,
-    // The client for your bot. This is the only required property
-    client,
-    // Path to your commands folder
-    commandsDir: path.join(__dirname, "commands"),
-    // Path to your features folder
-    featuresDir: path.join(__dirname, "features"),
-    // Configure your event handlers
-    events: {
-      dir: path.join(__dirname, "events"),
-    },
-    disabledDefaultCommands: [
-      DefaultCommands.ChannelCommand,
-      DefaultCommands.CustomCommand,
-      DefaultCommands.Prefix,
-      // DefaultCommands.RequiredPermissions,
-      // DefaultCommands.RequiredRoles,
-      // DefaultCommands.ToggleCommand
-    ],
-  });*/
+  const menus = await menuSchema.find();
+  menus.forEach(async (menu) => {
+    if (menu.deleteAfter != 0 || deleteAllMenusOnStart == true) {
+      if (menu.lastInteraction && menu.deleteAfter) {
+        if (
+          Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 1 ||
+          deleteAllMenusOnStart == true
+        ) {
+          try {
+            let channel = await client.channels.fetch(menu.channelId || "");
+            if (
+              channel instanceof DMChannel ||
+              channel instanceof TextChannel
+            ) {
+              try {
+                channel.messages.fetch(menu.messageId || "").then((msg) => {
+                  if (msg.deletable == true) {
+                    msg.delete();
+                  }
+                });
+              } catch (e) {
+                console.log("could not find message");
+              }
+            } else {
+              console.log("something wrong with channel");
+            }
+          } catch (e) {
+            console.log("could not find channel");
+          }
+
+          menu.delete();
+        }
+      }
+    }
+  });
 });
 
 client.login(process.env.TOKEN);
-client.on(Events.InteractionCreate, async (interaction) => {ChatInputCommandInteractionrun(interaction)})
-client.on(Events.InteractionCreate, async (interaction) => {ButtonInteractionrun(interaction)})
-client.on(Events.InteractionCreate, async (interaction) => {SelectMenuInteractionrun(interaction)})
-client.on(Events.MessageCreate, async (message) => {messageCreaterun(message)})
+client.on(Events.InteractionCreate, async (interaction) => {
+  ChatInputCommandInteractionrun(interaction);
+});
+client.on(Events.InteractionCreate, async (interaction) => {
+  ButtonInteractionrun(interaction);
+});
+client.on(Events.InteractionCreate, async (interaction) => {
+  SelectMenuInteractionrun(interaction);
+});
+client.on(Events.MessageCreate, async (message) => {
+  messageCreaterun(message);
+});
 // client.on("messageCreate", async (Message) => {
 //   if (Message.author.id === "282859044593598464") {
 //     Message.delete();

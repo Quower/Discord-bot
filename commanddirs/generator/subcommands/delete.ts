@@ -21,15 +21,15 @@ export default {
     Menus.create({
       menu: 'deleteVcGeneratorSelector',
       client: client,
-      where: interaction.channel,
+      where: interaction,
       deleteAfter: 5,
       ephemeral: false,
       saveMenu: false
     })
-    interaction.reply({
-      content:'menu created',
-      ephemeral: true
-    })
+    // interaction.reply({
+    //   content:'menu created',
+    //   ephemeral: true
+    // })
     /*const row = await Select_Generator(
       interaction.guild,
       "deletechannel",
