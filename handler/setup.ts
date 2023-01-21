@@ -468,23 +468,30 @@ export const Menus = {
       });
       message.ephemeral = options.ephemeral;
       console.log(JSON.stringify(message, null, "  "));
+      console.log('got to before reply')
       await sendplace.reply({
         components: message.components,
         content: message.content,
         ephemeral: message.ephemeral,
         embeds: message.embeds,
-      })
+      });
       const msg = await sendplace.fetchReply();
       menu.messageId = msg.id;
       menu.guildId = msg.guildId || undefined;
       menu.channelId = msg.channelId;
+      console.log('sendplace before seting:')
+      console.log(sendplace)
       menu.interaction = sendplace;
     }
     menu.lastInteraction = Date.now();
+    console.log(`menu at create end:\n${menu} \n`)
     menu.save();
-    setTimeout(() => {
+    if (menu.deleteAfter > 0) {
+      setTimeout(() => {
+        MenuDeleteCheck({ client: client, messageId: menu.messageId || "" });
+      }, menu.deleteAfter * 1000);
+    }
 
-    }, 10000)
     return;
   },
   update: async (options: {
@@ -498,6 +505,7 @@ export const Menus = {
     saveState?: boolean;
     data?: any;
   }) => {
+    console.log('got to update')
     const menudb = await menuSchema.findOne({ messageId: options.messageId });
     if (!menudb) {
       return;
@@ -600,17 +608,26 @@ export const Menus = {
       channelId: menudb.channelId,
     });
     if (menudb.interaction instanceof CommandInteraction) {
+      console.log('got to edit 1 we are tesing')
       try {
         menudb.interaction.editReply(message).then(() => {
           menudb.lastInteraction = Date.now();
           menudb.save();
+          if (menudb.deleteAfter && menudb.deleteAfter > 0) {
+            setTimeout(() => {
+              MenuDeleteCheck({ client: client, messageId: menudb.messageId || "" });
+            }, menudb.deleteAfter * 1000);
+            return;
+          }
         });
       } catch (e) {
         console.log("something went wrong when editing interaction reply");
+        return;
       }
       return;
     }
     try {
+      console.log('got to edit 2 we are tesing')
       const channel = await client.channels.fetch(menudb.channelId || "");
       console.log(`${menudb.data}       fff`);
       if (channel instanceof DMChannel || channel instanceof TextChannel) {
@@ -620,9 +637,15 @@ export const Menus = {
           msg.edit(message).then(() => {
             menudb.lastInteraction = Date.now();
             menudb.save();
+            if (menudb.deleteAfter && menudb.deleteAfter > 0) {
+              setTimeout(() => {
+                MenuDeleteCheck({ client: client, messageId: menudb.messageId || "" });
+              }, menudb.deleteAfter * 1000);
+            }
           });
         } catch (e) {
           console.log("could not find message");
+          return;
         }
       } else {
         console.log("something wrong with channel");
@@ -630,24 +653,29 @@ export const Menus = {
       }
     } catch (e) {
       console.log("could not find channel");
+      return;
     }
   },
   delete: async (options: { messageId: string; client: Client }) => {
+    console.log('delete funtion start')
     const menu = await menuSchema.findOne({ messageId: options.messageId });
     if (!menu) {
       console.log("the menu you are trying to delete was not found");
       return;
     }
-    if (menu.interaction instanceof CommandInteraction) {
-      try {
-        menu.interaction.deleteReply();
-      } catch (e) {
-        console.log("something went wrong when deleting interaction reply");
-      }
-      menu.delete();
-      return;
-    }
+    console.log(menu)
+    // if (menu.interaction) {
+    //   console.log(`got to interaction delete`)
+    //   try {
+    //     menu.interaction.deleteReply();
+    //   } catch (e) {
+    //     console.log("something went wrong when deleting interaction reply");
+    //   }
+    //   menu.delete();
+    //   return;
+    // }
     try {
+      console.log(`got to message delete`)
       const channel = await client.channels.fetch(menu?.channelId || "");
       if (channel instanceof DMChannel || channel instanceof TextChannel) {
         try {
@@ -676,35 +704,41 @@ async function MenuDeleteCheck(options: { messageId: string; client: Client }) {
     return;
   }
   if (menu.deleteAfter != 0) {
-      if (menu.lastInteraction && menu.deleteAfter) {
-        if (
-          Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 1
-        ) {
-          try {
-            let channel = await client.channels.fetch(menu.channelId || "");
-            if (
-              channel instanceof DMChannel ||
-              channel instanceof TextChannel
-            ) {
-              try {
-                channel.messages.fetch(menu.messageId || "").then((msg) => {
-                  if (msg.deletable == true) {
-                    msg.delete();
-                  }
-                });
-              } catch (e) {
-                console.log("could not find message");
-              }
-            } else {
-              console.log("something wrong with channel");
+    if (menu.lastInteraction && menu.deleteAfter) {
+      if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 1) {
+        console.log(menu)
+        // if (menu.interaction) {
+        //   try {
+        //     console.log('got to delete 3 we are tesing')
+        //     menu.interaction.deleteReply();
+        //   } catch (e) {
+        //     console.log("something went wrong when deleting interaction reply");
+        //   }
+        //   menu.delete();
+        //   return;
+        // }
+        try {
+          let channel = await client.channels.fetch(menu.channelId || "");
+          if (channel instanceof DMChannel || channel instanceof TextChannel) {
+            try {
+              channel.messages.fetch(menu.messageId || "").then((msg) => {
+                if (msg.deletable == true) {
+                  console.log('got to delete 4 we are tesing')
+                  msg.delete();
+                }
+              });
+            } catch (e) {
+              console.log("could not find message");
             }
-          } catch (e) {
-            console.log("could not find channel");
+          } else {
+            console.log("something wrong with channel");
           }
-
-          menu.delete();
+        } catch (e) {
+          console.log("could not find channel");
         }
+
+        menu.delete();
       }
     }
-
+  }
 }

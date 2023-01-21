@@ -37,7 +37,6 @@ export default async function (interaction: DiscordJS.Interaction<DiscordJS.Cach
         return;
       }
     }
-    console.log(`${menuschema.data}    hhhwwwh`)
     buttonObject.callback(client, interaction, menuschema.data);
   }
 }

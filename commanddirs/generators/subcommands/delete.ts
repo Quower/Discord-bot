@@ -22,8 +22,8 @@ export default {
       menu: 'deleteVcGeneratorSelector',
       client: client,
       where: interaction,
-      deleteAfter: 5,
-      ephemeral: false,
+      deleteAfter: 10,
+      ephemeral: true,
       saveMenu: false
     })
     // interaction.reply({

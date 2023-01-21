@@ -20,7 +20,6 @@ export default {
     embed.setDescription(`Are you sure you want to delete a vc generator: <#${options.data}>`);
 
     let menu = await new UkMessageBuilder().build({
-      content: 'weed',
       rows: [['deleteVcGeneratorConfirmbutton','deleteVcGeneratorCancelbutton']],
       embeds: [embed],
       client: options.client,

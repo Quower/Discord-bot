@@ -5,6 +5,7 @@ import DiscordJS, {
   IntentsBitField,
   Message,
   SelectMenuInteraction,
+  CommandInteraction,
 } from "discord.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -18,6 +19,7 @@ import menuSchema from "./handler/models/menuSchema";
 dotenv.config();
 export const botOwners = ["424279456031703041"];
 const deleteAllMenusOnStart = true;
+const deleteMenusWithoutMessage = true;
 
 export const client = new DiscordJS.Client({
   intents: [
@@ -61,6 +63,16 @@ client.on("ready", async () => {
           Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 1 ||
           deleteAllMenusOnStart == true
         ) {
+          // if (menu.interaction) {
+          //   try {
+          //     console.log('got to delete 1 we are tesing')
+          //     menu.interaction.deleteReply();
+          //   } catch (e) {
+          //     console.log("something went wrong when deleting interaction reply");
+          //   }
+          //   menu.delete();
+          //   return;
+          // }
           try {
             let channel = await client.channels.fetch(menu.channelId || "");
             if (
@@ -68,8 +80,10 @@ client.on("ready", async () => {
               channel instanceof TextChannel
             ) {
               try {
+                console.log('got to before delete 2 we are tesing')
                 channel.messages.fetch(menu.messageId || "").then((msg) => {
                   if (msg.deletable == true) {
+                    console.log('got to delete 2 we are tesing')
                     msg.delete();
                   }
                 });

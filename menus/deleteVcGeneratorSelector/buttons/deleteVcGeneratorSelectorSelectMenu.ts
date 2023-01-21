@@ -1,6 +1,8 @@
 import {
   ActionRowBuilder,
   AnyComponentBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   ChatInputCommandInteraction,
   Client,
   EmbedBuilder,
@@ -10,20 +12,24 @@ import {
   VoiceChannel,
 } from "discord.js";
 import { Model } from "mongoose";
-import generatorSchema from "../../../commanddirs/generator/models/generatorSchema";
+import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
 import { Menus } from "../../../handler/setup";
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (client: Client, interaction: SelectMenuInteraction, data?: any) => {
-    interaction.deferUpdate()
-    console.log(interaction.values[0])
+  callback: async (
+    client: Client,
+    interaction: SelectMenuInteraction,
+    data?: any
+  ) => {
+    interaction.deferUpdate();
+    console.log(interaction.values[0]);
     Menus.update({
       messageId: interaction.message.id,
       client: client,
-      menu: 'deleteVcGeneratorConfirm',
-      data: interaction.values[0]
-    })
+      menu: "deleteVcGeneratorConfirm",
+      data: interaction.values[0],
+    });
   },
   create: async (
     client: Client,
@@ -32,22 +38,22 @@ export default {
     userId?: String,
     Indms?: Boolean,
     data?: any
-  ): Promise<MessageActionRowComponentBuilder> => {
+  ): Promise<MessageActionRowComponentBuilder | undefined> => {
     const generators = await generatorSchema.find({ guildId: guildId });
     const selectMenu = new SelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)
-      .setPlaceholder("Nothing Selected")
-    if(!generators) {selectMenu.setDisabled
-    selectMenu.setPlaceholder("This guild doesn't have any generators")}
-    await generators.forEach( (generator) => {
+      .setPlaceholder("Nothing Selected");
+    // if(generators.length == 0) {selectMenu.setDisabled()
+    // selectMenu.setPlaceholder("This guild doesn't have any generators")
+    // return selectMenu}
+    await generators.forEach((generator) => {
       if (generator.channelId) {
         const channel = client.channels.cache.get(generator.channelId);
         if (channel instanceof VoiceChannel) {
           selectMenu.addOptions([
             {
               label: `${channel.name}`,
-              description: `${channel.position}`,
               value: generator.channelId,
               emoji: `1034894487236902942`,
             },
@@ -56,7 +62,6 @@ export default {
           selectMenu.addOptions([
             {
               label: `${"#deleted-channel"}`,
-              description: `${"stuff"}`,
               value: generator.channelId,
               emoji: `1034894487236902942`,
             },
@@ -64,7 +69,14 @@ export default {
         }
       }
     });
-    
+    if (generators.length == 0) {
+      const button = new ButtonBuilder();
+      button
+        .setDisabled(true)
+        .setLabel("No generators found for this guild")
+        .setStyle(ButtonStyle.Secondary);
+      return button;
+    }
 
     return selectMenu;
   },

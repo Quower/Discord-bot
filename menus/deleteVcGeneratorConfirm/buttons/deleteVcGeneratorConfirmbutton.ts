@@ -6,7 +6,7 @@ import {
   MessageActionRowComponentBuilder,
 } from "discord.js";
 import { Model } from "mongoose";
-import generatorSchema from "../../../commanddirs/generator/models/generatorSchema";
+import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
 import { Menus } from "../../../handler/setup";
 import { button } from "../../../handler/typings";
 
