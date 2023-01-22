@@ -23,7 +23,7 @@ export default {
       client: client,
       where: interaction,
       deleteAfter: 10,
-      ephemeral: true,
+      ephemeral: false,
       saveMenu: false
     })
     // interaction.reply({

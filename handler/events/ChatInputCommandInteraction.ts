@@ -8,10 +8,12 @@ import { commandsExport } from "../setup";
 import { client } from "../../index";
 
 export default async function (interaction: DiscordJS.Interaction<DiscordJS.CacheType>) {
+  let time = Date.now()
   if (interaction instanceof ChatInputCommandInteraction) {
     let commandObject = (await commandsExport).find(
     (comannd) => comannd.command == interaction.commandName
   );
+  console.log(`got to commaninteraction point 1:${(Date.now() - time)}`); time = Date.now()
 
   if (interaction.member?.permissions instanceof PermissionsBitField) {
     if (commandObject?.ownerOnly) {
@@ -35,9 +37,11 @@ export default async function (interaction: DiscordJS.Interaction<DiscordJS.Cach
           (subcommand) =>
             subcommand.command == interaction.options.getSubcommand()
         );
+        console.log(`got to commaninteraction point 2.1:${(Date.now() - time)}`); time = Date.now()
 
         subcommandObject?.callback(client, interaction);
       } else {
+        console.log(`got to commaninteraction point 2.2:${(Date.now() - time)}`); time = Date.now()
         commandObject?.callback(client, interaction);
       }
     } else {

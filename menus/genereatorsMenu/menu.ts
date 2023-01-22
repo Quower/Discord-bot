@@ -19,13 +19,14 @@ export default {
     // embed.setDescription(
     //   "Menu for doing stuff for vc generators"
     // );
-    console.log('got to menu we are tesing')
+    let time = Date.now()
     let channels:string = ''
     await (
       await generatorSchema.find({ guildId: options.guildId })
     ).forEach((generator) => {
       channels = `${channels}• <#${generator.channelId}>\n`;
     });
+    console.log(`got to generatorsMenu point 1:${(Date.now() - time)}`); time = Date.now()
 
     const embed = new EmbedBuilder();
     embed.setTitle("Generators Menu");
@@ -35,6 +36,7 @@ export default {
         channels = `**list of all vc generators:**\n${channels}`;
     }
     embed.setDescription(channels);
+    console.log(`got to generatorsMenu point 2:${(Date.now() - time)}`); time = Date.now()
     let menu = await new UkMessageBuilder().build({
       rows: [
         ['generatorsMenuCreateButton', 'generatorsMenuDeleteButton', 'generatorsMenuExitButton'],
@@ -47,6 +49,7 @@ export default {
       Indms: options.Indms,
       data: options.data
     })
+    console.log(`got to generatorsMenu point 3:${(Date.now() - time)}`); time = Date.now()
     return menu;
   },
 } as menu;

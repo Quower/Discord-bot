@@ -80,13 +80,16 @@ client.on("ready", async () => {
               channel instanceof TextChannel
             ) {
               try {
-                console.log('got to before delete 2 we are tesing')
-                channel.messages.fetch(menu.messageId || "").then((msg) => {
-                  if (msg.deletable == true) {
-                    console.log('got to delete 2 we are tesing')
+                console.log("got to before delete 2 we are tesing");
+                const msg = await channel.messages.fetch(menu.messageId || "");
+                if (msg.deletable == true) {
+                  console.log("got to delete 2 we are tesing");
+                  try {
                     msg.delete();
+                  } catch (e) {
+                    console.log("could not delete message");
                   }
-                });
+                }
               } catch (e) {
                 console.log("could not find message");
               }

@@ -302,21 +302,27 @@ export class UkMessageBuilder {
     Indms?: Boolean;
     data: any;
   }): Promise<returnMenu> {
+    let time = Date.now()
     let menu: returnMenu = {};
     menu.content = options.content;
     menu.embeds = options.embeds;
+    console.log(`got to messagebuilder point 1:${(Date.now() - time)}`); time = Date.now()
     if (options.rows) {
+      console.log(`got to messagebuilder point 2:${(Date.now() - time)}`); time = Date.now()
       for (const buttons of options.rows) {
         const row = new ActionRowBuilder();
         //console.log(buttons)
         for (const buttonName of buttons) {
           //console.log(buttonsExport)
+          console.log(`got to messagebuilder point 3:${(Date.now() - time)}`); time = Date.now()
           let buttonobject = buttonsExport.find(
             (button) => button.name == buttonName
           );
+          console.log(`got to messagebuilder point 4:${(Date.now() - time)}`); time = Date.now()
           if (!buttonobject) {
             throw console.error(`button "${buttonName}" not found`);
           }
+          console.log(`got to messagebuilder point 5:${(Date.now() - time)}`); time = Date.now()
           let button = await buttonobject?.create(
             options.client,
             options.guildId,
@@ -325,6 +331,7 @@ export class UkMessageBuilder {
             options.Indms,
             options.data
           );
+          console.log(`got to messagebuilder point 6:${(Date.now() - time)}`); time = Date.now()
           if (button) {
             button.setCustomId(buttonName);
             row.addComponents(button);
@@ -337,6 +344,7 @@ export class UkMessageBuilder {
         }
       }
     }
+    console.log(`got to messagebuilder point 7:${(Date.now() - time)}`); time = Date.now()
 
     return menu;
   }
@@ -354,6 +362,7 @@ export const Menus = {
     ephemeral?: boolean;
     data?: any;
   }) => {
+    let time = Date.now()
     let menu = new menuSchema();
     if ((menu.waitingForResponse = true)) {
       const generators = await menuSchema.find({ waitingForResponse: true });
@@ -384,14 +393,15 @@ export const Menus = {
     } else {
       menu.userIds = [];
     }
+    console.log(`got to menus create point 1:${(Date.now() - time)}`); time = Date.now()
     let menuObject = (await menusExport).find(
       (menu) => menu.name == options.menu
     );
+    console.log(`got to menus create point 2:${(Date.now() - time)}`); time = Date.now()
     if (!menuObject) {
       console.log(`no menu found with name:${options.menu}`);
       return;
     }
-    options.client;
     let sendplace: DMChannel | TextChannel | CommandInteraction | undefined =
       undefined;
     if (
@@ -426,11 +436,13 @@ export const Menus = {
         return;
       }
     }
+    console.log(`got to menus create point 3:${(Date.now() - time)}`); time = Date.now()
     if (sendplace instanceof DMChannel || sendplace instanceof TextChannel) {
       let guildId: string | undefined;
       if (sendplace instanceof TextChannel) {
         guildId = sendplace.guildId;
       }
+      console.log(`got to menus create point 4.1:${(Date.now() - time)}`); time = Date.now()
       const message = await menuObject.create({
         client: options.client,
         waitingForResponse: menu.waitingForResponse,
@@ -440,7 +452,7 @@ export const Menus = {
         guildId: guildId,
         channelId: sendplace.id,
       });
-      console.log(JSON.stringify(message, null, "  "));
+      console.log(`got to menus create point 5.1:${(Date.now() - time)}`); time = Date.now()
       await sendplace
         .send({
           components: message.components,
@@ -452,11 +464,13 @@ export const Menus = {
           menu.guildId = msg.guildId || undefined;
           menu.channelId = msg.channelId;
         });
+        console.log(`got to menus create point 6.1:${(Date.now() - time)}`); time = Date.now()
     } else if (sendplace instanceof CommandInteraction) {
       let guildId: string | undefined;
       if (sendplace.channel instanceof TextChannel) {
         guildId = sendplace.channel.guildId;
       }
+      console.log(`got to menus create point 4.2:${(Date.now() - time)}`); time = Date.now()
       const message = await menuObject.create({
         client: options.client,
         waitingForResponse: menu.waitingForResponse,
@@ -466,26 +480,26 @@ export const Menus = {
         guildId: guildId,
         channelId: sendplace.id,
       });
+      console.log(`got to menus create point 5.2:${(Date.now() - time)}`); time = Date.now()
       message.ephemeral = options.ephemeral;
-      console.log(JSON.stringify(message, null, "  "));
-      console.log('got to before reply')
-      await sendplace.reply({
-        components: message.components,
-        content: message.content,
-        ephemeral: message.ephemeral,
-        embeds: message.embeds,
-      });
+      //console.log(JSON.stringify(message, null, "  "));
+      //console.log("got to before reply");
+      await sendplace.reply(message);
+      console.log(`got to menus create point 6.2:${(Date.now() - time)}`); time = Date.now()
       const msg = await sendplace.fetchReply();
       menu.messageId = msg.id;
       menu.guildId = msg.guildId || undefined;
       menu.channelId = msg.channelId;
-      console.log('sendplace before seting:')
-      console.log(sendplace)
-      menu.interaction = sendplace;
+      //console.log("sendplace before seting:");
+      //console.log(sendplace);
+      console.log(`got to menus create point 6.21:${(Date.now() - time)}`); time = Date.now()
+      //menu.interaction = [sendplace]
     }
     menu.lastInteraction = Date.now();
-    console.log(`menu at create end:\n${menu} \n`)
+    //console.log(`menu at create end:\n${menu} \n`);
+    console.log(`got to menus create point 7:${(Date.now() - time)}`); time = Date.now()
     menu.save();
+    console.log(`got to menus create point 8:${(Date.now() - time)}`); time = Date.now()
     if (menu.deleteAfter > 0) {
       setTimeout(() => {
         MenuDeleteCheck({ client: client, messageId: menu.messageId || "" });
@@ -505,8 +519,9 @@ export const Menus = {
     saveState?: boolean;
     data?: any;
   }) => {
-    console.log('got to update')
+    let time = Date.now()
     const menudb = await menuSchema.findOne({ messageId: options.messageId });
+    console.log(`got to menus update point 1:${(Date.now() - time)}`); time = Date.now()
     if (!menudb) {
       return;
     }
@@ -514,6 +529,7 @@ export const Menus = {
     let back = false;
     let data: any;
     let waitingForResponse: boolean;
+    console.log(`got to menus update point 2:${(Date.now() - time)}`); time = Date.now()
     if (options.menu) {
       if (options.menu == "back") {
         const last = menudb?.prevMenus[menudb.prevMenus.length - 1];
@@ -553,9 +569,11 @@ export const Menus = {
         data = menudb.data;
       }
     }
+    console.log(`got to menus update point 3:${(Date.now() - time)}`); time = Date.now()
     if (options.deleteAfter) {
       menudb.deleteAfter = options.deleteAfter;
     }
+
     if (options.userIds) {
       switch (options.userIds.mode) {
         case "set":
@@ -574,6 +592,7 @@ export const Menus = {
           break;
       }
     }
+    console.log(`got to menus update point 4:${(Date.now() - time)}`); time = Date.now()
     if (back == true) {
       menudb?.prevMenus.pop();
     } else if (menudb.saveMenu == true) {
@@ -597,7 +616,7 @@ export const Menus = {
       console.log("no menu found and ur code is fucked");
       return;
     }
-    console.log(`${data}    hhhh`);
+    console.log(`got to menus update point 5:${(Date.now() - time)}`); time = Date.now()
     const message = await menuObject.create({
       client: options.client,
       waitingForResponse: waitingForResponse,
@@ -607,39 +626,45 @@ export const Menus = {
       guildId: menudb.guildId,
       channelId: menudb.channelId,
     });
-    if (menudb.interaction instanceof CommandInteraction) {
-      console.log('got to edit 1 we are tesing')
-      try {
-        menudb.interaction.editReply(message).then(() => {
-          menudb.lastInteraction = Date.now();
-          menudb.save();
-          if (menudb.deleteAfter && menudb.deleteAfter > 0) {
-            setTimeout(() => {
-              MenuDeleteCheck({ client: client, messageId: menudb.messageId || "" });
-            }, menudb.deleteAfter * 1000);
-            return;
-          }
-        });
-      } catch (e) {
-        console.log("something went wrong when editing interaction reply");
-        return;
-      }
-      return;
-    }
+    // if (menudb.interaction[0] instanceof CommandInteraction) {
+    //   console.log('got to edit 1 we are tesing')
+    //   try {
+    //     menudb.interaction[0].editReply(message).then(() => {
+    //       menudb.lastInteraction = Date.now();
+    //       menudb.save();
+    //       if (menudb.deleteAfter && menudb.deleteAfter > 0) {
+    //         setTimeout(() => {
+    //           MenuDeleteCheck({ client: client, messageId: menudb.messageId || "" });
+    //         }, menudb.deleteAfter * 1000);
+    //         return;
+    //       }
+    //     });
+    //   } catch (e) {
+    //     console.log("something went wrong when editing interaction reply");
+    //     return;
+    //   }
+    //   return;
+    // }
     try {
-      console.log('got to edit 2 we are tesing')
+      console.log(`got to menus update point 6:${(Date.now() - time)}`); time = Date.now()
       const channel = await client.channels.fetch(menudb.channelId || "");
-      console.log(`${menudb.data}       fff`);
+      console.log(`got to menus update point 7:${(Date.now() - time)}`); time = Date.now()
       if (channel instanceof DMChannel || channel instanceof TextChannel) {
         try {
+          console.log(`got to menus update point 8:${(Date.now() - time)}`); time = Date.now()
           const msg = await channel.messages.fetch(options.messageId);
-          console.log(JSON.stringify(message, null, "  "));
+          console.log(`got to menus update point 9:${(Date.now() - time)}`); time = Date.now()
           msg.edit(message).then(() => {
             menudb.lastInteraction = Date.now();
+            console.log(`got to menus update point 10:${(Date.now() - time)}`); time = Date.now()
             menudb.save();
+            console.log(`got to menus update point 11:${(Date.now() - time)}`); time = Date.now()
             if (menudb.deleteAfter && menudb.deleteAfter > 0) {
               setTimeout(() => {
-                MenuDeleteCheck({ client: client, messageId: menudb.messageId || "" });
+                MenuDeleteCheck({
+                  client: client,
+                  messageId: menudb.messageId || "",
+                });
               }, menudb.deleteAfter * 1000);
             }
           });
@@ -657,17 +682,17 @@ export const Menus = {
     }
   },
   delete: async (options: { messageId: string; client: Client }) => {
-    console.log('delete funtion start')
+    let time = Date.now()
     const menu = await menuSchema.findOne({ messageId: options.messageId });
+    console.log(`got to menus delete point 1:${(Date.now() - time)}`); time = Date.now()
     if (!menu) {
       console.log("the menu you are trying to delete was not found");
       return;
     }
-    console.log(menu)
-    // if (menu.interaction) {
+    // if (menu.interaction[0] instanceof CommandInteraction) {
     //   console.log(`got to interaction delete`)
     //   try {
-    //     menu.interaction.deleteReply();
+    //     menu.interaction[0].deleteReply();
     //   } catch (e) {
     //     console.log("something went wrong when deleting interaction reply");
     //   }
@@ -675,13 +700,17 @@ export const Menus = {
     //   return;
     // }
     try {
-      console.log(`got to message delete`)
+      console.log(`got to menus delete point 2:${(Date.now() - time)}`); time = Date.now()
       const channel = await client.channels.fetch(menu?.channelId || "");
+      console.log(`got to menus delete point 3:${(Date.now() - time)}`); time = Date.now()
       if (channel instanceof DMChannel || channel instanceof TextChannel) {
         try {
+          console.log(`got to menus delete point 4:${(Date.now() - time)}`); time = Date.now()
           channel.messages.fetch(menu.messageId || "").then((msg) => {
+            console.log(`got to menus delete point 5:${(Date.now() - time)}`); time = Date.now()
             if (msg.deletable == true) {
               msg.delete();
+              console.log(`got to menus delete point 6:${(Date.now() - time)}`); time = Date.now()
             }
           });
         } catch (e) {
@@ -695,22 +724,24 @@ export const Menus = {
     }
 
     menu.delete();
+    console.log(`got to menus delete point 7:${(Date.now() - time)}`); time = Date.now()
   },
 };
 async function MenuDeleteCheck(options: { messageId: string; client: Client }) {
+  let time = Date.now()
   const menu = await menuSchema.findOne({ messageId: options.messageId });
   if (!menu) {
     console.log("the menu you are trying to delete was not found 2");
     return;
   }
+  console.log(`got to menus check delete point 1:${(Date.now() - time)}`); time = Date.now()
   if (menu.deleteAfter != 0) {
     if (menu.lastInteraction && menu.deleteAfter) {
       if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 1) {
-        console.log(menu)
-        // if (menu.interaction) {
+        // if (menu.interaction[0] instanceof CommandInteraction) {
         //   try {
         //     console.log('got to delete 3 we are tesing')
-        //     menu.interaction.deleteReply();
+        //     menu.interaction[0].deleteReply();
         //   } catch (e) {
         //     console.log("something went wrong when deleting interaction reply");
         //   }
@@ -718,12 +749,14 @@ async function MenuDeleteCheck(options: { messageId: string; client: Client }) {
         //   return;
         // }
         try {
+          console.log(`got to menus check delete point 2:${(Date.now() - time)}`); time = Date.now()
           let channel = await client.channels.fetch(menu.channelId || "");
           if (channel instanceof DMChannel || channel instanceof TextChannel) {
             try {
+              console.log(`got to menus check delete point 3:${(Date.now() - time)}`); time = Date.now()
               channel.messages.fetch(menu.messageId || "").then((msg) => {
                 if (msg.deletable == true) {
-                  console.log('got to delete 4 we are tesing')
+                  console.log(`got to menus check delete point 4:${(Date.now() - time)}`); time = Date.now()
                   msg.delete();
                 }
               });
@@ -736,8 +769,10 @@ async function MenuDeleteCheck(options: { messageId: string; client: Client }) {
         } catch (e) {
           console.log("could not find channel");
         }
+        console.log(`got to menus check delete point 5:${(Date.now() - time)}`); time = Date.now()
 
         menu.delete();
+        console.log(`got to menus check delete point 6:${(Date.now() - time)}`); time = Date.now()
       }
     }
   }

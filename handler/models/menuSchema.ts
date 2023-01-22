@@ -53,10 +53,10 @@ const menuSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         require: false
     },
-    interaction: {
-        type: mongoose.Schema.Types.Mixed,
-        require: false
-    }
+    // interaction: {
+    //     type: Array,
+    //     require: false
+    // }
   });
   
   export default mongoose.model("menu", menuSchema);
