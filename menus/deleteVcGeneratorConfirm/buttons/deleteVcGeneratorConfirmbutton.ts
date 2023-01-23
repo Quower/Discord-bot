@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import { Model } from "mongoose";
 import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
-import { Menus } from "../../../handler/setup";
+import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {

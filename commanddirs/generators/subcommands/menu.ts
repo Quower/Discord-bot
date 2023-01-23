@@ -7,7 +7,7 @@ import {
     ChatInputCommandInteraction,
     TextChannel,
   } from "discord.js";
-  import { Menus } from "../../../handler/setup";
+  import { Menus } from "../../../handler/menuhandlre";
   import { subcommand } from "../../../handler/typings";
   import { Select_Generator } from "../funtions/generator_selector";
   

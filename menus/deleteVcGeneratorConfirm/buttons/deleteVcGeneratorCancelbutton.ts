@@ -6,7 +6,7 @@ import {
   MessageActionRowComponentBuilder,
 } from "discord.js";
 import { Model } from "mongoose";
-import { Menus } from "../../../handler/setup";
+import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {

@@ -8,6 +8,7 @@ import {
   ButtonInteraction,
   SelectMenuInteraction,
   AnyComponentBuilder,
+  Events,
 } from "discord.js";
 import fs from "fs";
 import { Model, model } from "mongoose";
@@ -118,6 +119,11 @@ export type menuInfo = {
   waitingForResponse: boolean;
   data: any;
 };
+
+export type myEvent = {
+  event: Events;
+  execute(...args, client:Client)
+}
 
 
 /*export type menuSchema = {

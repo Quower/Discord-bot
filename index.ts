@@ -111,18 +111,18 @@ client.on("ready", async () => {
 });
 
 client.login(process.env.TOKEN);
-client.on(Events.InteractionCreate, async (interaction) => {
-  ChatInputCommandInteractionrun(interaction);
-});
-client.on(Events.InteractionCreate, async (interaction) => {
-  ButtonInteractionrun(interaction);
-});
-client.on(Events.InteractionCreate, async (interaction) => {
-  SelectMenuInteractionrun(interaction);
-});
-client.on(Events.MessageCreate, async (message) => {
-  messageCreaterun(message);
-});
+// client.on(Events.InteractionCreate, async (interaction) => {
+//   ChatInputCommandInteractionrun(interaction);
+// });
+// client.on(Events.InteractionCreate, async (interaction) => {
+//   ButtonInteractionrun(interaction);
+// });
+// client.on(Events.InteractionCreate, async (interaction) => {
+//   SelectMenuInteractionrun(interaction);
+// });
+// client.on(Events.MessageCreate, async (message) => {
+//   messageCreaterun(message);
+// });
 // client.on("messageCreate", async (Message) => {
 //   if (Message.author.id === "282859044593598464") {
 //     Message.delete();
