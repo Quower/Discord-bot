@@ -103,6 +103,7 @@ menufolders.forEach((folder) => {
 
 let buttons: buttonArray = new Array();
 menus.forEach((menu) => {
+  if (fs.existsSync(`${menu.path}buttons/`)) {
   const buttonfiles = fs
     .readdirSync(`${menu.path}buttons/`)
     .filter((file) => file.endsWith(".ts"));
@@ -132,7 +133,7 @@ menus.forEach((menu) => {
     } as buttonobject;
 
     buttons.push(button);
-  });
+  });}
 });
 
 export function Setup_Subcommands(folder: fs.PathLike): subcommandArray {
