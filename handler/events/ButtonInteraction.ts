@@ -18,7 +18,7 @@ export default {
       let menuschema = await menuSchema.findOne({
         messageId: interaction.message.id,
       });
-      let buttonObject = await buttonsExport.find(
+      const buttonObject = await buttonsExport.find(
         (button) => button.name == interaction.customId
       );
       if (menuschema == undefined) {

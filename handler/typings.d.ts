@@ -9,6 +9,7 @@ import {
   SelectMenuInteraction,
   AnyComponentBuilder,
   Events,
+  CommandInteraction,
 } from "discord.js";
 import fs from "fs";
 import { Model, model } from "mongoose";
@@ -170,3 +171,8 @@ export type menuobject = {
 };
 
 export type buttonArray = buttonobject[];
+
+export type interactionSave = {
+  messageId: String,
+  interaction: CommandInteraction
+}

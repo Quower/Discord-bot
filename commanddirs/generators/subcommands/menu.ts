@@ -23,7 +23,7 @@ import {
         client: client,
         where: interaction,
         deleteAfter: 30,
-        ephemeral: false,
+        ephemeral: true,
         saveMenu: true
       })
     },

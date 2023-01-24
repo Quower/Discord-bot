@@ -16,13 +16,12 @@ import SelectMenuInteractionrun from "./handler/events/SelectMenuInteraction";
 import messageCreaterun from "./handler/events/messageCreate";
 import menuSchema from "./handler/models/menuSchema";
 import { Player } from "discord-player";
+import { MenuDeleteCheck } from "./handler/menuhandlre";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 export const botOwners = ["424279456031703041"];
 const deleteAllMenusOnStart = true;
 const deleteMenusWithoutMessage = true;
-
-
 
 export const client = new DiscordJS.Client({
   intents: [
@@ -60,16 +59,18 @@ client.on("ready", async () => {
 
   const menus = await menuSchema.find();
   menus.forEach(async (menu) => {
-    if (menu.deleteAfter != 0 || deleteAllMenusOnStart == true) {
+    if (menu.deleteAfter && menu.deleteAfter > 0) {
       if (menu.lastInteraction && menu.deleteAfter) {
-        if (
-          Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 1 ||
-          deleteAllMenusOnStart == true
+        if (menu.ephemeral == true) {
+          menu.delete();
+        } else if (
+          Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) >
+          0
         ) {
-          // if (menu.interaction) {
+          // if (menu.interaction[0] instanceof CommandInteraction) {
           //   try {
-          //     console.log('got to delete 1 we are tesing')
-          //     menu.interaction.deleteReply();
+          //     console.log('got to delete 3 we are tesing')
+          //     menu.interaction[0].deleteReply();
           //   } catch (e) {
           //     console.log("something went wrong when deleting interaction reply");
           //   }
@@ -83,16 +84,11 @@ client.on("ready", async () => {
               channel instanceof TextChannel
             ) {
               try {
-                console.log("got to before delete 2 we are tesing");
-                const msg = await channel.messages.fetch(menu.messageId || "");
-                if (msg.deletable == true) {
-                  console.log("got to delete 2 we are tesing");
-                  try {
+                channel.messages.fetch(menu.messageId || "").then((msg) => {
+                  if (msg.deletable == true) {
                     msg.delete();
-                  } catch (e) {
-                    console.log("could not delete message");
                   }
-                }
+                });
               } catch (e) {
                 console.log("could not find message");
               }
@@ -104,6 +100,13 @@ client.on("ready", async () => {
           }
 
           menu.delete();
+        } else {
+          setTimeout(() => {
+            MenuDeleteCheck({
+              client: client,
+              messageId: menu.messageId || "",
+            });
+          }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
         }
       }
     }
