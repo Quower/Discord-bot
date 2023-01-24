@@ -21,7 +21,11 @@ export default {
         (button) => button.name == interaction.customId
       );
       if (menuschema == undefined) {
-        console.log("no menuschema 2");
+        console.log("no menuschema found on selectmenu");
+        interaction.reply({
+          content: 'this message is not a valid menu',
+          ephemeral: true
+        })
         return;
       }
       if (buttonObject == undefined) {
