@@ -1,0 +1,12 @@
+{
+    "name": "bot options",
+    "description": "some bot options",
+    "settings": [
+        {
+            "name": "Enable new command by default",
+            "description": "Should we enable new commands added by default",
+            "type": "boolean",
+            "defaultValue": true
+        }
+    ]
+}

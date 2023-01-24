@@ -108,7 +108,7 @@ client.on("ready", async () => {
             });
           }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
         }
-      }
+      } 
     }
   });
 });
