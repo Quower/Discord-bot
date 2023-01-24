@@ -125,6 +125,9 @@ export type myEvent = {
   execute(...args, client:Client)
 }
 
+export type readyEvent = {
+  execute(client:Client)
+}
 
 /*export type menuSchema = {
   permenent: boolean;
