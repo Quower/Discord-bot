@@ -36,6 +36,7 @@ import {
   menuobject,
   buttonobject,
   buttonArray,
+  readyEvent
 } from "./typings";
 import menu from "../menus/deleteVcGeneratorConfirm/menu";
 import { ExitStatus } from "typescript";
@@ -343,9 +344,13 @@ export default class Handler {
           .filter((file) => file.endsWith(".ts"));
         for (const file of eventFiles) {
           const event = require(`.${command.path}events/${file}`).default;
-          client.on(event.event, (...args) =>
-            event.execute(...args, this.client)
-          );
+          if (event.event) {
+            client.on(event.event, (...args) =>
+              event.execute(...args, this.client)
+            );
+          } else {
+            event.execute(this.client)
+          }
         }
       }
     }
@@ -356,9 +361,13 @@ export default class Handler {
           .filter((file) => file.endsWith(".ts"));
         for (const file of eventFiles) {
           const event = require(`.${menu.path}events/${file}`).default;
-          client.on(event.event, (...args) =>
-            event.execute(...args, this.client)
-          );
+          if (event.event) {
+            client.on(event.event, (...args) =>
+              event.execute(...args, this.client)
+            );
+          } else {
+            event.execute(this.client)
+          }
         }
       }
     }
@@ -367,14 +376,26 @@ export default class Handler {
       .filter((file) => file.endsWith(".ts"));
     for (const file of eventFiles) {
       const event = require(`./events/${file}`).default;
-      client.on(event.event, (...args) => event.execute(...args, this.client));
+      if (event.event) {
+        client.on(event.event, (...args) =>
+          event.execute(...args, this.client)
+        );
+      } else {
+        event.execute(this.client)
+      }
     }
     const eventFiles2 = fs
       .readdirSync(`./events`)
       .filter((file) => file.endsWith(".ts"));
     for (const file of eventFiles2) {
       const event = require(`../events/${file}`).default;
-      client.on(event.event, (...args) => event.execute(...args, this.client));
+      if (event.event) {
+        client.on(event.event, (...args) =>
+          event.execute(...args, this.client)
+        );
+      } else {
+        event.execute(this.client)
+      }
     }
   }
 }
