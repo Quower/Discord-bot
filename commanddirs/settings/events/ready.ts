@@ -16,7 +16,7 @@ export default {
       const guilds = client.guilds.cache;
       guilds.forEach(async (guild) => {
         const guildOptions = await optionsSchema.findOne({ guildId: guild.id });
-        
+        // comment for testing
         
       });
     }
