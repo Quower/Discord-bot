@@ -32,17 +32,19 @@ export default {
     if (config.updateSettingsOnStart == true) {
       let optionSchemas = await optionsSchema.find();
       //console.log(optionSchemas)
-      for (const options of optionSchemas) {
+      for (let options of optionSchemas) {
         //console.log(options)
-        for (const setting of settingsBase) {
-          let newOptions = settingsBase
+        let newSettings = settingsBase;
+        for (let i = 0; i < newSettings.length; i++) {
           const foundOption = options.options.find(
-            (option) => option.name == setting.name
+            (option) => option.name == newSettings[i].name
           );
           if (foundOption) {
-            //code hge aeeeeeeeeeeeeeee
+            newSettings[i] = foundOption;
           }
         }
+        options.options = newSettings;
+
         options.save();
       }
     }
