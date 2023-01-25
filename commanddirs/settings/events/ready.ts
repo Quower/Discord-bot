@@ -15,15 +15,9 @@ export default {
     if (config.updateSettingsOnStart == true) {
       const guilds = client.guilds.cache;
       guilds.forEach(async (guild) => {
-        const saveCategorys = await optionsSchema.findOne({ guildId: guild.id });
-        settingcategorys.forEach(category => {
-            let saveCategoryIndex = saveCategorys?.options.findIndex(
-                saveCategory => saveCategory.name == category.name
-            )
-            if (saveCategoryIndex) {
-
-            }
-        })
+        const guildOptions = await optionsSchema.findOne({ guildId: guild.id });
+        
+        
       });
     }
   },

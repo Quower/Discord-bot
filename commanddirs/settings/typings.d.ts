@@ -10,11 +10,9 @@ export type setting = {
   defaultValue: any;
 };
 
-export type saveSettingsCategory = {
-    name: string;
-    settings: setting[];
-  };
+
   export type saveSetting = {
+    category: string
     name: string;
     type: string;
     value: any;
