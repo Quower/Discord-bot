@@ -1,12 +1,21 @@
 {
-    "name": "bot options",
+    "name": "guildoptions",
+    "display": "bot options",
     "description": "some bot options",
     "settings": [
         {
-            "name": "Enable new command by default",
+            "name": "enableNewCommand",
+            "display": "Enable new command by default",
             "description": "Should we enable new commands added by default",
             "type": "boolean",
             "defaultValue": true
+        },
+        {
+            "name": "testSetting",
+            "display": "Enable new command by default",
+            "description": "Should we enable new commands added by default",
+            "type": "role",
+            "defaultValue": null
         }
     ]
 }

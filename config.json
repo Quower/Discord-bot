@@ -1,3 +1,4 @@
 {
-    "updateSettingsOnStart": true
+    "updateSettingsOnStart": true,
+    "nukeSettings": false
 }

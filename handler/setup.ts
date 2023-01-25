@@ -338,9 +338,9 @@ export default class Handler {
     client.application?.commands.set(globalCommands);
     console.log("finished registering commands");
     for (const command of commandsExport) {
-      if (fs.existsSync(`.${command.path}events/`)) {
+      if (fs.existsSync(`${command.path}events/`)) {
         const eventFiles = fs
-          .readdirSync(`.${command.path}events/`)
+          .readdirSync(`${command.path}events/`)
           .filter((file) => file.endsWith(".ts"));
         for (const file of eventFiles) {
           const event = require(`.${command.path}events/${file}`).default;
@@ -355,9 +355,9 @@ export default class Handler {
       }
     }
     for (const menu of menusExport) {
-      if (fs.existsSync(`.${menu.path}events/`)) {
+      if (fs.existsSync(`${menu.path}events/`)) {
         const eventFiles = fs
-          .readdirSync(`.${menu.path}events/`)
+          .readdirSync(`${menu.path}events/`)
           .filter((file) => file.endsWith(".ts"));
         for (const file of eventFiles) {
           const event = require(`.${menu.path}events/${file}`).default;
