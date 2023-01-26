@@ -25,9 +25,9 @@ export default {
   create: async (options: {
     client: Client;
     guildId?: String;
-    channelId?: String;
-    userIds?: String[];
-    Indms?: Boolean;
+    channelId: String;
+    userIds: String[];
+    Indms: Boolean;
     data?: any;
   }): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
