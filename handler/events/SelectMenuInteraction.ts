@@ -23,9 +23,9 @@ export default {
       if (menuschema == undefined) {
         console.log("no menuschema found on selectmenu");
         interaction.reply({
-          content: 'this message is not a valid menu',
-          ephemeral: true
-        })
+          content: "this message is not a valid menu",
+          ephemeral: true,
+        });
         return;
       }
       if (buttonObject == undefined) {
@@ -45,7 +45,11 @@ export default {
           return;
         }
       }
-      buttonObject.callback(client, interaction, menuschema);
+      buttonObject.callback({
+        client: client,
+        interaction: interaction,
+        data: menuschema.data,
+      });
     }
   },
 } as myEvent;

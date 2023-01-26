@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-const optionsSchema = new mongoose.Schema({
+const settingsSchema = new mongoose.Schema({
   guildId: {
     type: String,
     require: true,
   },
-  options: {
+  settings: {
     type: Array,
     require: true,
   },
 });
 
-export default mongoose.model("options", optionsSchema);
+export default mongoose.model("setting", settingsSchema);

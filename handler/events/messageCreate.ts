@@ -42,7 +42,7 @@ export default {
       }
 
       let run = require(`${menuobject?.path}input.ts`);
-      run(client, message, menuSchema);
+      run({client: client, message: message, data: menuschema.data});
     }
   },
 } as myEvent;

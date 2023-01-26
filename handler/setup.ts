@@ -36,13 +36,13 @@ import {
   menuobject,
   buttonobject,
   buttonArray,
-  readyEvent
+  readyEvent,
 } from "./typings";
 import menu from "../menus/deleteVcGeneratorConfirm/menu";
 import { ExitStatus } from "typescript";
 
 const commandfolders = fs.readdirSync("./commanddirs");
-let commands = new Array<commandobject>();
+export let commandsExport = new Array<commandobject>();
 commandfolders.forEach((folder) => {
   if (folder.endsWith(".ts")) {
     const name = folder.split(".")[0];
@@ -64,7 +64,7 @@ commandfolders.forEach((folder) => {
       ManinCommand: object.default.ManinCommand || true,
     } as commandobject;
 
-    commands.push(subcommand);
+    commandsExport.push(subcommand);
   } else {
     const name = folder;
     const path = `./commanddirs/${folder}/`;
@@ -86,12 +86,12 @@ commandfolders.forEach((folder) => {
       ManinCommand: object.default.ManinCommand || false,
     } as commandobject;
 
-    commands.push(subcommand);
+    commandsExport.push(subcommand);
   }
 });
 
 const menufolders = fs.readdirSync("./menus");
-let menus = new Array<menuobject>();
+export let menusExport = new Array<menuobject>();
 menufolders.forEach((folder) => {
   if (folder.endsWith(".ts")) {
     const name = folder.split(".")[0];
@@ -152,12 +152,12 @@ menufolders.forEach((folder) => {
       //buttons: buttons,
     } as menuobject;
 
-    menus.push(menu);
+    menusExport.push(menu);
   }
 });
 
-let buttons: buttonArray = new Array();
-menus.forEach((menu) => {
+export let buttonsExport: buttonArray = new Array();
+menusExport.forEach((menu) => {
   if (fs.existsSync(`${menu.path}buttons/`)) {
     const buttonfiles = fs
       .readdirSync(`${menu.path}buttons/`)
@@ -169,38 +169,42 @@ menus.forEach((menu) => {
       const button: buttonobject = {
         name: name,
         path: path,
-        callback: function (
-          client: Client,
-          interaction: ButtonInteraction | SelectMenuInteraction,
-          data: any
-        ) {
-          object.default.callback(client, interaction, data);
+        callback: function (options: {
+          client: Client;
+          interaction: ButtonInteraction | SelectMenuInteraction;
+          data?: any;
+        }) {
+          object.default.callback({
+            client: options.client,
+            interaction: options.interaction,
+            data: options.data,
+          });
         },
-        create: function (
-          client: Client,
-          guildId?: String,
-          channelId?: String,
-          userId?: String,
-          Indms?: Boolean
-        ): Promise<AnyComponentBuilder> {
-          return object.default.create(
-            client,
-            guildId,
-            channelId,
-            userId,
-            Indms
-          );
+        create: function (options: {
+          client: Client;
+          guildId?: string;
+          channelId: string;
+          userIds: string[];
+          Indms: boolean;
+          data?: any;
+        }): Promise<MessageActionRowComponentBuilder> {
+          return object.default.create({
+            client: options.client,
+            guildId: options.guildId,
+            channelId: options.channelId,
+            userIds: options.userIds,
+            InDms: options.Indms,
+            data: options.data,
+          });
         },
       } as buttonobject;
 
-      buttons.push(button);
+      buttonsExport.push(button);
     });
   }
 });
 
-export function Setup_Subcommands(
-  folder: fs.PathLike
-): subcommandArray | undefined {
+function Setup_Subcommands(folder: fs.PathLike): subcommandArray | undefined {
   if (fs.existsSync(folder)) {
     const subcommandfiles = fs
       .readdirSync(folder)
@@ -257,9 +261,9 @@ export function Setup_Subcommands(
   return buttons;
 }*/
 
-export const commandsExport = commands;
-export const menusExport = menus;
-export const buttonsExport = buttons;
+// export const commandsExport = commands;
+// export const menusExport = menus;
+// export const buttonsExport = buttons;
 
 export default class Handler {
   testServers!: String[];
@@ -293,7 +297,7 @@ export default class Handler {
       Array<RESTPostAPIChatInputApplicationCommandsJSONBody>();
     let globalCommands =
       Array<RESTPostAPIChatInputApplicationCommandsJSONBody>();
-    commands.forEach((command) => {
+    commandsExport.forEach((command) => {
       let options = command.options || [];
 
       command.subcommands.forEach((subcommand) => {
@@ -349,7 +353,7 @@ export default class Handler {
               event.execute(...args, this.client)
             );
           } else {
-            event.execute(this.client)
+            event.execute(this.client);
           }
         }
       }
@@ -366,7 +370,7 @@ export default class Handler {
               event.execute(...args, this.client)
             );
           } else {
-            event.execute(this.client)
+            event.execute(this.client);
           }
         }
       }
@@ -381,7 +385,7 @@ export default class Handler {
           event.execute(...args, this.client)
         );
       } else {
-        event.execute(this.client)
+        event.execute(this.client);
       }
     }
     const eventFiles2 = fs
@@ -394,34 +398,38 @@ export default class Handler {
           event.execute(...args, this.client)
         );
       } else {
-        event.execute(this.client)
+        event.execute(this.client);
       }
     }
   }
 }
 
 export class UkMessageBuilder {
-  async build(options: {
-    content?: string;
-    embeds?: EmbedBuilder[];
-    rows?: Array<String[]>;
-    client: Client;
-    guildId?: String;
-    channelId?: String;
-    userIds?: String[];
-    Indms?: Boolean;
-    data: any;
-  }): Promise<returnMenu> {
+  async build(
+    options: {
+      client: Client;
+      guildId?: string;
+      channelId: string;
+      userIds: string[];
+      Indms: boolean;
+      data?: any;
+    },
+    options2: {
+      content?: string;
+      embeds?: EmbedBuilder[];
+      rows?: Array<String[]>;
+    }
+  ): Promise<returnMenu> {
     let time = Date.now();
     let menu: returnMenu = {};
-    menu.content = options.content;
-    menu.embeds = options.embeds;
+    menu.content = options2.content;
+    menu.embeds = options2.embeds;
     console.log(`got to messagebuilder point 1:${Date.now() - time}`);
     time = Date.now();
-    if (options.rows) {
+    if (options2.rows) {
       console.log(`got to messagebuilder point 2:${Date.now() - time}`);
       time = Date.now();
-      for (const buttons of options.rows) {
+      for (const buttons of options2.rows) {
         const row = new ActionRowBuilder();
         //console.log(buttons)
         for (const buttonName of buttons) {
@@ -438,14 +446,7 @@ export class UkMessageBuilder {
           }
           console.log(`got to messagebuilder point 5:${Date.now() - time}`);
           time = Date.now();
-          let button = await buttonobject?.create(
-            options.client,
-            options.guildId,
-            options.channelId,
-            options.userIds,
-            options.Indms,
-            options.data
-          );
+          let button = await buttonobject?.create(options);
           console.log(`got to messagebuilder point 6:${Date.now() - time}`);
           time = Date.now();
           if (button) {

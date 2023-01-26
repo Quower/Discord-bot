@@ -82,37 +82,38 @@ export interface buttonobject {
 }*/
 
 export interface button {
-  callback(
-    client: Client,
-    interaction: ButtonInteraction | SelectMenuInteraction,
-    data?: any
-  );
-  create(
-    client: Client,
-    guildId?: String,
-    channelId?: String,
-    userIds?: String[],
-    Indms?: Boolean
-  ): Promise<MessageActionRowComponentBuilder>;
+  callback(options: {
+    client: Client;
+    interaction: ButtonInteraction | SelectMenuInteraction;
+    data?: any;
+  });
+  create(options: {
+    client: Client;
+    guildId?: string;
+    channelId: string;
+    userIds: string[];
+    Indms: boolean;
+    data?: any;
+  }): Promise<MessageActionRowComponentBuilder>;
 }
 
 export type buttonobject = {
   path: fs.PathLike;
   name: string;
   model: Model;
-  callback(
-    client: Client,
-    interaction: ButtonInteraction | SelectMenuInteraction,
-    data?: any
-  );
-  create(
-    client: Client,
-    guildId?: String,
-    channelId?: String,
-    userIds?: String[],
-    Indms?: Boolean,
-    data?: any
-  ): Promise<MessageActionRowComponentBuilder>;
+  callback(options: {
+    client: Client;
+    interaction: ButtonInteraction | SelectMenuInteraction;
+    data?: any;
+  });
+  create(options: {
+    client: Client;
+    guildId?: string;
+    channelId: string;
+    userIds: string[];
+    Indms: boolean;
+    data?: any;
+  }): Promise<MessageActionRowComponentBuilder>;
 };
 
 export type menuInfo = {
@@ -123,12 +124,12 @@ export type menuInfo = {
 
 export type myEvent = {
   event: Events;
-  execute(...args, client:Client)
-}
+  execute(...args, client: Client);
+};
 
 export type readyEvent = {
-  execute(client:Client)
-}
+  execute(client: Client);
+};
 
 /*export type menuSchema = {
   permenent: boolean;
@@ -145,11 +146,11 @@ export interface menu {
   create(options: {
     client: Client;
     waitingForResponse: boolean;
-    guildId?: String;
-    channelId?: String;
-    userIds?: String[];
-    Indms?: Boolean;
-    data?: any
+    guildId?: string;
+    channelId: string;
+    userIds: string[];
+    Indms: boolean;
+    data?: any;
   }): returnMenu;
 }
 
@@ -157,11 +158,11 @@ export type menuobject = {
   create(options: {
     client: Client;
     waitingForResponse: boolean;
-    guildId?: String;
-    channelId?: String;
-    userIds?: String[];
-    Indms?: Boolean;
-    data?: any
+    guildId?: string;
+    channelId: string;
+    userIds: string[];
+    Indms: boolean;
+    data?: any;
   }): returnMenu;
   name: string;
   //buttons: buttonobject[];
@@ -173,6 +174,8 @@ export type menuobject = {
 export type buttonArray = buttonobject[];
 
 export type interactionSave = {
-  messageId: String,
-  interaction: CommandInteraction
-}
+  messageId: string;
+  interaction: CommandInteraction;
+};
+
+

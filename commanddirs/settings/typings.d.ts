@@ -13,8 +13,16 @@ export type setting = {
 };
 
 export type saveSetting = {
-  category: string;
   name: string;
-  type: string;
+  type: string;/*
+  Acepted values:
+  string, boolean
+  channel, channels,
+  textChannel, textChannels,
+  voiceChannel, voiceChannels,
+  member, members,
+  role, roles(accepts users),
+
+  */
   value: any;
 };

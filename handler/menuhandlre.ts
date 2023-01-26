@@ -111,8 +111,8 @@ export const Menus = {
       const message = await menuObject.create({
         client: options.client,
         waitingForResponse: menu.waitingForResponse,
-        userIds: options.userIds,
-        Indms: menu.inDms,
+        userIds: options.userIds || [],
+        Indms: menu.inDms || false,
         data: options.data,
         guildId: guildId,
         channelId: sendplace.id,
@@ -146,8 +146,8 @@ export const Menus = {
       const message = await menuObject.create({
         client: options.client,
         waitingForResponse: menu.waitingForResponse,
-        userIds: options.userIds,
-        Indms: menu.inDms,
+        userIds: options.userIds || [],
+        Indms: menu.inDms || false,
         data: options.data,
         guildId: guildId,
         channelId: sendplace.id,
@@ -312,10 +312,10 @@ export const Menus = {
       client: options.client,
       waitingForResponse: waitingForResponse,
       userIds: menudb.userIds,
-      Indms: menudb.inDms,
+      Indms: menudb.inDms || false,
       data: data,
       guildId: menudb.guildId,
-      channelId: menudb.channelId,
+      channelId: menudb.channelId || '',
     });
     if (menudb.ephemeral == true) {
       const interactio = interactions.find(

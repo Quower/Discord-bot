@@ -1,21 +1,20 @@
-import optionsSchema from "../../../handler/models/optionsSchema";
+import settingsSchema from "../../../handler/models/optionsSchema";
 import { readyEvent } from "../../../handler/typings";
 import fs from "fs";
 import { saveSetting, settingsCategory } from "../typings";
 const config = require("../../../config.json");
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 const settingsfiles = fs.readdirSync("./commanddirs/settings/settingcategorys");
-export let settingcategorys: settingsCategory[] = [];
+export const settingcategorys: settingsCategory[] = [];
 settingsfiles.forEach(async (file) => {
   const category = require(`../settingcategorys/${file}`);
   settingcategorys.push(category);
 });
 
-const settingsBase: saveSetting[] = [];
+export const settingsBase: saveSetting[] = [];
 settingcategorys.forEach((category) => {
   category.settings.forEach((setting) => {
     const saveSetting: saveSetting = {
-      category: category.name,
       name: setting.name,
       type: setting.type,
       value: setting.defaultValue,
@@ -26,34 +25,39 @@ settingcategorys.forEach((category) => {
 
 export default {
   async execute(client) {
+    if (config.nukeEntireDB) {
+      mongoose.connection.dropDatabase()
+      throw new Error("DATABASE NUKE COMPLETE!!!!!");
+    }
     if (config.nukeSettings) {
-      await optionsSchema.deleteMany();
+      await settingsSchema.deleteMany();
+      throw new Error("Settings nuke complete!");
     }
     if (config.updateSettingsOnStart == true) {
-      let optionSchemas = await optionsSchema.find();
+      let settingSchemas = await settingsSchema.find();
       //console.log(optionSchemas)
-      for (let options of optionSchemas) {
+      for (let settings of settingSchemas) {
         //console.log(options)
         let newSettings = settingsBase;
         for (let i = 0; i < newSettings.length; i++) {
-          const foundOption = options.options.find(
-            (option) => option.name == newSettings[i].name
+          const foundOption = settings.settings.find(
+            (setting) => setting.name == newSettings[i].name
           );
           if (foundOption) {
             newSettings[i] = foundOption;
           }
         }
-        options.options = newSettings;
+        settings.settings = newSettings;
 
-        options.save();
+        settings.save();
       }
     }
     const guilds = client.guilds.cache;
     // var settingsUpdate = new Promise((resolve, reject) => {
     guilds.forEach(async (guild) => {
-      const guildOptions = await optionsSchema.findOne({ guildId: guild.id });
+      const guildOptions = await settingsSchema.findOne({ guildId: guild.id });
       if (!guildOptions) {
-        await optionsSchema.create({
+        await settingsSchema.create({
           guildId: guild.id,
           options: settingsBase,
         })
@@ -61,7 +65,7 @@ export default {
     });
     // });
     // settingsUpdate.then(async () => {
-    console.log(`done with settings updating:\n${await optionsSchema.find()}`);
+    console.log(`done with settings updating:\n${await settingsSchema.find()}`);
     // });
   },
 } as readyEvent;

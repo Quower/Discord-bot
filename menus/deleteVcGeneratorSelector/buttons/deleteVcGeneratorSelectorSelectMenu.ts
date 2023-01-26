@@ -2,6 +2,7 @@ import {
   ActionRowBuilder,
   AnyComponentBuilder,
   ButtonBuilder,
+  ButtonInteraction,
   ButtonStyle,
   ChatInputCommandInteraction,
   Client,
@@ -17,29 +18,29 @@ import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (
-    client: Client,
-    interaction: SelectMenuInteraction,
-    data?: any
-  ) => {
-    interaction.deferUpdate();
-    console.log(interaction.values[0]);
+  callback: async (options: {
+    client: Client;
+    interaction: SelectMenuInteraction;
+    data?: any;
+  }) => {
+    options.interaction.deferUpdate();
+    console.log(options.interaction.values[0]);
     Menus.update({
-      messageId: interaction.message.id,
-      client: client,
+      messageId: options.interaction.message.id,
+      client: options.client,
       menu: "deleteVcGeneratorConfirm",
-      data: interaction.values[0],
+      data: options.interaction.values[0],
     });
   },
-  create: async (
-    client: Client,
-    guildId?: String,
-    channelId?: String,
-    userId?: String,
-    Indms?: Boolean,
-    data?: any
-  ): Promise<MessageActionRowComponentBuilder | undefined> => {
-    const generators = await generatorSchema.find({ guildId: guildId });
+  create: async (options: {
+    client: Client;
+    guildId?: String;
+    channelId: String;
+    userIds: String[];
+    Indms: Boolean;
+    data?: any;
+  }): Promise<MessageActionRowComponentBuilder> => {
+    const generators = await generatorSchema.find({ guildId: options.guildId });
     const selectMenu = new SelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)
@@ -49,7 +50,7 @@ export default {
     // return selectMenu}
     await generators.forEach((generator) => {
       if (generator.channelId) {
-        const channel = client.channels.cache.get(generator.channelId);
+        const channel = options.client.channels.cache.get(generator.channelId);
         if (channel instanceof VoiceChannel) {
           selectMenu.addOptions([
             {

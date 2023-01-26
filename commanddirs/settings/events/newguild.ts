@@ -4,12 +4,20 @@ import fs from "fs";
 import { saveSetting, settingsCategory } from "../typings";
 const config = require("../../../config.json");
 import { Schema } from "mongoose";
-import { Events } from "discord.js";
-
+import { Events, Guild } from "discord.js";
+import { settingsBase } from "./ready";
 
 export default {
-    event: Events.GuildCreate,
+  event: Events.GuildCreate,
   async execute(guild, client) {
-    console.log('new guild event ran')
+    if (guild instanceof Guild) {
+      const guildOptions = await optionsSchema.findOne({ guildId: guild.id });
+      if (!guildOptions) {
+        await optionsSchema.create({
+          guildId: guild.id,
+          options: settingsBase,
+        });
+      }
+    }
   },
 } as myEvent;
