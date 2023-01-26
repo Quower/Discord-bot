@@ -53,10 +53,10 @@ export default {
     guilds.forEach(async (guild) => {
       const guildOptions = await optionsSchema.findOne({ guildId: guild.id });
       if (!guildOptions) {
-        const newGuildOptions = await optionsSchema.create({
+        await optionsSchema.create({
           guildId: guild.id,
           options: settingsBase,
-        });
+        })
       }
     });
     // });

@@ -10,6 +10,6 @@ import { Events } from "discord.js";
 export default {
     event: Events.GuildCreate,
   async execute(guild, client) {
-    
+    console.log('new guild event ran')
   },
 } as myEvent;
