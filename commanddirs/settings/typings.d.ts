@@ -1,3 +1,5 @@
+import { Client, GuildMember, Role } from "discord.js";
+
 export type settingsCategory = {
   name: string;
   display: string;
@@ -10,7 +12,17 @@ export type setting = {
   description: string;
   type: string;
   defaultValue: any;
+  updateExec?: string;
+  validValues?: string[];
 };
+
+settingUpdate = {
+  exec(options:{
+    client: Client,
+    guildId: string,
+    setting: setting
+  }): boolean
+}
 
 export type saveSetting = {
   name: string;
@@ -21,8 +33,20 @@ export type saveSetting = {
   textChannel, textChannels,
   voiceChannel, voiceChannels,
   member, members,
-  role, roles(accepts users),
+  role, roles,
+  perms
 
   */
   value: any;
 };
+
+export type perm = {
+  permissions: PermissionsBitField[],
+  members: GuildMember[],
+  roles: Role[]
+}
+export type savePerm = {
+  permissions: PermissionsBitField[],
+  members: string[],
+  roles: string[]
+}

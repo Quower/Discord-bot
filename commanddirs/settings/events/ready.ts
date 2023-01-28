@@ -11,6 +11,7 @@ settingsfiles.forEach(async (file) => {
   settingcategorys.push(category);
 });
 
+export const settingRuns: { name: string; path: string }[] = [];
 export const settingsBase: saveSetting[] = [];
 settingcategorys.forEach((category) => {
   category.settings.forEach((setting) => {
@@ -20,13 +21,19 @@ settingcategorys.forEach((category) => {
       value: setting.defaultValue,
     };
     settingsBase.push(saveSetting);
+    if (setting.updateExec) {
+      settingRuns.push({
+        name: setting.name,
+        path: setting.updateExec
+      })
+    }
   });
 });
 
 export default {
   async execute(client) {
     if (config.nukeEntireDB) {
-      mongoose.connection.dropDatabase()
+      mongoose.connection.dropDatabase();
       throw new Error("DATABASE NUKE COMPLETE!!!!!");
     }
     if (config.nukeSettings) {
@@ -60,7 +67,7 @@ export default {
         await settingsSchema.create({
           guildId: guild.id,
           options: settingsBase,
-        })
+        });
       }
     });
     // });
