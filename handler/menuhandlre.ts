@@ -161,7 +161,7 @@ export const Menus = {
         time = Date.now();
         const msg = await sendplace.fetchReply();
         if ((options.ephemeral = true)) {
-          menu.ephemeral = true;
+          menu.ephemeral = interactions.length;
           interactions.push({
             messageId: msg.id,
             interaction: sendplace,
@@ -207,6 +207,7 @@ export const Menus = {
   }) => {
     let time = Date.now();
     const menudb = await menuSchema.findOne({ messageId: options.messageId });
+    console.log(menudb?.ephemeral);
     console.log(`got to menus update point 1:${Date.now() - time}`);
     time = Date.now();
     if (!menudb) {
@@ -315,21 +316,20 @@ export const Menus = {
       Indms: menudb.inDms || false,
       data: data,
       guildId: menudb.guildId,
-      channelId: menudb.channelId || '',
+      channelId: menudb.channelId || "",
     });
-    if (menudb.ephemeral == true) {
-      const interactio = interactions.find(
-        (interaction) => (interaction.messageId = options.messageId)
-      );
-      if (!interactio) {
-        console.log("something went wrong when finding interaction");
-        return;
-      }
+    if (menudb.ephemeral != undefined) {
       try {
-        interactio.interaction.editReply(message).then(() => {
-          menudb.lastInteraction = Date.now();
-          menudb.save();
-        });
+        interactions[menudb.ephemeral].interaction
+          .editReply({
+            content: message.content || "",
+            embeds: message.embeds || [],
+            components: message.components || [],
+          })
+          .then(() => {
+            menudb.lastInteraction = Date.now();
+            menudb.save();
+          });
       } catch (e) {
         console.log("something went wrong when editing interaction reply");
         return;
@@ -352,14 +352,24 @@ export const Menus = {
           console.log(`got to menus update point 9:${Date.now() - time}`);
           time = Date.now();
           try {
-            msg.edit(message).then(() => {
-              menudb.lastInteraction = Date.now();
-              console.log(`got to menus update point 10:${Date.now() - time}`);
-              time = Date.now();
-              menudb.save();
-              console.log(`got to menus update point 11:${Date.now() - time}`);
-              time = Date.now();
-            });
+            msg
+              .edit({
+                content: message.content || "",
+                embeds: message.embeds || [],
+                components: message.components || [],
+              })
+              .then(() => {
+                menudb.lastInteraction = Date.now();
+                console.log(
+                  `got to menus update point 10:${Date.now() - time}`
+                );
+                time = Date.now();
+                menudb.save();
+                console.log(
+                  `got to menus update point 11:${Date.now() - time}`
+                );
+                time = Date.now();
+              });
           } catch (e) {
             console.log("something went wrong when editing message");
           }
@@ -395,7 +405,7 @@ export const Menus = {
     //   menu.delete();
     //   return;
     // }
-    if (menu.ephemeral == false) {
+    if (menu.ephemeral == undefined) {
       try {
         console.log(`got to menus delete point 2:${Date.now() - time}`);
         time = Date.now();
@@ -427,14 +437,16 @@ export const Menus = {
         console.log("could not find channel");
       }
     } else {
-      const interactio = interactions.find(
-        (interaction) => (interaction.messageId = options.messageId)
-      );
-      interactio?.interaction.editReply({
-        content: "This menu doesn't exist anymore",
-        components: [],
-        embeds: [],
-      });
+      try {
+        interactions[menu.ephemeral].interaction.editReply({
+          content: "This menu doesn't exist anymore",
+          components: [],
+          embeds: [],
+        });
+        interactions.splice(menu.ephemeral);
+      } catch (e) {
+        console.log("something went wrong when editing interaction reply");
+      }
     }
 
     menu.delete();
@@ -461,7 +473,7 @@ export async function MenuDeleteCheck(options: {
     return;
   }
   if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 0) {
-    if (menu.ephemeral == false) {
+    if (menu.ephemeral == undefined) {
       try {
         console.log(`got to menus check delete point 2:${Date.now() - time}`);
         time = Date.now();
@@ -491,12 +503,16 @@ export async function MenuDeleteCheck(options: {
         console.log("could not find channel");
       }
     } else {
-      const interactio = interactions.find(
-        (interaction) => (interaction.messageId = options.messageId)
-      );
-      interactio?.interaction.editReply({
-        content: "This menu doesn't exist anymore",
-      });
+      try {
+        interactions[menu.ephemeral].interaction.editReply({
+          content: "This menu doesn't exist anymore",
+          components: [],
+          embeds: [],
+        });
+        interactions.splice(menu.ephemeral);
+      } catch (e) {
+        console.log("something went wrong when editing interaction reply");
+      }
     }
     console.log(`got to menus check delete point 5:${Date.now() - time}`);
     time = Date.now();

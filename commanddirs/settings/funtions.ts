@@ -38,7 +38,7 @@ export default class SettingsHandler {
             settings.settings[index].value = updateSetting.value;
           }
         }
-        await settings.save()
+        await settings.save();
       }
 
       this.updatedSettings = [];
@@ -52,23 +52,34 @@ export default class SettingsHandler {
   }): Promise<any> {
     let setting;
     const index = this.settings.findIndex(
+      (setting) => setting.name == options.optionName
+    );
+    if (index == -1) {
+      setting = settingsBase.find(
         (setting) => setting.name == options.optionName
       );
-      if (index == -1) {
-        setting = settingsBase.find(
-            (setting) => setting.name == options.optionName
-        );
-        if (!setting) {return}
-      } else {
-        setting = this.settings
+      if (!setting) {
+        return;
+      }
+    } else {
+      setting = this.settings[index];
     }
+    switch(setting.type) {
+      case 'boolean': 
 
+      break;
+
+      
+    }
   }
   async write(options: {
     optionName: string;
     value: any;
     retunrAsString: boolean;
   }): Promise<any> {
-    
+    const baseSetting = settingsBase.find(
+      (setting) => setting.name == options.optionName
+    );
+
   }
 }

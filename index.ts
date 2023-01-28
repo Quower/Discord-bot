@@ -61,7 +61,7 @@ client.on("ready", async () => {
   menus.forEach(async (menu) => {
     if (menu.deleteAfter && menu.deleteAfter > 0) {
       if (menu.lastInteraction && menu.deleteAfter) {
-        if (menu.ephemeral == true) {
+        if (menu.ephemeral != undefined) {
           menu.delete();
         } else if (
           Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) >
@@ -108,7 +108,7 @@ client.on("ready", async () => {
             });
           }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
         }
-      } 
+      }
     }
   });
 });

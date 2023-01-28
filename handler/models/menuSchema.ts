@@ -54,7 +54,7 @@ const menuSchema = new mongoose.Schema({
         require: false
     },
     ephemeral: {
-        type: Boolean,
+        type: Number,
         require: false
     }
   });
