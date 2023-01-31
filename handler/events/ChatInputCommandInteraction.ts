@@ -41,7 +41,8 @@ export default {
             commandObject?.permissions &&
             interaction.member?.permissions.has(commandObject?.permissions)) ||
             botOwners.includes(interaction.member.user.id) ||
-            interaction.channel instanceof DMChannel
+            interaction.channel instanceof DMChannel ||
+            interaction.user.id == interaction.guild.ownerId
         ) {
           if (interaction.options.getSubcommand()) {
             let subcommandObject = commandObject?.subcommands.find(

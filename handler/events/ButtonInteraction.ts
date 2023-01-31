@@ -37,7 +37,7 @@ export default {
       if (menuschema.userIds instanceof Array<String>) {
         const userIds: Array<String> = menuschema.userIds;
         if (
-          userIds.includes(interaction.user.id) == false &&
+          userIds.includes(interaction.user.id) == false ||
           botOwners.includes(interaction.user.id) == false
         ) {
           interaction.reply({

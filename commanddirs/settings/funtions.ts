@@ -64,6 +64,7 @@ export default class SettingsHandler {
     } else {
       setting = this.settings[index];
     }
+    let channels = [];
     switch (options.retunrAs) {
       case "raw":
         return setting.value;
@@ -79,31 +80,66 @@ export default class SettingsHandler {
               return "false";
             }
           case "channel":
-            break;
+            return `<#${setting.value}>`;
           case "channels":
-            break;
+            for (const channelId of setting.value) {
+              channels.push(`<#${channelId}>`);
+            }
+            return channels;
           case "textChannel":
-            break;
+            return `<#${setting.value}>`;
           case "textChannels":
-            break;
+            for (const channelId of setting.value) {
+              channels.push(`<#${channelId}>`);
+            }
+            return channels;
           case "voiceChannel":
-            break;
+            return `<#${setting.value}>`;
           case "voiceChannels":
-            break;
-          case "member": 
-            break;
+            for (const channelId of setting.value) {
+              channels.push(`<#${channelId}>`);
+            }
+            return channels;
+          case "member":
+            return `<@${setting.value}>`;
           case "members":
-            break;
+            let members = [];
+            for (const memberId of setting.value) {
+              members.push(`<@${memberId}>`);
+            }
+            return members;
           case "role":
-            break;
+            return `<@&${setting.value}>`;
           case "roles":
-            break;
+            let roles = [];
+            for (const roleId of setting.value) {
+              roles.push(`<@&${roleId}>`);
+            }
+            return roles;
           case "perms":
-            return;
+            let retunrperms = [];
+
+            for (const Perm of setting.value) {
+              let roles: string[] = [];
+              for (const frole of Perm.roles) {
+                roles.push(`<@&${frole}>`);
+              }
+              let members: string[] = [];
+              for (const fmember of Perm.member) {
+                members.push(`<@${setting.value}>`);
+              }
+              if (Perm.permissions instanceof Array<PermissionsBitField>) {
+                retunrperms.push({
+                  permissions: await Perm.permissions.toArray(),
+                  members: members,
+                  roles: roles,
+                });
+              }
+            }
+            return retunrperms;
         }
         break;
       case "other":
-        let channels = [];
         switch (setting.type) {
           case "string":
             return setting.value;
@@ -120,7 +156,7 @@ export default class SettingsHandler {
           case "channels":
             for (const channelId of setting.value) {
               try {
-                const channel = await this.client.channels.fetch(setting.value);
+                const channel = await this.client.channels.fetch(channelId);
                 channels.push(channel);
               } catch (e) {
                 console.log("something went wrong when fetchin channel");
@@ -138,7 +174,7 @@ export default class SettingsHandler {
           case "textChannels":
             for (const channelId of setting.value) {
               try {
-                const channel = await this.client.channels.fetch(setting.value);
+                const channel = await this.client.channels.fetch(channelId);
                 channels.push(channel);
               } catch (e) {
                 console.log("something went wrong when fetchin channel");
@@ -156,7 +192,7 @@ export default class SettingsHandler {
           case "voiceChannels":
             for (const channelId of setting.value) {
               try {
-                const channel = await this.client.channels.fetch(setting.value);
+                const channel = await this.client.channels.fetch(channelId);
                 channels.push(channel);
               } catch (e) {
                 console.log("something went wrong when fetchin channel");
@@ -174,10 +210,10 @@ export default class SettingsHandler {
             break;
           case "members":
             let members = [];
-            for (const channelId of setting.value) {
+            for (const memberId of setting.value) {
               try {
                 const guild = await this.client.guilds.fetch(this.guildId);
-                const member = await guild.channels.fetch(setting.value);
+                const member = await guild.channels.fetch(memberId);
                 members.push(member);
               } catch (e) {
                 console.log("something went wrong when fetchin channel");
@@ -195,10 +231,10 @@ export default class SettingsHandler {
             break;
           case "roles":
             let roles = [];
-            for (const channelId of setting.value) {
+            for (const roleId of setting.value) {
               try {
                 const guild = await this.client.guilds.fetch(this.guildId);
-                const role = await guild.roles.fetch(setting.value);
+                const role = await guild.roles.fetch(roleId);
                 roles.push(role);
               } catch (e) {
                 console.log("something went wrong when fetchin channel");
@@ -245,11 +281,7 @@ export default class SettingsHandler {
         break;
     }
   }
-  async write(options: {
-    optionName: string;
-    value: any;
-    retunrAsString: boolean;
-  }): Promise<any> {
+  async write(options: { optionName: string; value: any }): Promise<void> {
     const setting = settingsBase.find(
       (setting) => setting.name == options.optionName
     );
@@ -262,6 +294,63 @@ export default class SettingsHandler {
         setting: setting,
         exec: settingRun?.path,
       });
+    }
+  }
+  async checkPerms(options: {
+    optionName: string;
+    value: any;
+    member: GuildMember;
+  }): Promise<boolean | void> {
+    let setting;
+    const index = this.settings.findIndex(
+      (setting) => setting.name == options.optionName
+    );
+    if (index == -1) {
+      setting = settingsBase.find(
+        (setting) => setting.name == options.optionName
+      );
+      if (!setting) {
+        //return;
+      }
+    } else {
+      setting = this.settings[index];
+    }
+    if (setting?.type == "perms") {
+      let retunrperms: perm[] = [];
+      for (const Perm of setting.value) {
+        let roles: Role[] = [];
+        for (const frole of Perm.roles) {
+          try {
+            const guild = await this.client.guilds.fetch(this.guildId);
+            const role = await guild.roles.fetch(frole);
+            if (role) {
+              roles.push(role);
+            }
+          } catch (e) {
+            console.log("something went wrong when fetchin channel");
+          }
+        }
+        let members: GuildMember[] = [];
+        for (const fmember of Perm.member) {
+          try {
+            const guild = await this.client.guilds.fetch(this.guildId);
+            const member = await guild.members.fetch(fmember);
+            if (member) {
+              members.push(member);
+            }
+          } catch (e) {
+            console.log("something went wrong when fetchin channel");
+          }
+        }
+        if (Perm.permissions instanceof Array<PermissionsBitField>) {
+          retunrperms.push({
+            permissions: Perm.permissions,
+            members: members,
+            roles: roles,
+          });
+        }
+      }
+      
     }
   }
 }
