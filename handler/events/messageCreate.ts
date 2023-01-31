@@ -25,7 +25,8 @@ export default {
         const userIds: Array<String> = menuschema.userIds;
         if (
           userIds.includes(message.member?.id || "") == false ||
-          botOwners.includes(message.member?.id || "") == false
+          botOwners.includes(message.member?.id || "") == false ||
+          message.member?.id == message.guild?.ownerId
         ) {
           message
             .reply({

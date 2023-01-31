@@ -38,7 +38,8 @@ export default {
         const userIds: Array<String> = menuschema.userIds;
         if (
           userIds.includes(interaction.user.id) == false ||
-          botOwners.includes(interaction.user.id) == false
+          botOwners.includes(interaction.user.id) == false ||
+          interaction.user.id == interaction.guild.ownerId
         ) {
           interaction.reply({
             content: "You are not permitted to interact with this menu",
