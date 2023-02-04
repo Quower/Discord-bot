@@ -32,12 +32,12 @@ export default {
         console.log("no buttonobject");
         return;
       }
-      if (menuschema.userIds instanceof Array<String>) {
+      if (menuschema.userIds.length > 0) {
         const userIds: Array<String> = menuschema.userIds;
         if (
           userIds.includes(interaction.user.id) == false ||
           botOwners.includes(interaction.user.id) == false ||
-          interaction.user.id == interaction.guild.ownerId
+          interaction.user.id != interaction.guild.ownerId
         ) {
           interaction.reply({
             content: "You are not permitted to interact with this menu",

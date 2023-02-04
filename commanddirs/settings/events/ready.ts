@@ -5,7 +5,7 @@ import { saveSetting, settingsCategory } from "../typings";
 const config = require("../../../config.json");
 import mongoose, { Schema } from "mongoose";
 const settingsfiles = fs.readdirSync("./commanddirs/settings/settingcategorys");
-export const settingcategorys: settingsCategory[] = [];
+export let settingcategorys: settingsCategory[] = [];
 settingsfiles.forEach(async (file) => {
   const category = require(`../settingcategorys/${file}`);
   settingcategorys.push(category);

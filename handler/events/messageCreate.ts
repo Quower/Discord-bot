@@ -21,12 +21,12 @@ export default {
         //console.log("no menuschema");
         return;
       }
-      if (menuschema.userIds instanceof Array<String>) {
+      if (menuschema.userIds.length > 0) {
         const userIds: Array<String> = menuschema.userIds;
         if (
           userIds.includes(message.member?.id || "") == false ||
           botOwners.includes(message.member?.id || "") == false ||
-          message.member?.id == message.guild?.ownerId
+          message.member?.id != message.guild?.ownerId
         ) {
           message
             .reply({

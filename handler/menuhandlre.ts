@@ -232,7 +232,7 @@ export const Menus = {
         back = true;
         menuName = last.name;
         data = last.data;
-        waitingForResponse = last.data;
+        waitingForResponse = last.waitingForResponse;
       } else {
         menuName = options.menu;
         if (options.waitingForResponse) {
@@ -257,6 +257,14 @@ export const Menus = {
       } else {
         data = menudb.data;
       }
+    }
+    if (waitingForResponse == true) {
+      const menus = await menuSchema.find({channelId: menudb.channelId, waitingForResponse: true})
+      menus.forEach(menu => {
+        if (menu.channelId != menudb.channelId) {
+          waitingForResponse = false
+        }
+      })
     }
     console.log(`got to menus update point 3:${Date.now() - time}`);
     time = Date.now();
@@ -287,12 +295,15 @@ export const Menus = {
     if (back == true) {
       menudb?.prevMenus.pop();
     } else if (menudb.saveMenu == true) {
-      const menuI: menuInfo = {
-        name: menudb.currentMenu || "",
-        waitingForResponse: menudb.waitingForResponse || false,
-        data: menudb.data,
-      };
-      menudb.prevMenus.push(menuI);
+      if (options.menu) {
+        const menuI: menuInfo = {
+          name: menudb.currentMenu || "",
+          waitingForResponse: menudb.waitingForResponse || false,
+          data: menudb.data,
+        };
+        if (!options.saveState) {menuI.waitingForResponse = false}
+        menudb.prevMenus.push(menuI);
+      }
     }
     menudb.currentMenu = menuName;
     menudb.waitingForResponse = waitingForResponse;
@@ -439,9 +450,14 @@ export const Menus = {
     } else {
       try {
         interactions[menu.ephemeral].interaction.editReply({
-          content: "This menu doesn't exist anymore",
+          content: "",
           components: [],
-          embeds: [],
+          embeds: [
+            {
+              title: "this menu doesn't exist anymore",
+              color: 16711680,
+            },
+          ],
         });
         interactions.splice(menu.ephemeral);
       } catch (e) {
@@ -505,9 +521,14 @@ export async function MenuDeleteCheck(options: {
     } else {
       try {
         interactions[menu.ephemeral].interaction.editReply({
-          content: "This menu doesn't exist anymore",
+          content: "",
           components: [],
-          embeds: [],
+          embeds: [
+            {
+              title: "this menu doesn't exist anymore",
+              color: 16711680,
+            },
+          ],
         });
         interactions.splice(menu.ephemeral);
       } catch (e) {

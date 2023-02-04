@@ -18,13 +18,15 @@ export default class SettingsHandler {
   client!: Client;
   settings!: saveSetting[];
   updatedSettings: { setting: saveSetting; exec?: string }[] = [];
-  constructor(options: { client: Client; guildId: string }) {
-    this.init(options);
-  }
+  // constructor(options: { client: Client; guildId: string }) {
+  //   this.init(options);
+  // }
   async init(options: { client: Client; guildId: string }) {
     let { client, guildId } = options;
     this.client = client;
     this.guildId = guildId;
+    this.settings =
+      (await settingsSchema.findOne({ guildId: this.guildId }))?.settings || [];
   }
   async update() {
     if (this.updatedSettings.length > 0) {
@@ -51,6 +53,7 @@ export default class SettingsHandler {
   /**returnAs acepted values: raw, mention, other*/
   async read(options: { optionName: string; retunrAs: string }): Promise<any> {
     let setting;
+    console.log(this.settings)
     const index = this.settings.findIndex(
       (setting) => setting.name == options.optionName
     );

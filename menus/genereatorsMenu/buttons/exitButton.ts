@@ -32,7 +32,7 @@ export default {
   }): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     button.setLabel("Exit");
-    button.setStyle(ButtonStyle.Secondary);
+    button.setStyle(ButtonStyle.Danger);
     return button;
   },
 } as button;

@@ -51,10 +51,9 @@ export default {
         [
           "generatorsMenuCreateButton",
           "generatorsMenuDeleteButton",
-          "exitButton",
+          "generatorsMenuExitButton",
         ],
       ],
-      embeds: [embed],
     });
     console.log(`got to generatorsMenu point 3:${Date.now() - time}`);
     time = Date.now();
