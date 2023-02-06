@@ -4,11 +4,10 @@ import {
   CommandInteraction,
   EmbedBuilder,
 } from "discord.js";
+import { settingcategorys } from "../../commanddirs/settings/events/ready";
+import SettingsHandler from "../../commanddirs/settings/funtions";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
-import Handler from "../../handler/setup";
-import generatorSchema from "../../commanddirs/generators/models/generatorSchema";
-import SettingsHandler from "../../commanddirs/settings/funtions";
 
 export default {
   create: async (options: {
@@ -20,43 +19,170 @@ export default {
     Indms: boolean;
     data?: any;
   }): Promise<BaseMessageOptions> => {
-    // const embed = new EmbedBuilder();
-    // embed.setTitle("Delete Vc generator!");
-    // embed.setDescription(
-    //   "Menu for doing stuff for vc generators"
-    // );
-    let time = Date.now();
-
-    let channels: string = "";
-    await (
-      await generatorSchema.find({ guildId: options.guildId })
-    ).forEach((generator) => {
-      channels = `${channels}• <#${generator.channelId}>\n`;
-    });
-    console.log(`got to generatorsMenu point 1:${Date.now() - time}`);
-    time = Date.now();
-
-    const embed = new EmbedBuilder();
-    embed.setTitle("Generators Menu");
-    if (channels.length == 0) {
-      channels = "None";
-    } else {
-      channels = `**list of all vc generators:**\n${channels}`;
+    const settingsCategory = settingcategorys.find(
+      (category) => category.name == options.data.category
+    );
+    if (!settingsCategory) {
+      throw console.error("no setting category");
     }
-    embed.setDescription(channels);
-    console.log(`got to generatorsMenu point 2:${Date.now() - time}`);
-    time = Date.now();
-    let menu = await new UkMessageBuilder().build(options, {
-      rows: [
-        [
-          "generatorsMenuCreateButton",
-          "generatorsMenuDeleteButton",
-          "generatorsMenuExitButton",
-        ],
-      ],
+    const settingBase = settingsCategory.settings.find(
+      (setting) => setting.name == options.data.setting
+    );
+    const embed = new EmbedBuilder();
+    embed.setTitle(`${settingBase?.display} [${settingBase?.type}]`);
+    const settingsHandler = new SettingsHandler();
+    await settingsHandler.init({
+      client: options.client,
+      guildId: options.guildId || "",
     });
-    console.log(`got to generatorsMenu point 3:${Date.now() - time}`);
-    time = Date.now();
-    return menu;
+
+    if (!settingBase) {
+      throw console.error("no settingbase");
+    }
+    console.log(settingBase);
+    let value = await settingsHandler.read({
+      optionName: settingBase.name,
+      retunrAs: "mention",
+    });
+    let description1 = "";
+    let description2 = undefined;
+    if (settingBase.type == "string" || settingBase.type == "boolean") {
+      description1 = `${value}`;
+      if (options.data.newValue) {
+        description2 = `${
+          options.data.newValue
+        }`;
+      }
+    } else if (
+      settingBase.type == "channel" ||
+      settingBase.type == "textChannel" ||
+      settingBase.type == "voiceChannel" ||
+      settingBase.type == "member" ||
+      settingBase.type == "role"
+    ) {
+      console.log(value);
+      if (
+        value == "<@null>" ||
+        value == "<@>" ||
+        value == "<#null>" ||
+        value == "<#>" ||
+        value == "<@&null>" ||
+        value == "<@&>"
+      ) {
+        value = "null";
+      }
+      description1 = `${value}`;
+      if (options.data.newValue) {
+        let value2 = options.data.newValue;
+        if (
+          value2 == "<@null>" ||
+          value2 == "<@>" ||
+          value2 == "<#null>" ||
+          value2 == "<#>" ||
+          value2 == "<@&null>" ||
+          value2 == "<@&>"
+        ) {
+          value2 = "null";
+        }
+        description2 = `${value2}`;
+      }
+    } else if (
+      settingBase.type == "channels" ||
+      settingBase.type == "textChannels" ||
+      settingBase.type == "voiceChannels" ||
+      settingBase.type == "members" ||
+      settingBase.type == "roles"
+    ) {
+      if (value.length < 1) {
+        value = "null";
+      } else {
+        value = value.toString();
+      }
+      description1 = `${value}`;
+      if (options.data.newValue) {
+        let value2 = options.data.newValue;
+        if (value2.length < 1) {
+          value2 = "null";
+        } else {
+          value2 = value.toString();
+        }
+        description2 = `${"``"}${settingBase.description}${"``"}\n${value2}`;
+      }
+    } else if (settingBase.type == "perms") {
+      if (value.length < 1) {
+        value = "null";
+        description1 = `${"``"}${settingBase.description}${"``"}\n${value}`;
+      } else {
+        let newValues = "";
+        let i = 0;
+        for (const valu of value) {
+          i++;
+          newValues = `${newValues}**Case ${i}:**\n${valu.permissions.toString()}\n${value.members.toString()},${value.roles.toString()}\n`;
+        }
+        description1 = `${"``"}${settingBase.description}${"``"}\n${newValues}`;
+      }
+      if (options.data.newValue) {
+        let value2 = options.data.newValue;
+        if (value2.length < 1) {
+          value2 = "null";
+          description1 = `${"``"}${settingBase.description}${"``"}\n${value2}`;
+        } else {
+          let newValues = "";
+          let i = 0;
+          for (const valu of value2) {
+            i++;
+            newValues = `${newValues}**Case ${i}:**\n${valu.permissions.toString()}\n${value.members.toString()},${value.roles.toString()}\n`;
+          }
+          description1 = `${"``"}${
+            settingBase.description
+          }${"``"}\n${newValues}`;
+        }
+      }
+    }
+
+    options.data.validValues = settingBase?.validValues;
+    options.data.settingType = settingBase?.type;
+    if (description2) {
+      embed.setDescription(
+        `${"``"}${settingBase.description}${"``"}\n----------\nCurrent value\n----------\n${description1}\n\n----------\nNew value\n(----------\n${description2}`
+      );
+    } else {
+      embed.setDescription(
+        `${"``"}${settingBase.description}${"``"}\n----------\nCurrent value\n----------\n${description1}`
+      );
+    }
+    if (settingBase?.type == "perm") {
+      if (options.data.selected != -1 || !options.data.selected) {
+        let menu = await new UkMessageBuilder().build(options, {
+          rows: [["cancelButton", "settingEditConfirm"], ["permCaseSelect"]],
+          embeds: [embed],
+        });
+        return menu;
+      } else {
+        let menu = await new UkMessageBuilder().build(options, {
+          rows: [["settingEditSelect"], ["settingEditSelect5000"], ["backButton"]],
+          embeds: [embed],
+        });
+        return menu;
+      }
+    } else {
+      options.data.setting = await settingsHandler.read({
+        optionName: settingBase.name,
+        retunrAs: "raw",
+      });
+      let menu = await new UkMessageBuilder().build(options, {
+        rows: [["cancelButton", "settingEditConfirm"], ["settingEditSelect"]],
+        embeds: [embed],
+      });
+      return menu;
+    }
+
+    // let menu = await new UkMessageBuilder().build(options, {
+    //   rows: [
+    //     ["backButton"],
+    //     //["settingsMenuSelector"]
+    //   ],
+    //   embeds: [embed],
+    // });
   },
 } as menu;

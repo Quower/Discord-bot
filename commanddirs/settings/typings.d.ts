@@ -16,7 +16,7 @@ export type setting = {
   validValues?: string[];
 };
 
-settingUpdate = {
+export interface settingUpdate {
   exec(options:{
     client: Client,
     guildId: string,

@@ -86,6 +86,7 @@ export interface button {
     client: Client;
     interaction: ButtonInteraction | SelectMenuInteraction;
     data?: any;
+    waitingForResponse: boolean
   });
   create(options: {
     client: Client;
@@ -105,6 +106,7 @@ export type buttonobject = {
     client: Client;
     interaction: ButtonInteraction | SelectMenuInteraction;
     data?: any;
+    waitingForResponse: boolean
   });
   create(options: {
     client: Client;
@@ -113,6 +115,7 @@ export type buttonobject = {
     userIds: string[];
     Indms: boolean;
     data?: any;
+    waitingForResponse: boolean
   }): Promise<MessageActionRowComponentBuilder>;
 };
 

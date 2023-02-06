@@ -12,8 +12,8 @@
         },
         {
             "name": "testSetting",
-            "display": "Enable new command by default",
-            "description": "Should we enable new commands added by default",
+            "display": "testsetting",
+            "description": "tessy",
             "type": "role",
             "defaultValue": null
         }

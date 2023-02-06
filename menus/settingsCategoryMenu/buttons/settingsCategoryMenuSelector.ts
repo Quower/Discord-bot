@@ -27,8 +27,8 @@ export default {
     Menus.update({
       messageId: options.interaction.message.id,
       client: options.client,
-      menu: "settingsCategoryMenu",
-      data: { page: 1, category: options.interaction.values[0] },
+      menu: "settingEditMenu",
+      data: {setting: options.interaction.values[0], category: options.data.category},
     });
   },
   create: async (options: {
@@ -46,7 +46,7 @@ export default {
     // if(generators.length == 0) {selectMenu.setDisabled()
     // selectMenu.setPlaceholder("This guild doesn't have any generators")
     // return selectMenu}
-    if (options.data.categorydata.length < 1) {
+    if (options.data.settingdata.length < 1) {
       const button = new ButtonBuilder();
       button
         .setDisabled(true)
@@ -54,15 +54,15 @@ export default {
         .setStyle(ButtonStyle.Secondary);
       return button;
     }
-    options.data.categorydata.forEach((category: any) => {
+    options.data.settingdata.forEach((setting: any) => {
       selectMenu.addOptions([
         {
-          label: category.display,
-          value: category.name,
-          description: category.description,
+          label: setting.display,
+          value: setting.name,
+          description: setting.description,
         },
       ]);
-    });
+    }); 
 
     return selectMenu;
   },

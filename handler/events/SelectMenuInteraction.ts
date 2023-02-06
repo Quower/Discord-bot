@@ -50,6 +50,7 @@ export default {
         client: client,
         interaction: interaction,
         data: menuschema.data,
+        waitingForResponse: menuschema.waitingForResponse || false
       });
     }
   },

@@ -23,7 +23,7 @@ export default {
       throw console.error("no page in data");
     }
     const embed = new EmbedBuilder();
-    embed.setTitle("Setting Menu");
+    embed.setTitle("Settings Menu");
     embed.setDescription("```\npick a settings category to view\n```");
     options.data = {
       currentPage: options.data.page,

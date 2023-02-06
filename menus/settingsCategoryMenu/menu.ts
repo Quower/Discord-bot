@@ -30,12 +30,12 @@ export default {
       throw console.error("no page in data");
     }
     const embed = new EmbedBuilder();
-    embed.setTitle("Setting Menu");
+    embed.setTitle(settingsCategory.display);
     embed.setDescription("```\npick a setting to view\n```");
     options.data = {
       currentPage: options.data.page,
       totalPages: pages,
-      categorydata: new Array<
+      settingdata: new Array<
         { name: string; description: string; display: string }[]
       >(),
     };
@@ -62,6 +62,12 @@ export default {
             optionName: settingsCategory.settings[i].name,
             retunrAs: "raw",
           });
+          embed.addFields({
+            name: `${settingsCategory.settings[i].display} [${settingsCategory.settings[i].type}]`,
+            value: `${"``"}${
+              settingsCategory.settings[i].description
+            }${"``"}\n${value}`,
+          });
         } else if (
           settingsCategory.settings[i].type == "channel" ||
           settingsCategory.settings[i].type == "textChannel" ||
@@ -69,26 +75,26 @@ export default {
           settingsCategory.settings[i].type == "member" ||
           settingsCategory.settings[i].type == "role"
         ) {
-          let value2 = await settingsHandler.read({
+          let value = await settingsHandler.read({
             optionName: settingsCategory.settings[i].name,
             retunrAs: "mention",
           });
-          console.log(value2);
+          console.log(value);
           if (
-            value2 == "<@null>" ||
-            value2 == "<@>" ||
-            value2 == "<#null>" ||
-            value2 == "<#>" ||
-            value2 == "<@&null>" ||
-            value2 == "<@&>"
+            value == "<@null>" ||
+            value == "<@>" ||
+            value == "<#null>" ||
+            value == "<#>" ||
+            value == "<@&null>" ||
+            value == "<@&>"
           ) {
-            value2 = "null";
+            value = "null";
           }
           embed.addFields({
-            name: settingsCategory.settings[i].display,
+            name: `${settingsCategory.settings[i].display} [${settingsCategory.settings[i].type}]`,
             value: `${"``"}${
               settingsCategory.settings[i].description
-            }${"``"}\n${value2}`,
+            }${"``"}\n${value}`,
           });
         } else if (
           settingsCategory.settings[i].type == "channels" ||
@@ -107,31 +113,31 @@ export default {
             values = values.toString();
           }
           embed.addFields({
-            name: settingsCategory.settings[i].display,
+            name: `${settingsCategory.settings[i].display} [${settingsCategory.settings[i].type}]`,
             value: `${"``"}${
               settingsCategory.settings[i].description
             }${"``"}\n${values}`,
           });
         } else if (settingsCategory.settings[i].type == "perms") {
-          let values2 = await settingsHandler.read({
+          let values = await settingsHandler.read({
             optionName: settingsCategory.settings[i].name,
             retunrAs: "mention",
           });
-          if (values2.length < 1) {
-            values2 = "null";
+          if (values.length < 1) {
+            values = "null";
             embed.addFields({
-              name: settingsCategory.settings[i].display,
+              name: `${settingsCategory.settings[i].display} [${settingsCategory.settings[i].type}]`,
               value: `${"``"}${
                 settingsCategory.settings[i].description
-              }${"``"}\n${values2}`,
+              }${"``"}\n${values}`,
             });
           } else {
             let newValues = "";
-            for (const value of values2) {
+            for (const value of values) {
               newValues = `${newValues}[[${value.permissions.toString()}],[${value.members.toString()}],[${value.roles.toString()}]]\n`;
             }
             embed.addFields({
-              name: settingsCategory.settings[i].display,
+              name: `${settingsCategory.settings[i].display} [${settingsCategory.settings[i].type}]`,
               value: `${"``"}${
                 settingsCategory.settings[i].description
               }${"``"}\n${newValues}`,
@@ -149,18 +155,18 @@ export default {
         //     settingsCategory.settings[i].description
         //   }${"``"}\n${value}`,
         // });
-        // options.data.categorydata.push({
-        //   name: settingsCategory.settings[i].name,
-        //   description: settingsCategory.settings[i].description,
-        //   display: settingsCategory.settings[i].display,
-        // });
+        options.data.settingdata.push({
+          name: settingsCategory.settings[i].name,
+          description: settingsCategory.settings[i].description,
+          display: settingsCategory.settings[i].display,
+        });
       }
     }
     embed.setFooter({ text: `page ${options.data.currentPage} of ${pages}` });
     let menu = await new UkMessageBuilder().build(options, {
       rows: [
         ["preveousButton", "nextButton", "backButton"],
-        //["settingsMenuSelector"]
+        ["settingsCategoryMenuSelector"]
       ],
       embeds: [embed],
     });

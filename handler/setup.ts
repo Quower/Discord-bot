@@ -173,11 +173,13 @@ menusExport.forEach((menu) => {
           client: Client;
           interaction: ButtonInteraction | SelectMenuInteraction;
           data?: any;
+          waitingForResponse: boolean
         }) {
           object.default.callback({
             client: options.client,
             interaction: options.interaction,
             data: options.data,
+            waitingForResponse: options.waitingForResponse
           });
         },
         create: function (options: {
@@ -187,6 +189,7 @@ menusExport.forEach((menu) => {
           userIds: string[];
           Indms: boolean;
           data?: any;
+          waitingForResponse: boolean
         }): Promise<MessageActionRowComponentBuilder> {
           return object.default.create({
             client: options.client,
@@ -195,6 +198,7 @@ menusExport.forEach((menu) => {
             userIds: options.userIds,
             InDms: options.Indms,
             data: options.data,
+            waitingForResponse: options.waitingForResponse
           });
         },
       } as buttonobject;
@@ -408,6 +412,7 @@ export class UkMessageBuilder {
   async build(
     options: {
       client: Client;
+      waitingForResponse: boolean;
       guildId?: string;
       channelId: string;
       userIds: string[];

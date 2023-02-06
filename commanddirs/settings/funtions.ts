@@ -36,10 +36,25 @@ export default class SettingsHandler {
           const index = settings.settings.findIndex(
             (setting) => setting.name == updateSetting.setting.name
           );
-          if (index == -1) {
-            settings.settings.push(updateSetting);
-          } else {
-            settings.settings[index].value = updateSetting.setting.value;
+          let scontinue = true;
+          if (updateSetting.exec) {
+            const exec = require(`../../${updateSetting.exec}`).default;
+            try {
+              scontinue = await exec.exec({
+                client: this.client,
+                guildId: this.guildId,
+                setting: updateSetting.setting,
+              });
+            } catch (e) {
+              console.log("error when executing settingupdate");
+            }
+          }
+          if (scontinue == true) {
+            if (index == -1) {
+              settings.settings.push(updateSetting.setting);
+            } else {
+              settings.settings[index].value = updateSetting.setting.value;
+            }
           }
         }
         await settings.save();
@@ -53,7 +68,7 @@ export default class SettingsHandler {
   /**returnAs acepted values: raw, mention, other*/
   async read(options: { optionName: string; retunrAs: string }): Promise<any> {
     let setting;
-    console.log(this.settings)
+    console.log(this.settings);
     const index = this.settings.findIndex(
       (setting) => setting.name == options.optionName
     );
@@ -353,7 +368,6 @@ export default class SettingsHandler {
           });
         }
       }
-      
     }
   }
 }
