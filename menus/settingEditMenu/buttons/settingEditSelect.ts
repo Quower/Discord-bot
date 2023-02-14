@@ -33,15 +33,14 @@ export default {
     waitingForResponse: boolean;
   }) => {
     options.interaction.deferUpdate();
-    Menus.update({
-      messageId: options.interaction.message.id,
-      client: options.client,
-      menu: "settingEditMenu",
-      data: {
-        setting: options.interaction.values[0],
-        category: options.data.category,
-      },
-    });
+    // Menus.update({
+    //   messageId: options.interaction.message.id,
+    //   client: options.client,
+    //   data: {
+    //     setting: options.interaction.values[0],
+    //     category: options.data.category,
+    //   },
+    // });
   },
   create: async (options: {
     client: Client;
@@ -63,7 +62,7 @@ export default {
               {
                 label: validValue,
                 value: validValue,
-                default: options.data.setting.includes("validValue"),
+                default: options.data.settingValue.includes("validValue"),
               },
             ]);
           });
@@ -85,7 +84,7 @@ export default {
           return stringInput;
         }
       case "boolean":
-        if (options.data.setting) {
+        if (options.data.settingValue) {
           return new SelectMenuBuilder().setOptions([
             {
               label: "true",
@@ -204,6 +203,13 @@ export default {
         rolesSelect.setMaxValues(25);
 
         return rolesSelect;
+      case "perms":
+        const permSelect = new SelectMenuBuilder({
+          type: ComponentType.MentionableSelect,
+        });
+        permSelect.setPlaceholder("select roles and members");
+        permSelect.setMaxValues(0);
+        permSelect.setMaxValues(25);
     }
     const button = new ButtonBuilder();
     button

@@ -24,7 +24,7 @@ export default {
     }
     const embed = new EmbedBuilder();
     embed.setTitle("Settings Menu");
-    embed.setDescription("```\npick a settings category to view\n```");
+    embed.setDescription("pick a settings category to view");
     options.data = {
       currentPage: options.data.page,
       totalPages: pages,

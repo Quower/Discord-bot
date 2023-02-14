@@ -49,9 +49,9 @@ export default {
     if (settingBase.type == "string" || settingBase.type == "boolean") {
       description1 = `${value}`;
       if (options.data.newValue) {
-        description2 = `${
+        description2 = 
           options.data.newValue
-        }`;
+        
       }
     } else if (
       settingBase.type == "channel" ||
@@ -71,7 +71,7 @@ export default {
       ) {
         value = "null";
       }
-      description1 = `${value}`;
+      description1 = value
       if (options.data.newValue) {
         let value2 = options.data.newValue;
         if (
@@ -84,7 +84,7 @@ export default {
         ) {
           value2 = "null";
         }
-        description2 = `${value2}`;
+        description2 = value2;
       }
     } else if (
       settingBase.type == "channels" ||
@@ -106,12 +106,12 @@ export default {
         } else {
           value2 = value.toString();
         }
-        description2 = `${"``"}${settingBase.description}${"``"}\n${value2}`;
+        description1 = value2;
       }
     } else if (settingBase.type == "perms") {
       if (value.length < 1) {
         value = "null";
-        description1 = `${"``"}${settingBase.description}${"``"}\n${value}`;
+        description1 = `${value}`;
       } else {
         let newValues = "";
         let i = 0;
@@ -119,30 +119,31 @@ export default {
           i++;
           newValues = `${newValues}**Case ${i}:**\n${valu.permissions.toString()}\n${value.members.toString()},${value.roles.toString()}\n`;
         }
-        description1 = `${"``"}${settingBase.description}${"``"}\n${newValues}`;
+        description1 = newValues;
       }
       if (options.data.newValue) {
+        console.log(options.data.newValue)
         let value2 = options.data.newValue;
         if (value2.length < 1) {
           value2 = "null";
-          description1 = `${"``"}${settingBase.description}${"``"}\n${value2}`;
-        } else {
+          description1 = value2
+        } else {2
           let newValues = "";
           let i = 0;
           for (const valu of value2) {
             i++;
-            newValues = `${newValues}**Case ${i}:**\n${valu.permissions.toString()}\n${value.members.toString()},${value.roles.toString()}\n`;
+            if (valu.permissions.length > 0)
+            newValues = `${newValues}**Case ${i}:**\n${valu.permissions.toString() || ''}\n${value.members.toString() || ''},${value.roles.toString() || ''}\n`;
           }
-          description1 = `${"``"}${
-            settingBase.description
-          }${"``"}\n${newValues}`;
+          description2 = newValues;
         }
       }
     }
 
     options.data.validValues = settingBase?.validValues;
     options.data.settingType = settingBase?.type;
-    if (description2) {
+
+    if (options.data.newValue) {
       embed.setDescription(
         `${"``"}${settingBase.description}${"``"}\n----------\nCurrent value\n----------\n${description1}\n\n----------\nNew value\n(----------\n${description2}`
       );
@@ -151,8 +152,12 @@ export default {
         `${"``"}${settingBase.description}${"``"}\n----------\nCurrent value\n----------\n${description1}`
       );
     }
-    if (settingBase?.type == "perm") {
-      if (options.data.selected != -1 || !options.data.selected) {
+    if (settingBase?.type == "perms") {
+      if (options.data.selected = -1 || !options.data.selected) {
+        options.data.settingValue = options.data.newValue || await settingsHandler.read({
+          optionName: settingBase.name,
+          retunrAs: "raw",
+        });
         let menu = await new UkMessageBuilder().build(options, {
           rows: [["cancelButton", "settingEditConfirm"], ["permCaseSelect"]],
           embeds: [embed],
@@ -166,7 +171,7 @@ export default {
         return menu;
       }
     } else {
-      options.data.setting = await settingsHandler.read({
+      options.data.settingValue = options.data.newValue || await settingsHandler.read({
         optionName: settingBase.name,
         retunrAs: "raw",
       });

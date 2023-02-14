@@ -16,6 +16,20 @@
             "description": "tessy",
             "type": "role",
             "defaultValue": null
+        },
+        {
+            "name": "cool",
+            "display": "hiiina",
+            "description": "viiiner",
+            "type": "perms",
+            "defaultValue": []
+        },
+        {
+            "name": "stringoption",
+            "display": "äge tekst",
+            "description": "kirjuta siia mõni racist slur",
+            "type": "string" ,
+            "defaultValue": ""
         }
     ]
 }

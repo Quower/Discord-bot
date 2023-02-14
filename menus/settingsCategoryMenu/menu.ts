@@ -31,7 +31,7 @@ export default {
     }
     const embed = new EmbedBuilder();
     embed.setTitle(settingsCategory.display);
-    embed.setDescription("```\npick a setting to view\n```");
+    embed.setDescription("pick a setting to view");
     options.data = {
       currentPage: options.data.page,
       totalPages: pages,

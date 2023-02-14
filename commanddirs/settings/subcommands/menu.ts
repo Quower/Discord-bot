@@ -21,7 +21,7 @@ import {
         menu: 'settingsMenu',
         client: client,
         where: interaction,
-        deleteAfter: 60,
+        deleteAfter: 600,
         ephemeral: true,
         saveMenu: true,
         data: {page:1}
