@@ -13,7 +13,7 @@ export type setting = {
   type: string;
   defaultValue: any;
   updateExec?: string;
-  validValues?: string[];
+  validValues?: {values: string[], max: number, min: number};
 };
 
 export interface settingUpdate {
@@ -34,8 +34,6 @@ export type saveSetting = {
   voiceChannel, voiceChannels,
   member, members,
   role, roles,
-  perms
-
   */
   value: any;
 };

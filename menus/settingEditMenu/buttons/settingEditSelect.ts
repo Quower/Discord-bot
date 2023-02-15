@@ -18,29 +18,62 @@ import discordjs, {
   ChannelType,
   SelectMenuComponent,
   ComponentType,
+  ModalBuilder,
 } from "discord.js";
 import { Model } from "mongoose";
 import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
-import SettingsHandler from "../../../commanddirs/settings/funtions";
+import SettingsHandler from "../../../handler/funtions";
 import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {
   callback: async (options: {
     client: Client;
-    interaction: SelectMenuInteraction;
+    interaction: SelectMenuInteraction | ButtonInteraction;
     data?: any;
     waitingForResponse: boolean;
   }) => {
-    options.interaction.deferUpdate();
-    // Menus.update({
-    //   messageId: options.interaction.message.id,
-    //   client: options.client,
-    //   data: {
-    //     setting: options.interaction.values[0],
-    //     category: options.data.category,
-    //   },
-    // });
+    console.log(options.data);
+    if (options.interaction instanceof ButtonInteraction) {
+      const Modal = new ModalBuilder()
+      Modal.setCustomId(options.interaction.message.id)
+      Modal.setTitle("Input")
+      const Input = new TextInputBuilder
+      Input.setCustomId('string')
+      Input.setStyle(1)
+      Input.setLabel("String")
+      const ActionRow = new ActionRowBuilder<TextInputBuilder>()
+      ActionRow.addComponents(Input)
+      Modal.addComponents(ActionRow)
+      await options.interaction.showModal(Modal)
+    } else {
+      options.interaction.deferUpdate();
+      switch (options.data.settingType) {
+        case "string":
+
+        case "boolean":
+
+        case "channel":
+
+        case "channels":
+
+        case "textChannel":
+
+        case "textChannels":
+
+        case "voiceChannel":
+
+        case "voiceChannels":
+
+        case "member":
+
+        case "members":
+
+        case "role":
+
+        case "roles":
+      }
+    }
   },
   create: async (options: {
     client: Client;
@@ -50,29 +83,28 @@ export default {
     Indms: boolean;
     data?: any;
   }): Promise<MessageActionRowComponentBuilder> => {
-    console.log(options.data)
+    console.log(options.data);
     switch (options.data.settingType) {
       case "string":
         if (options.data.validValues) {
           const stringSelect = new SelectMenuBuilder();
           stringSelect.setPlaceholder("select string");
-          stringSelect.setMaxValues(0);
-          options.data.validValues.forEach(async (validValue: any) => {
+          stringSelect.setMinValues(options.data.validValues.min);
+          stringSelect.setMaxValues(options.data.validValues.max);
+          options.data.validValues.values.forEach(async (validValue: any) => {
             stringSelect.addOptions([
               {
                 label: validValue,
                 value: validValue,
-                default: options.data.settingValue.includes("validValue"),
+                default: options.data.settingValue.includes(validValue),
               },
             ]);
           });
           return stringSelect;
         } else {
-          const stringInput = new ButtonBuilder({
-            type: ComponentType.TextInput,
-            style: 1 /*short*/,
-          });
+          const stringInput = new ButtonBuilder();
           stringInput.setLabel("input string");
+          stringInput.setStyle(ButtonStyle.Secondary);
 
           // if (options.data.waitingForResponse) {
           //   stringButton.setStyle(ButtonStyle.Primary);
@@ -185,7 +217,7 @@ export default {
 
         return membersSelect;
       case "role":
-        console.log('at role')
+        console.log("at role");
         const roleSelect = new SelectMenuBuilder({
           type: ComponentType.RoleSelect,
         });
@@ -203,13 +235,6 @@ export default {
         rolesSelect.setMaxValues(25);
 
         return rolesSelect;
-      case "perms":
-        const permSelect = new SelectMenuBuilder({
-          type: ComponentType.MentionableSelect,
-        });
-        permSelect.setPlaceholder("select roles and members");
-        permSelect.setMaxValues(0);
-        permSelect.setMaxValues(25);
     }
     const button = new ButtonBuilder();
     button

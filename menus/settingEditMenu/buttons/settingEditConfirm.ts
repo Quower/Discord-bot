@@ -8,7 +8,7 @@ import {
 import { button } from "../../../handler/typings";
 import { Model } from "mongoose";
 import { Menus } from "../../../handler/menuhandlre";
-import SettingsHandler from "../../../commanddirs/settings/funtions";
+import SettingsHandler from "../../../handler/funtions";
 
 export default {
   callback: async (options: {
@@ -21,12 +21,13 @@ export default {
       client: options.client,
       guildId: options.interaction.guildId || "",
     });
-    for (const newvalue of options.data.newValues) {
-        await settingsHandler.write({optionName: newvalue.name, value: newvalue.value})
-    }
-    settingsHandler.update()
+    await settingsHandler.write({
+      optionName: options.data.setting,
+      value: options.data.newValue,
+    });
+    await settingsHandler.update();
     options.interaction.deferUpdate();
-    Menus.update({
+    await Menus.update({
       messageId: options.interaction.message.id,
       client: options.client,
       menu: "back",
@@ -42,7 +43,7 @@ export default {
   }): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     button.setLabel("Confirm");
-    if (!options.data.newValues) {
+    if (!options.data.newValue) {
       button.setDisabled(true);
     }
     button.setStyle(ButtonStyle.Success);

@@ -8,7 +8,7 @@ import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 import Handler from "../../handler/setup";
 import generatorSchema from "../../commanddirs/generators/models/generatorSchema";
-import SettingsHandler from "../../commanddirs/settings/funtions";
+import SettingsHandler from "../../handler/funtions";
 
 export default {
   create: async (options: {

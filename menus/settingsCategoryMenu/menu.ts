@@ -5,7 +5,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import { settingcategorys } from "../../commanddirs/settings/events/ready";
-import SettingsHandler from "../../commanddirs/settings/funtions";
+import SettingsHandler from "../../handler/funtions";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 
@@ -49,10 +49,8 @@ export default {
       i < options.data.currentPage * 5;
       i++
     ) {
-      console.log(i);
 
       if (settingsCategory.settings[i]) {
-        console.log(settingsCategory.settings[i]);
 
         if (
           settingsCategory.settings[i].type == "string" ||
@@ -79,7 +77,6 @@ export default {
             optionName: settingsCategory.settings[i].name,
             retunrAs: "mention",
           });
-          console.log(value);
           if (
             value == "<@null>" ||
             value == "<@>" ||
@@ -118,31 +115,6 @@ export default {
               settingsCategory.settings[i].description
             }${"``"}\n${values}`,
           });
-        } else if (settingsCategory.settings[i].type == "perms") {
-          let values = await settingsHandler.read({
-            optionName: settingsCategory.settings[i].name,
-            retunrAs: "mention",
-          });
-          if (values.length < 1) {
-            values = "null";
-            embed.addFields({
-              name: `${settingsCategory.settings[i].display} [${settingsCategory.settings[i].type}]`,
-              value: `${"``"}${
-                settingsCategory.settings[i].description
-              }${"``"}\n${values}`,
-            });
-          } else {
-            let newValues = "";
-            for (const value of values) {
-              newValues = `${newValues}[[${value.permissions.toString()}],[${value.members.toString()}],[${value.roles.toString()}]]\n`;
-            }
-            embed.addFields({
-              name: `${settingsCategory.settings[i].display} [${settingsCategory.settings[i].type}]`,
-              value: `${"``"}${
-                settingsCategory.settings[i].description
-              }${"``"}\n${newValues}`,
-            });
-          }
         }
 
         // const value = await settingsHandler.read({

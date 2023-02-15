@@ -18,18 +18,19 @@
             "defaultValue": null
         },
         {
-            "name": "cool",
-            "display": "hiiina",
-            "description": "viiiner",
-            "type": "perms",
-            "defaultValue": []
-        },
-        {
             "name": "stringoption",
             "display": "äge tekst",
             "description": "kirjuta siia mõni racist slur",
             "type": "string" ,
             "defaultValue": ""
+        },
+        {
+            "name": "stringselectoption",
+            "display": "äge tekst2.0",
+            "description": "kirjuta siia mõni racist slurdsssssssssss",
+            "type": "string" ,
+            "defaultValue": "jaapan",
+            "validValues": {"values": ["hiina", "saksa", "taiwan", "jaapan"], "max": 1, "min": 0}
         }
     ]
 }

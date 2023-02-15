@@ -22,7 +22,7 @@ import discordjs, {
 } from "discord.js";
 import { Model } from "mongoose";
 import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
-import SettingsHandler from "../../../commanddirs/settings/funtions";
+import SettingsHandler from "../../../handler/funtions";
 import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 import { perm } from "../../../commanddirs/settings/typings";

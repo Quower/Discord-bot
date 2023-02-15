@@ -25,8 +25,9 @@ export default {
       let menuobject = (await menusExport).find(
         (menu) => menu.name == menuschema?.currentMenu
       );
-      let run = require(`${menuobject?.path}input.ts`);
-      run({client: client, message: interaction.fields.getTextInputValue('string'), data: menuschema?.data});//continiue here
+      let run = require(`../.${menuobject?.path}input.ts`).default;
+      interaction.deferUpdate()
+      run({client: client, message: interaction.fields.getTextInputValue('string'), data: menuschema?.data, messageId: menuschema?.messageId});//continiue here
     }
   },
 } as myEvent;
