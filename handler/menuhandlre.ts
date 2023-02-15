@@ -259,17 +259,20 @@ export const Menus = {
       }
     }
     if (waitingForResponse == true) {
-      const menus = await menuSchema.find({channelId: menudb.channelId, waitingForResponse: true})
-      menus.forEach(menu => {
+      const menus = await menuSchema.find({
+        channelId: menudb.channelId,
+        waitingForResponse: true,
+      });
+      menus.forEach((menu) => {
         if (menu.channelId != menudb.channelId) {
-          waitingForResponse = false
+          waitingForResponse = false;
         }
-      })
+      });
     }
     console.log(`got to menus update point 3:${Date.now() - time}`);
     time = Date.now();
     if (options.deleteAfter) {
-      console.log('dsfjfddddddddddddddddddddddddd')
+      console.log("dsfjfddddddddddddddddddddddddd");
       menudb.deleteAfter = options.deleteAfter;
     }
 
@@ -302,7 +305,9 @@ export const Menus = {
           waitingForResponse: menudb.waitingForResponse || false,
           data: menudb.data,
         };
-        if (!options.saveState) {menuI.waitingForResponse = false}
+        if (!options.saveState) {
+          menuI.waitingForResponse = false;
+        }
         menudb.prevMenus.push(menuI);
       }
     }
@@ -340,8 +345,8 @@ export const Menus = {
           })
           .then(() => {
             menudb.lastInteraction = Date.now();
-            console.log(menudb.deleteAfter)
-            console.log(`${Date.now()} dddddddddddddddaaaaaaaaaaa`)
+            console.log(menudb.deleteAfter);
+            console.log(`${Date.now()} dddddddddddddddaaaaaaaaaaa`);
             menudb.save();
           });
       } catch (e) {
@@ -491,8 +496,8 @@ export async function MenuDeleteCheck(options: {
   if (!menu.lastInteraction) {
     return;
   }
-  if ((Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000)) > 0) {
-    console.log(`vvvvvvvv`)
+  if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 0) {
+    console.log(`vvvvvvvv`);
     //console.log(Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000))
     if (menu.ephemeral == undefined) {
       try {
@@ -547,13 +552,13 @@ export async function MenuDeleteCheck(options: {
     console.log(`got to menus check delete point 6:${Date.now() - time}`);
     time = Date.now();
   } else {
-    console.log(`hhhhhh`)
-    console.log((menu.lastInteraction + menu.deleteAfter * 1000) - Date.now())
+    console.log(`hhhhhh`);
+    console.log(menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
     setTimeout(() => {
       MenuDeleteCheck({
         client: options.client,
         messageId: options.messageId,
       });
-    }, (menu.lastInteraction + menu.deleteAfter * 1000) - Date.now());
+    }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
   }
 }

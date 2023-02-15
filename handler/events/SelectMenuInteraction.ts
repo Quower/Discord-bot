@@ -1,5 +1,5 @@
-import DiscordJS, { Client, Events, SelectMenuInteraction } from "discord.js";
-import { botOwners, client } from "../../index";
+import { Client, Events, SelectMenuInteraction } from "discord.js";
+import { botOwners } from "../../index";
 import menuSchema from "../models/menuSchema";
 import { buttonsExport } from "../setup";
 import { myEvent } from "../typings";
@@ -50,7 +50,7 @@ export default {
         client: client,
         interaction: interaction,
         data: menuschema.data,
-        waitingForResponse: menuschema.waitingForResponse || false
+        waitingForResponse: menuschema.waitingForResponse || false,
       });
     }
   },

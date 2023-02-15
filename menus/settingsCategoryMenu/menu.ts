@@ -1,11 +1,6 @@
-import {
-  BaseMessageOptions,
-  Client,
-  CommandInteraction,
-  EmbedBuilder,
-} from "discord.js";
-import { settingcategorys } from "../../commanddirs/settings/events/ready";
-import SettingsHandler from "../../handler/funtions";
+import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
+import { settingcategorys } from "../../handler/events/ready";
+import SettingsHandler from "../../handler/settingshandler";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 
@@ -49,15 +44,13 @@ export default {
       i < options.data.currentPage * 5;
       i++
     ) {
-
       if (settingsCategory.settings[i]) {
-
         if (
           settingsCategory.settings[i].type == "string" ||
           settingsCategory.settings[i].type == "boolean"
         ) {
           const value = await settingsHandler.read({
-            optionName: settingsCategory.settings[i].name,
+            settingName: settingsCategory.settings[i].name,
             retunrAs: "raw",
           });
           embed.addFields({
@@ -74,7 +67,7 @@ export default {
           settingsCategory.settings[i].type == "role"
         ) {
           let value = await settingsHandler.read({
-            optionName: settingsCategory.settings[i].name,
+            settingName: settingsCategory.settings[i].name,
             retunrAs: "mention",
           });
           if (
@@ -101,7 +94,7 @@ export default {
           settingsCategory.settings[i].type == "roles"
         ) {
           let values = await settingsHandler.read({
-            optionName: settingsCategory.settings[i].name,
+            settingName: settingsCategory.settings[i].name,
             retunrAs: "mention",
           });
           if (values.length < 1) {
@@ -138,7 +131,7 @@ export default {
     let menu = await new UkMessageBuilder().build(options, {
       rows: [
         ["preveousButton", "nextButton", "backButton"],
-        ["settingsCategoryMenuSelector"]
+        ["settingsCategoryMenuSelector"],
       ],
       embeds: [embed],
     });

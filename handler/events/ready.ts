@@ -1,10 +1,10 @@
-import settingsSchema from "../../../handler/models/optionsSchema";
-import { readyEvent } from "../../../handler/typings";
+import settingsSchema from "../models/optionsSchema";
+import { readyEvent } from "../typings";
 import fs from "fs";
-import { saveSetting, settingsCategory } from "../typings";
-const config = require("../../../config.json");
-import mongoose, { Schema } from "mongoose";
-const settingsfiles = fs.readdirSync("./commanddirs/settings/settingcategorys");
+import { saveSetting, settingsCategory } from "../../handler/typings";
+const config = require("../../config.json");
+import mongoose from "mongoose";
+const settingsfiles = fs.readdirSync("./handler/settingcategorys");
 export let settingcategorys: settingsCategory[] = [];
 settingsfiles.forEach(async (file) => {
   const category = require(`../settingcategorys/${file}`);
@@ -24,8 +24,8 @@ settingcategorys.forEach((category) => {
     if (setting.updateExec) {
       settingRuns.push({
         name: setting.name,
-        path: setting.updateExec
-      })
+        path: setting.updateExec,
+      });
     }
   });
 });

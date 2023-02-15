@@ -1,5 +1,5 @@
-import DiscordJS, { Client, Events, Message } from "discord.js";
-import { botOwners, client } from "../../index";
+import { Client, Events, Message } from "discord.js";
+import { botOwners } from "../../index";
 import menuSchema from "../models/menuSchema";
 import { menusExport } from "../setup";
 import { myEvent } from "../typings";
@@ -43,7 +43,12 @@ export default {
       }
 
       let run = require(`${menuobject?.path}input.ts`);
-      run({client: client, message: message.content, data: menuschema.data, messageId: menuschema.messageId});
+      run({
+        client: client,
+        message: message.content,
+        data: menuschema.data,
+        messageId: menuschema.messageId,
+      });
     }
   },
 } as myEvent;

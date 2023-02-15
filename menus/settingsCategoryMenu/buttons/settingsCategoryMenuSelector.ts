@@ -1,19 +1,11 @@
 import {
-  ActionRowBuilder,
-  AnyComponentBuilder,
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
-  ChatInputCommandInteraction,
   Client,
-  EmbedBuilder,
   MessageActionRowComponentBuilder,
   SelectMenuBuilder,
   SelectMenuInteraction,
-  VoiceChannel,
 } from "discord.js";
-import { Model } from "mongoose";
-import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
 import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
@@ -28,7 +20,10 @@ export default {
       messageId: options.interaction.message.id,
       client: options.client,
       menu: "settingEditMenu",
-      data: {setting: options.interaction.values[0], category: options.data.category},
+      data: {
+        setting: options.interaction.values[0],
+        category: options.data.category,
+      },
     });
   },
   create: async (options: {
@@ -62,7 +57,7 @@ export default {
           description: setting.description,
         },
       ]);
-    }); 
+    });
 
     return selectMenu;
   },

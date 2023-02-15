@@ -6,7 +6,6 @@ import {
   MessageActionRowComponentBuilder,
 } from "discord.js";
 import { button } from "../../../handler/typings";
-import { Model } from "mongoose";
 import { Menus } from "../../../handler/menuhandlre";
 
 export default {
@@ -16,7 +15,7 @@ export default {
     data?: any;
   }) => {
     options.interaction.deferUpdate();
-    options.data.page = options.data.page + 1
+    options.data.page = options.data.page + 1;
     Menus.update({
       messageId: options.interaction.message.id,
       client: options.client,
@@ -35,7 +34,7 @@ export default {
     if (options.data.totalPages == options.data.currentPage) {
       button.setLabel(">");
       button.setStyle(ButtonStyle.Primary);
-      button.setDisabled(true)
+      button.setDisabled(true);
       return button;
     }
     button.setLabel(">");

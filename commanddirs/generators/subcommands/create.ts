@@ -21,7 +21,7 @@ export default {
     if (client == undefined && interaction == undefined) {
       return;
     }
-    const name = interaction.options.getString("name")
+    const name = interaction.options.getString("name");
     interaction.guild?.channels
       .create({ name: `${name}`, type: ChannelType.GuildVoice })
       .then(async (channel) => {

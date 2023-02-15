@@ -1,21 +1,7 @@
-import DiscordJS, {
-  DMChannel,
-  TextChannel,
-  Events,
-  IntentsBitField,
-  Message,
-  SelectMenuInteraction,
-  CommandInteraction,
-} from "discord.js";
+import DiscordJS, { DMChannel, TextChannel, IntentsBitField } from "discord.js";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 import Handler from "./handler/setup";
-import ChatInputCommandInteractionrun from "./handler/events/ChatInputCommandInteraction";
-import ButtonInteractionrun from "./handler/events/ButtonInteraction";
-import SelectMenuInteractionrun from "./handler/events/SelectMenuInteraction";
-import messageCreaterun from "./handler/events/messageCreate";
 import menuSchema from "./handler/models/menuSchema";
-import { Player } from "discord-player";
 import { MenuDeleteCheck } from "./handler/menuhandlre";
 //import testSchema from './mongodb/testschema'
 dotenv.config();

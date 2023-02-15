@@ -1,14 +1,5 @@
-import DiscordJS, {
-  Events,
-  PermissionsBitField,
-  ChatInputCommandInteraction,
-  Client,
-  DMChannel,
-  ModalSubmitInteraction,
-} from "discord.js";
-import { botOwners } from "../../index";
-import { commandsExport, menusExport } from "../setup";
-import { client } from "../../index";
+import { Events, Client, ModalSubmitInteraction } from "discord.js";
+import { menusExport } from "../setup";
 import { myEvent } from "../typings";
 import menuSchema from "../models/menuSchema";
 
@@ -20,14 +11,19 @@ export default {
   ) => {
     if (interaction instanceof ModalSubmitInteraction) {
       let menuschema = await menuSchema.findOne({
-        messageId: interaction.customId
+        messageId: interaction.customId,
       });
       let menuobject = (await menusExport).find(
         (menu) => menu.name == menuschema?.currentMenu
       );
       let run = require(`../.${menuobject?.path}input.ts`).default;
-      interaction.deferUpdate()
-      run({client: client, message: interaction.fields.getTextInputValue('string'), data: menuschema?.data, messageId: menuschema?.messageId});//continiue here
+      interaction.deferUpdate();
+      run({
+        client: client,
+        message: interaction.fields.getTextInputValue("string"),
+        data: menuschema?.data,
+        messageId: menuschema?.messageId,
+      }); //continiue here
     }
   },
 } as myEvent;

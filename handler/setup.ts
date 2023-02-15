@@ -1,34 +1,19 @@
 import {
   ActionRowBuilder,
-  ActionRowData,
-  AnyComponentBuilder,
-  APIActionRowComponent,
-  APIMessageActionRowComponent,
   ApplicationCommandOption,
   ApplicationCommandOptionType,
-  BaseMessageOptions,
   ButtonInteraction,
-  Channel,
-  ChatInputCommandInteraction,
   Client,
   CommandInteraction,
-  DMChannel,
   EmbedBuilder,
-  Interaction,
-  InteractionCollector,
-  JSONEncodable,
   MessageActionRowComponentBuilder,
-  MessageActionRowComponentData,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   SelectMenuInteraction,
   SlashCommandBuilder,
-  TextChannel,
 } from "discord.js";
 import fs from "fs";
-import mongoose, { Model } from "mongoose";
-import { menuInfo, returnMenu } from "./typings";
-import { client } from "../index";
-import menuSchema from "./models/menuSchema";
+import mongoose from "mongoose";
+import { returnMenu } from "./typings";
 import {
   commandobject,
   subcommandobject,
@@ -36,10 +21,7 @@ import {
   menuobject,
   buttonobject,
   buttonArray,
-  readyEvent,
 } from "./typings";
-import menu from "../menus/deleteVcGeneratorConfirm/menu";
-import { ExitStatus } from "typescript";
 
 const commandfolders = fs.readdirSync("./commanddirs");
 export let commandsExport = new Array<commandobject>();
@@ -173,13 +155,13 @@ menusExport.forEach((menu) => {
           client: Client;
           interaction: ButtonInteraction | SelectMenuInteraction;
           data?: any;
-          waitingForResponse: boolean
+          waitingForResponse: boolean;
         }) {
           object.default.callback({
             client: options.client,
             interaction: options.interaction,
             data: options.data,
-            waitingForResponse: options.waitingForResponse
+            waitingForResponse: options.waitingForResponse,
           });
         },
         create: function (options: {
@@ -189,7 +171,7 @@ menusExport.forEach((menu) => {
           userIds: string[];
           Indms: boolean;
           data?: any;
-          waitingForResponse: boolean
+          waitingForResponse: boolean;
         }): Promise<MessageActionRowComponentBuilder> {
           return object.default.create({
             client: options.client,
@@ -198,7 +180,7 @@ menusExport.forEach((menu) => {
             userIds: options.userIds,
             InDms: options.Indms,
             data: options.data,
-            waitingForResponse: options.waitingForResponse
+            waitingForResponse: options.waitingForResponse,
           });
         },
       } as buttonobject;

@@ -1,19 +1,11 @@
 import {
-  ActionRowBuilder,
-  AnyComponentBuilder,
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
-  ChatInputCommandInteraction,
   Client,
-  EmbedBuilder,
   MessageActionRowComponentBuilder,
   SelectMenuBuilder,
   SelectMenuInteraction,
-  VoiceChannel,
 } from "discord.js";
-import { Model } from "mongoose";
-import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
 import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 

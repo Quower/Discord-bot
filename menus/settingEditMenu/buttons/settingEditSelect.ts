@@ -1,29 +1,17 @@
-import discordjs, {
+import {
   ActionRowBuilder,
-  AnyComponentBuilder,
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  ChatInputCommandInteraction,
   Client,
-  EmbedBuilder,
   MessageActionRowComponentBuilder,
   SelectMenuBuilder,
   SelectMenuInteraction,
   TextInputBuilder,
-  VoiceChannel,
-  APIChannelSelectComponent,
-  APISelectMenuComponent,
-  ComponentBuilder,
   ChannelType,
-  SelectMenuComponent,
   ComponentType,
   ModalBuilder,
 } from "discord.js";
-import { Model } from "mongoose";
-import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
-import SettingsHandler from "../../../handler/funtions";
-import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {
@@ -35,17 +23,17 @@ export default {
   }) => {
     console.log(options.data);
     if (options.interaction instanceof ButtonInteraction) {
-      const Modal = new ModalBuilder()
-      Modal.setCustomId(options.interaction.message.id)
-      Modal.setTitle("Input")
-      const Input = new TextInputBuilder
-      Input.setCustomId('string')
-      Input.setStyle(1)
-      Input.setLabel("String")
-      const ActionRow = new ActionRowBuilder<TextInputBuilder>()
-      ActionRow.addComponents(Input)
-      Modal.addComponents(ActionRow)
-      await options.interaction.showModal(Modal)
+      const Modal = new ModalBuilder();
+      Modal.setCustomId(options.interaction.message.id);
+      Modal.setTitle("Input");
+      const Input = new TextInputBuilder();
+      Input.setCustomId("string");
+      Input.setStyle(1);
+      Input.setLabel("String");
+      const ActionRow = new ActionRowBuilder<TextInputBuilder>();
+      ActionRow.addComponents(Input);
+      Modal.addComponents(ActionRow);
+      await options.interaction.showModal(Modal);
     } else {
       options.interaction.deferUpdate();
       switch (options.data.settingType) {

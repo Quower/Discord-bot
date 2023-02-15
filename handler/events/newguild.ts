@@ -1,9 +1,6 @@
-import optionsSchema from "../../../handler/models/optionsSchema";
-import { myEvent, readyEvent } from "../../../handler/typings";
-import fs from "fs";
-import { saveSetting, settingsCategory } from "../typings";
-const config = require("../../../config.json");
-import { Schema } from "mongoose";
+import optionsSchema from "../models/optionsSchema";
+import { myEvent } from "../typings";
+const config = require("../../config.json");
 import { Events, Guild } from "discord.js";
 import { settingsBase } from "./ready";
 

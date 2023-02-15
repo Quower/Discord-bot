@@ -1,11 +1,6 @@
-import {
-  BaseMessageOptions,
-  Client,
-  CommandInteraction,
-  EmbedBuilder,
-} from "discord.js";
-import { settingcategorys } from "../../commanddirs/settings/events/ready";
-import SettingsHandler from "../../handler/funtions";
+import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
+import { settingcategorys } from "../../handler/events/ready";
+import SettingsHandler from "../../handler/settingshandler";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 
@@ -41,7 +36,7 @@ export default {
     }
     console.log(settingBase);
     let value = await settingsHandler.read({
-      optionName: settingBase.name,
+      settingName: settingBase.name,
       retunrAs: "mention",
     });
     let description1 = "";
@@ -128,7 +123,7 @@ export default {
     options.data.settingValue =
       options.data.newValue ||
       (await settingsHandler.read({
-        optionName: settingBase.name,
+        settingName: settingBase.name,
         retunrAs: "raw",
       }));
     let menu = await new UkMessageBuilder().build(options, {

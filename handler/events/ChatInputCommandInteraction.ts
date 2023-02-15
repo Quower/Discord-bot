@@ -1,4 +1,4 @@
-import DiscordJS, {
+import {
   Events,
   PermissionsBitField,
   ChatInputCommandInteraction,
@@ -7,7 +7,6 @@ import DiscordJS, {
 } from "discord.js";
 import { botOwners } from "../../index";
 import { commandsExport } from "../setup";
-import { client } from "../../index";
 import { myEvent } from "../typings";
 
 export default {
@@ -21,7 +20,7 @@ export default {
       let commandObject = (await commandsExport).find(
         (comannd) => comannd.command == interaction.commandName
       );
-      console.log(await interaction.memberPermissions.toArray())
+      console.log(await interaction.memberPermissions.toArray());
       console.log(`got to commaninteraction point 1:${Date.now() - time}`);
       time = Date.now();
 
@@ -40,9 +39,9 @@ export default {
           (interaction.member?.permissions instanceof PermissionsBitField &&
             commandObject?.permissions &&
             interaction.member?.permissions.has(commandObject?.permissions)) ||
-            botOwners.includes(interaction.member.user.id) ||
-            interaction.channel instanceof DMChannel ||
-            interaction.user.id == interaction.guild.ownerId
+          botOwners.includes(interaction.member.user.id) ||
+          interaction.channel instanceof DMChannel ||
+          interaction.user.id == interaction.guild.ownerId
         ) {
           if (interaction.options.getSubcommand()) {
             let subcommandObject = commandObject?.subcommands.find(

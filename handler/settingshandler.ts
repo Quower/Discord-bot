@@ -1,18 +1,7 @@
-import {
-  Channel,
-  Client,
-  GuildChannel,
-  GuildMember,
-  PermissionsBitField,
-  Role,
-  TextChannel,
-  VoiceChannel,
-} from "discord.js";
-import { Type } from "typescript";
+import { Client } from "discord.js";
 import settingsSchema from "./models/optionsSchema";
-import { returnMenu } from "./typings";
-import { settingRuns, settingsBase } from "../commanddirs/settings/events/ready";
-import { perm, savePerm, saveSetting } from "../commanddirs/settings/typings";
+import { saveSetting } from "./typings";
+import { settingRuns, settingsBase } from "./events/ready";
 export default class SettingsHandler {
   guildId!: string;
   client!: Client;
@@ -29,16 +18,16 @@ export default class SettingsHandler {
       (await settingsSchema.findOne({ guildId: this.guildId }))?.settings || [];
   }
   async update() {
-    console.log(`updated settings:${JSON.stringify(this.updatedSettings)}`)
+    console.log(`updated settings:${JSON.stringify(this.updatedSettings)}`);
     if (this.updatedSettings.length > 0) {
       const settings = await settingsSchema.findOne({ guildId: this.guildId });
       if (settings) {
-        console.log('got to guild found')
+        console.log("got to guild found");
         for await (const updateSetting of this.updatedSettings) {
           const index = settings.settings.findIndex(
             (setting) => setting.name == updateSetting.setting.name
           );
-          console.log(index)
+          console.log(index);
           let scontinue = true;
           if (updateSetting.exec) {
             const exec = require(`../../${updateSetting.exec}`).default;
@@ -60,8 +49,8 @@ export default class SettingsHandler {
             }
           }
         }
-        settings.markModified('settings')
-        await settings.save()
+        settings.markModified("settings");
+        await settings.save();
       }
 
       this.updatedSettings = [];
@@ -70,15 +59,15 @@ export default class SettingsHandler {
       (await settingsSchema.findOne({ guildId: this.guildId }))?.settings || [];
   }
   /**returnAs acepted values: raw, mention, other*/
-  async read(options: { optionName: string; retunrAs: string }): Promise<any> {
+  async read(options: { settingName: string; retunrAs: string }): Promise<any> {
     let setting;
     console.log(this.settings);
     const index = this.settings.findIndex(
-      (setting) => setting.name == options.optionName
+      (setting) => setting.name == options.settingName
     );
     if (index == -1) {
       setting = settingsBase.find(
-        (setting) => setting.name == options.optionName
+        (setting) => setting.name == options.settingName
       );
       if (!setting) {
         return;
@@ -246,12 +235,12 @@ export default class SettingsHandler {
         break;
     }
   }
-  async write(options: { optionName: string; value: any }): Promise<void> {
+  async write(options: { settingName: string; value: any }): Promise<void> {
     const setting = settingsBase.find(
-      (setting) => setting.name == options.optionName
+      (setting) => setting.name == options.settingName
     );
     const settingRun = settingRuns.find(
-      (settingRun) => settingRun.name == options.optionName
+      (settingRun) => settingRun.name == options.settingName
     );
     if (setting) {
       setting.value = options.value;

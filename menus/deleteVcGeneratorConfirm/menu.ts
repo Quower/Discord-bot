@@ -1,10 +1,5 @@
-import {
-  BaseMessageOptions,
-  ChatInputCommandInteraction,
-  Client,
-  EmbedBuilder,
-} from "discord.js";
-import Handler, { UkMessageBuilder } from "../../handler/setup";
+import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
+import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 
 export default {

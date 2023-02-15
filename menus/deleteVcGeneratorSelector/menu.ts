@@ -1,12 +1,6 @@
-import {
-  BaseMessageOptions,
-  Client,
-  CommandInteraction,
-  EmbedBuilder,
-} from "discord.js";
+import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
-import Handler from "../../handler/setup";
 
 export default {
   create: async (options: {

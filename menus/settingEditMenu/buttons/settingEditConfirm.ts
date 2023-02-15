@@ -6,9 +6,8 @@ import {
   MessageActionRowComponentBuilder,
 } from "discord.js";
 import { button } from "../../../handler/typings";
-import { Model } from "mongoose";
 import { Menus } from "../../../handler/menuhandlre";
-import SettingsHandler from "../../../handler/funtions";
+import SettingsHandler from "../../../handler/settingshandler";
 
 export default {
   callback: async (options: {
@@ -22,7 +21,7 @@ export default {
       guildId: options.interaction.guildId || "",
     });
     await settingsHandler.write({
-      optionName: options.data.setting,
+      settingName: options.data.setting,
       value: options.data.newValue,
     });
     await settingsHandler.update();

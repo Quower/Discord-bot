@@ -1,31 +1,12 @@
-import discordjs, {
-  ActionRowBuilder,
-  AnyComponentBuilder,
-  ButtonBuilder,
-  ButtonInteraction,
-  ButtonStyle,
-  ChatInputCommandInteraction,
+import {
   Client,
-  EmbedBuilder,
   MessageActionRowComponentBuilder,
   SelectMenuBuilder,
   SelectMenuInteraction,
-  TextInputBuilder,
-  VoiceChannel,
-  APIChannelSelectComponent,
-  APISelectMenuComponent,
-  ComponentBuilder,
-  ChannelType,
-  SelectMenuComponent,
-  ComponentType,
-  PermissionsBitField,
 } from "discord.js";
-import { Model } from "mongoose";
-import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
-import SettingsHandler from "../../../handler/funtions";
+import SettingsHandler from "../../../handler/settingshandler";
 import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
-import { perm } from "../../../commanddirs/settings/typings";
 
 export default {
   callback: async (options: {
@@ -35,22 +16,24 @@ export default {
     waitingForResponse: boolean;
   }) => {
     options.interaction.deferUpdate();
-    JSON.stringify(options.data)
-    console.log(`data: ${JSON.stringify(options.data)}`)
+    JSON.stringify(options.data);
+    console.log(`data: ${JSON.stringify(options.data)}`);
     if (options.interaction.values[0] == "add") {
       const settingsHandler = new SettingsHandler();
       await settingsHandler.init({
         client: options.client,
         guildId: options.interaction.guildId || "",
       });
-      const setting = options.data.newValue
-      if (setting == undefined) {await settingsHandler.read({
-        optionName: options.data.setting,
-        retunrAs: "raw",
-      });}
-      console.log(`setting: ${setting}`)
+      const setting = options.data.newValue;
+      if (setting == undefined) {
+        await settingsHandler.read({
+          settingName: options.data.setting,
+          retunrAs: "raw",
+        });
+      }
+      console.log(`setting: ${setting}`);
       setting.push({ permissions: [], members: [], roles: [] });
-      options.data.newValue = setting
+      options.data.newValue = setting;
       options.data.selected = setting.length;
       Menus.update({
         messageId: options.interaction.message.id,

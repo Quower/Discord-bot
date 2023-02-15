@@ -1,7 +1,10 @@
-import { Client, Message, SelectMenuInteraction } from "discord.js"
-import { Model } from "mongoose"
+import { Client } from "discord.js";
 
-
-export default async (options: {client: Client, message: string, data: any, messageId: string}) => {
-    //code
-  } 
+export default async (options: {
+  client: Client;
+  message: string;
+  data: any;
+  messageId: string;
+}) => {
+  //code
+};

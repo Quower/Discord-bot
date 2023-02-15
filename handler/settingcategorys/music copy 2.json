@@ -1,0 +1,14 @@
+{
+  "name": "musicOptions4",
+  "display": "music options4",
+  "description": "options for playing music4",
+  "settings": [
+    {
+      "name": "djrole4",
+      "display": "Dj Role4",
+      "description": "Role that can fully controll the music bot4",
+      "type": "role",
+      "defaultValue": null
+    }
+  ]
+}
