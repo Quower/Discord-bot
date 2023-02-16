@@ -11,22 +11,25 @@ const deleteMenusWithoutMessage = true;
 
 export const client = new DiscordJS.Client({
   intents: [
-    IntentsBitField.Flags.DirectMessages,
+    IntentsBitField.Flags.AutoModerationConfiguration,
+    IntentsBitField.Flags.AutoModerationExecution,
     IntentsBitField.Flags.DirectMessageReactions,
     IntentsBitField.Flags.DirectMessageTyping,
-    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.DirectMessages,
     IntentsBitField.Flags.GuildBans,
     IntentsBitField.Flags.GuildEmojisAndStickers,
     IntentsBitField.Flags.GuildIntegrations,
     IntentsBitField.Flags.GuildInvites,
     IntentsBitField.Flags.GuildMembers,
-    IntentsBitField.Flags.GuildMessages,
     IntentsBitField.Flags.GuildMessageReactions,
     IntentsBitField.Flags.GuildMessageTyping,
+    IntentsBitField.Flags.GuildMessages,
     IntentsBitField.Flags.GuildPresences,
     IntentsBitField.Flags.GuildScheduledEvents,
     IntentsBitField.Flags.GuildVoiceStates,
     IntentsBitField.Flags.GuildWebhooks,
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.MessageContent
   ],
 });
 client.on("ready", async () => {
@@ -45,9 +48,11 @@ client.on("ready", async () => {
 });
 
 client.login(process.env.TOKEN);
-// client.on("interactionCreate", (interaction) => {
-//   console.log(interaction);
-// });
+client.on("interactionCreate", (interaction) => {
+  console.log(interaction);
+});
+
+
 // client.on(Events.InteractionCreate, async (interaction) => {
 //   ChatInputCommandInteractionrun(interaction);
 // });

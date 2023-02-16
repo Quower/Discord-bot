@@ -43,7 +43,7 @@ export default {
           interaction.channel instanceof DMChannel ||
           interaction.user.id == interaction.guild.ownerId
         ) {
-          if (interaction.options.getSubcommand()) {
+          if (!commandObject?.MainCommand) {
             let subcommandObject = commandObject?.subcommands.find(
               (subcommand) =>
                 subcommand.command == interaction.options.getSubcommand()

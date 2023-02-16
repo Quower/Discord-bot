@@ -87,7 +87,7 @@ export default {
       settingBase.type == "roles" ||
       settingBase.type == "select"
     ) {
-      if (value.length < 1) {
+      if (!value || value.length < 1) {
         value = "null";
       } else {
         value = value.toString();

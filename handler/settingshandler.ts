@@ -76,6 +76,7 @@ export default class SettingsHandler {
       setting = this.settings[index];
     }
     let channels = [];
+    if (setting.value == null) {return undefined}
     switch (options.retunrAs) {
       case "raw":
         return setting.value;

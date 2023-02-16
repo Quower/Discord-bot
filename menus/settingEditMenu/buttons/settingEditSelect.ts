@@ -77,26 +77,44 @@ export default {
           }
 
         case "channel":
+          console.log(options.interaction);
+          break;
 
         case "channels":
+          console.log(options.interaction);
+          break;
 
         case "textChannel":
+          console.log(options.interaction);
+          break;
 
         case "textChannels":
+          console.log(options.interaction);
+          break;
 
         case "voiceChannel":
+          console.log(options.interaction);
+          break;
 
         case "voiceChannels":
+          console.log(options.interaction);
+          break;
 
         case "member":
+          console.log(options.interaction);
+          break;
 
         case "members":
+          console.log(options.interaction);
+          break;
 
         case "role":
           console.log(options.interaction);
           break;
 
         case "roles":
+          console.log(options.interaction);
+          break;
 
         case "select":
           options.data.snewValue = options.interaction.values;
@@ -155,55 +173,61 @@ export default {
 
       case "channel":
         const channelSelect = new SelectMenuBuilder({
+          type: ComponentType.ChannelSelect,
           channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
         });
         channelSelect.setPlaceholder("select channel");
-        channelSelect.setMaxValues(0);
+        channelSelect.setMinValues(0);
         channelSelect.setMaxValues(1);
 
         return channelSelect;
       case "channels":
         const channelsSelect = new SelectMenuBuilder({
+          type: ComponentType.ChannelSelect,
           channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
         });
         channelsSelect.setPlaceholder("select channels");
-        channelsSelect.setMaxValues(0);
+        channelsSelect.setMinValues(0);
         channelsSelect.setMaxValues(25);
 
         return channelsSelect;
       case "textChannel":
         const textchannelSelect = new SelectMenuBuilder({
-          channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
+          type: ComponentType.ChannelSelect,
+          channel_types: [ChannelType.GuildText],
         });
         textchannelSelect.setPlaceholder("select text channel");
-        textchannelSelect.setMaxValues(0);
+        textchannelSelect.setMinValues(0);
         textchannelSelect.setMaxValues(1);
 
         return textchannelSelect;
       case "textChannels":
         const textchannelsSelect = new SelectMenuBuilder({
-          channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
+          type: ComponentType.ChannelSelect,
+          channel_types: [ChannelType.GuildText],
         });
         textchannelsSelect.setPlaceholder("select text channels");
-        textchannelsSelect.setMaxValues(0);
+        textchannelsSelect.setMinValues(0);
         textchannelsSelect.setMaxValues(25);
 
         return textchannelsSelect;
       case "voiceChannel":
         const voicechannelSelect = new SelectMenuBuilder({
-          channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
+          type: ComponentType.ChannelSelect,
+          channel_types: [ChannelType.GuildVoice],
         });
         voicechannelSelect.setPlaceholder("select voice channel");
-        voicechannelSelect.setMaxValues(0);
+        voicechannelSelect.setMinValues(0);
         voicechannelSelect.setMaxValues(1);
 
         return voicechannelSelect;
       case "voiceChannels":
         const voicechannelsSelect = new SelectMenuBuilder({
-          channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
+          type: ComponentType.ChannelSelect,
+          channel_types: [ChannelType.GuildVoice],
         });
         voicechannelsSelect.setPlaceholder("select voice channels");
-        voicechannelsSelect.setMaxValues(0);
+        voicechannelsSelect.setMinValues(0);
         voicechannelsSelect.setMaxValues(25);
 
         return voicechannelsSelect;
@@ -212,7 +236,7 @@ export default {
           type: ComponentType.UserSelect,
         });
         memberSelect.setPlaceholder("select member");
-        memberSelect.setMaxValues(0);
+        memberSelect.setMinValues(0);
         memberSelect.setMaxValues(1);
 
         return memberSelect;
@@ -221,7 +245,7 @@ export default {
           type: ComponentType.MentionableSelect,
         });
         membersSelect.setPlaceholder("select members");
-        membersSelect.setMaxValues(0);
+        membersSelect.setMinValues(0);
         membersSelect.setMaxValues(25);
 
         return membersSelect;
@@ -231,7 +255,7 @@ export default {
           type: ComponentType.RoleSelect,
         });
         roleSelect.setPlaceholder("select role");
-        roleSelect.setMaxValues(0);
+        roleSelect.setMinValues(0);
         roleSelect.setMaxValues(1);
 
         return roleSelect;
@@ -240,7 +264,7 @@ export default {
           type: ComponentType.RoleSelect,
         });
         rolesSelect.setPlaceholder("select roles");
-        rolesSelect.setMaxValues(0);
+        rolesSelect.setMinValues(0);
         rolesSelect.setMaxValues(25);
 
         return rolesSelect;

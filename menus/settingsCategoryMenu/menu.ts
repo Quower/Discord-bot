@@ -98,7 +98,7 @@ export default {
             settingName: settingsCategory.settings[i].name,
             retunrAs: "mention",
           });
-          if (values.length < 1) {
+          if (!values || values.length < 1) {
             values = "null";
           } else {
             values = values.toString();

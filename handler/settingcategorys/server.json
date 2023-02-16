@@ -11,8 +11,8 @@
       "defaultValue": true
     },
     {
-      "name": "testSetting",
-      "display": "testsetting",
+      "name": "role",
+      "display": "role",
       "description": "tessy",
       "type": "role",
       "defaultValue": null
@@ -35,6 +35,56 @@
         "max": 1,
         "min": 0
       }
+    },
+    {
+      "name": "roles",
+      "display": "roles",
+      "description": "tessy",
+      "type": "roles",
+      "defaultValue": null
+    },
+    {
+      "name": "member",
+      "display": "member",
+      "description": "tessy",
+      "type": "member",
+      "defaultValue": null
+    },
+    {
+      "name": "members",
+      "display": "members",
+      "description": "tessy",
+      "type": "members",
+      "defaultValue": null
+    },
+    {
+      "name": "channel",
+      "display": "channel",
+      "description": "tessy",
+      "type": "channel",
+      "defaultValue": null
+    },
+    {
+      "name": "channels",
+      "display": "channels",
+      "description": "tessy",
+      "type": "channels",
+      "defaultValue": null
+    },
+    {
+      "name": "textChannel",
+      "display": "textChannel",
+      "description": "tessy",
+      "type": "textChannel",
+      "defaultValue": null
+    },
+    {
+      "name": "textChannels",
+      "display": "textChannels",
+      "description": "tessy",
+      "type": "textChannels",
+      "defaultValue": null
     }
+
   ]
 }
