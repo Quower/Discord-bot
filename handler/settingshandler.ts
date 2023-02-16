@@ -127,6 +127,8 @@ export default class SettingsHandler {
               roles.push(`<@&${roleId}>`);
             }
             return roles;
+          case "select":
+            return setting.value;
         }
         break;
       case "other":
@@ -231,6 +233,8 @@ export default class SettingsHandler {
               }
             }
             return roles;
+          case "select":
+            return setting.value;
         }
         break;
     }

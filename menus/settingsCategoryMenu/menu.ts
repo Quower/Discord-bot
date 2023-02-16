@@ -91,7 +91,8 @@ export default {
           settingsCategory.settings[i].type == "textChannels" ||
           settingsCategory.settings[i].type == "voiceChannels" ||
           settingsCategory.settings[i].type == "members" ||
-          settingsCategory.settings[i].type == "roles"
+          settingsCategory.settings[i].type == "roles" || 
+          settingsCategory.settings[i].type == "select"
         ) {
           let values = await settingsHandler.read({
             settingName: settingsCategory.settings[i].name,

@@ -12,6 +12,8 @@ import {
   ComponentType,
   ModalBuilder,
 } from "discord.js";
+import { Menus } from "../../../handler/menuhandlre";
+import { CreateModal } from "../../../handler/modalhandelr";
 import { button } from "../../../handler/typings";
 
 export default {
@@ -23,23 +25,56 @@ export default {
   }) => {
     console.log(options.data);
     if (options.interaction instanceof ButtonInteraction) {
-      const Modal = new ModalBuilder();
-      Modal.setCustomId(options.interaction.message.id);
-      Modal.setTitle("Input");
-      const Input = new TextInputBuilder();
-      Input.setCustomId("string");
-      Input.setStyle(1);
-      Input.setLabel("String");
-      const ActionRow = new ActionRowBuilder<TextInputBuilder>();
-      ActionRow.addComponents(Input);
-      Modal.addComponents(ActionRow);
-      await options.interaction.showModal(Modal);
+      switch (options.data.settingType) {
+        case "select":
+          await CreateModal({
+            name: "settingEditMenuStringInput",
+            client: options.client,
+            deleteAfter: 120,
+            interaction: options.interaction,
+            data: {
+              menu: options.data,
+              messageId: options.interaction.message.id,
+            },
+          });
+        case "role": {
+          
+        }
+      }
+
+      // const Modal = new ModalBuilder();
+      // Modal.setCustomId(options.interaction.message.id);
+      // Modal.setTitle("Input");
+      // const Input = new TextInputBuilder();
+      // Input.setCustomId("string");
+      // Input.setStyle(1);
+      // Input.setLabel("String");
+      // Input.setValue(options.data.settingValue);
+      // const ActionRow = new ActionRowBuilder<TextInputBuilder>();
+      // ActionRow.addComponents(Input);
+      // Modal.addComponents(ActionRow);
+      // await options.interaction.showModal(Modal);
     } else {
       options.interaction.deferUpdate();
       switch (options.data.settingType) {
-        case "string":
-
         case "boolean":
+          if (options.interaction.values[0] == "1") {
+            options.data.snewValue = true;
+            options.data.newValue = "true";
+            Menus.update({
+              messageId: options.interaction.message.id,
+              client: options.client,
+              data: options.data,
+            });
+          } else if (options.interaction.values[0] == "0") {
+            options.data.snewValue = false;
+            options.data.newValue = "false";
+            Menus.update({
+              messageId: options.interaction.message.id,
+              client: options.client,
+              data: options.data,
+            });
+          }
 
         case "channel":
 
@@ -58,8 +93,19 @@ export default {
         case "members":
 
         case "role":
+          console.log(options.interaction);
+          break;
 
         case "roles":
+
+        case "select":
+          options.data.snewValue = options.interaction.values;
+          options.data.newValue = options.interaction.values;
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
       }
     }
   },
@@ -74,46 +120,21 @@ export default {
     console.log(options.data);
     switch (options.data.settingType) {
       case "string":
-        if (options.data.validValues) {
-          const stringSelect = new SelectMenuBuilder();
-          stringSelect.setPlaceholder("select string");
-          stringSelect.setMinValues(options.data.validValues.min);
-          stringSelect.setMaxValues(options.data.validValues.max);
-          options.data.validValues.values.forEach(async (validValue: any) => {
-            stringSelect.addOptions([
-              {
-                label: validValue,
-                value: validValue,
-                default: options.data.settingValue.includes(validValue),
-              },
-            ]);
-          });
-          return stringSelect;
-        } else {
-          const stringInput = new ButtonBuilder();
-          stringInput.setLabel("input string");
-          stringInput.setStyle(ButtonStyle.Secondary);
-
-          // if (options.data.waitingForResponse) {
-          //   stringButton.setStyle(ButtonStyle.Primary);
-          //   stringButton.setLabel("Input");
-          // } else {
-          //   stringButton.setStyle(ButtonStyle.Danger);
-          //   stringButton.setLabel("Cancel Input");
-          // }
-          return stringInput;
-        }
+        const stringInput = new ButtonBuilder();
+        stringInput.setLabel("input string");
+        stringInput.setStyle(ButtonStyle.Secondary);
+        return stringInput;
       case "boolean":
         if (options.data.settingValue) {
           return new SelectMenuBuilder().setOptions([
             {
               label: "true",
-              value: "true",
+              value: "1",
               default: true,
             },
             {
               label: "false",
-              value: "false",
+              value: "0",
               default: false,
             },
           ]);
@@ -121,12 +142,12 @@ export default {
           return new SelectMenuBuilder().setOptions([
             {
               label: "true",
-              value: "true",
+              value: "1",
               default: false,
             },
             {
               label: "false",
-              value: "false",
+              value: "0",
               default: true,
             },
           ]);
@@ -223,6 +244,23 @@ export default {
         rolesSelect.setMaxValues(25);
 
         return rolesSelect;
+      case "select":
+        const Select = new SelectMenuBuilder();
+        Select.setPlaceholder(
+          `select ${options.data.validValues.min} to ${options.data.validValues.max} items`
+        );
+        Select.setMinValues(options.data.validValues.min);
+        Select.setMaxValues(options.data.validValues.max);
+        options.data.validValues.values.forEach(async (validValue: any) => {
+          Select.addOptions([
+            {
+              label: validValue,
+              value: validValue,
+              default: options.data.settingValue.includes(validValue),
+            },
+          ]);
+        });
+        return Select;
     }
     const button = new ButtonBuilder();
     button

@@ -22,7 +22,7 @@ export default {
     });
     await settingsHandler.write({
       settingName: options.data.setting,
-      value: options.data.newValue,
+      value: options.data.snewValue,
     });
     await settingsHandler.update();
     options.interaction.deferUpdate();

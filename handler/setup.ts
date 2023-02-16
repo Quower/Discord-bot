@@ -3,17 +3,20 @@ import {
   ApplicationCommandOption,
   ApplicationCommandOptionType,
   ButtonInteraction,
+  ChatInputCommandInteraction,
   Client,
   CommandInteraction,
   EmbedBuilder,
   MessageActionRowComponentBuilder,
+  ModalBuilder,
+  ModalSubmitInteraction,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   SelectMenuInteraction,
   SlashCommandBuilder,
 } from "discord.js";
 import fs from "fs";
 import mongoose from "mongoose";
-import { returnMenu } from "./typings";
+import { modalobject, returnMenu } from "./typings";
 import {
   commandobject,
   subcommandobject,
@@ -188,6 +191,45 @@ menusExport.forEach((menu) => {
       buttonsExport.push(button);
     });
   }
+});
+
+const modalfiles = fs.readdirSync("./modals");
+export let modalExports = new Array<modalobject>();
+modalfiles.forEach((modal) => {
+  const name = modal.split(".")[0];
+  const path = `./modals/${modal}`;
+  const object = require(`.${path}`);
+  const Modal: modalobject = {
+    name: name,
+    path: path,
+    callback: function (options: {
+      client: Client;
+      interaction: ModalSubmitInteraction;
+      data?: any;
+    }) {
+      object.default.callback({
+        client: options.client,
+        interaction: options.interaction,
+        data: options.data,
+      });
+    },
+    create: function (options: {
+      client: Client;
+      interaction:
+        | ButtonInteraction
+        | SelectMenuInteraction
+        | ChatInputCommandInteraction;
+      data?: any;
+    }, modal: ModalBuilder){
+      object.default.create({
+        client: options.client,
+        interaction: options.interaction,
+        data: options.data,
+      }, modal);
+    },
+  } as modalobject;
+
+  modalExports.push(Modal);
 });
 
 function Setup_Subcommands(folder: fs.PathLike): subcommandArray | undefined {

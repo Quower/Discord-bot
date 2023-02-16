@@ -12,29 +12,29 @@ const deleteMenusWithoutMessage = true;
 export const client = new DiscordJS.Client({
   intents: [
     IntentsBitField.Flags.DirectMessages,
-    //IntentsBitField.Flags.DirectMessageReactions,
-    //IntentsBitField.Flags.DirectMessageTyping,
+    IntentsBitField.Flags.DirectMessageReactions,
+    IntentsBitField.Flags.DirectMessageTyping,
     IntentsBitField.Flags.Guilds,
-    //IntentsBitField.Flags.GuildBans,
+    IntentsBitField.Flags.GuildBans,
     IntentsBitField.Flags.GuildEmojisAndStickers,
-    //IntentsBitField.Flags.GuildIntegrations,
-    //IntentsBitField.Flags.GuildInvites,
+    IntentsBitField.Flags.GuildIntegrations,
+    IntentsBitField.Flags.GuildInvites,
     IntentsBitField.Flags.GuildMembers,
     IntentsBitField.Flags.GuildMessages,
-    //IntentsBitField.Flags.GuildMessageReactions,
-    //IntentsBitField.Flags.GuildMessageTyping,
-    //IntentsBitField.Flags.GuildPresences,
-    //IntentsBitField.Flags.GuildScheduledEvents,
+    IntentsBitField.Flags.GuildMessageReactions,
+    IntentsBitField.Flags.GuildMessageTyping,
+    IntentsBitField.Flags.GuildPresences,
+    IntentsBitField.Flags.GuildScheduledEvents,
     IntentsBitField.Flags.GuildVoiceStates,
-    //IntentsBitField.Flags.GuildWebhooks
+    IntentsBitField.Flags.GuildWebhooks,
   ],
 });
 client.on("ready", async () => {
   console.log(`Logged in as: ${client.user?.tag}`);
 
-  if (client.users.cache.get("424279456031703041")) {
-    client.users.cache.get("424279456031703041")!.send("bot started");
-  }
+  // if (client.users.cache.get("424279456031703041")) {
+  //   client.users.cache.get("424279456031703041")!.send("bot started");
+  // }
 
   new Handler({
     testServers: ["966345190480687167"],
@@ -42,64 +42,12 @@ client.on("ready", async () => {
     mongoUri: process.env.MONGODB || "",
     client,
   });
-
-  const menus = await menuSchema.find();
-  menus.forEach(async (menu) => {
-    if (menu.deleteAfter && menu.deleteAfter > 0) {
-      if (menu.lastInteraction && menu.deleteAfter) {
-        if (menu.ephemeral != undefined) {
-          menu.delete();
-        } else if (
-          Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) >
-          0
-        ) {
-          // if (menu.interaction[0] instanceof CommandInteraction) {
-          //   try {
-          //     console.log('got to delete 3 we are tesing')
-          //     menu.interaction[0].deleteReply();
-          //   } catch (e) {
-          //     console.log("something went wrong when deleting interaction reply");
-          //   }
-          //   menu.delete();
-          //   return;
-          // }
-          try {
-            let channel = await client.channels.fetch(menu.channelId || "");
-            if (
-              channel instanceof DMChannel ||
-              channel instanceof TextChannel
-            ) {
-              try {
-                channel.messages.fetch(menu.messageId || "").then((msg) => {
-                  if (msg.deletable == true) {
-                    msg.delete();
-                  }
-                });
-              } catch (e) {
-                console.log("could not find message");
-              }
-            } else {
-              console.log("something wrong with channel");
-            }
-          } catch (e) {
-            console.log("could not find channel");
-          }
-
-          menu.delete();
-        } else {
-          setTimeout(() => {
-            MenuDeleteCheck({
-              client: client,
-              messageId: menu.messageId || "",
-            });
-          }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
-        }
-      }
-    }
-  });
 });
 
 client.login(process.env.TOKEN);
+// client.on("interactionCreate", (interaction) => {
+//   console.log(interaction);
+// });
 // client.on(Events.InteractionCreate, async (interaction) => {
 //   ChatInputCommandInteractionrun(interaction);
 // });

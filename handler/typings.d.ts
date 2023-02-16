@@ -10,6 +10,8 @@ import {
   AnyComponentBuilder,
   Events,
   CommandInteraction,
+  ModalSubmitInteraction,
+  ModalBuilder,
 } from "discord.js";
 import fs from "fs";
 import { Model, model } from "mongoose";
@@ -101,7 +103,6 @@ export interface button {
 export type buttonobject = {
   path: fs.PathLike;
   name: string;
-  model: Model;
   callback(options: {
     client: Client;
     interaction: ButtonInteraction | SelectMenuInteraction;
@@ -213,6 +214,7 @@ export type saveSetting = {
   voiceChannel, voiceChannels,
   member, members,
   role, roles,
+  select
   */;
   value: any;
 };
@@ -226,4 +228,32 @@ export type savePerm = {
   permissions: PermissionsBitField[];
   members: string[];
   roles: string[];
+};
+
+export interface modal {
+  callback(options: {
+    client: Client;
+    interaction: ModalSubmitInteraction;
+    data?: any;
+  });
+  create(options: {
+    client: Client;
+    interaction: ButtonInteraction | SelectMenuInteraction | ChatInputCommandInteraction
+    data?: any;
+  }, modal: ModalBuilder);
+}
+
+export type modalobject = {
+  path: fs.PathLike;
+  name: string;
+  callback(options: {
+    client: Client;
+    interaction: ModalSubmitInteraction;
+    data?: any;
+  });
+  create(options: {
+    client: Client;
+    interaction: ButtonInteraction | SelectMenuInteraction | ChatInputCommandInteraction
+    data?: any;
+  }, modal: ModalBuilder);
 };

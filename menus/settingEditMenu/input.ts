@@ -8,6 +8,7 @@ export default async (options: {
   messageId: string;
 }) => {
   options.data.newValue = options.message;
+  options.data.snewValue = options.message;
   Menus.update({
     messageId: options.messageId,
     client: options.client,

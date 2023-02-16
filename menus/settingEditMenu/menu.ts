@@ -84,7 +84,8 @@ export default {
       settingBase.type == "textChannels" ||
       settingBase.type == "voiceChannels" ||
       settingBase.type == "members" ||
-      settingBase.type == "roles"
+      settingBase.type == "roles" ||
+      settingBase.type == "select"
     ) {
       if (value.length < 1) {
         value = "null";
@@ -97,9 +98,9 @@ export default {
         if (value2.length < 1) {
           value2 = "null";
         } else {
-          value2 = value.toString();
+          value2 = value2.toString();
         }
-        description1 = value2;
+        description2 = value2;
       }
     }
 
@@ -119,13 +120,30 @@ export default {
         }${"``"}\n----------\nCurrent value\n----------\n${description1}`
       );
     }
-
-    options.data.settingValue =
-      options.data.newValue ||
-      (await settingsHandler.read({
+    if (settingBase.type == "select") {
+      embed.setFooter({
+        text: `select ${options.data.validValues.min} to ${options.data.validValues.max} items`,
+      });
+    }
+    console.log(options.data);
+    if (options.data.snewValue === undefined) {
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      options.data.settingValue = await settingsHandler.read({
         settingName: settingBase.name,
         retunrAs: "raw",
-      }));
+      });
+    } else {
+      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbb");
+      options.data.settingValue = options.data.snewValue;
+    }
+    console.log(options.data);
+
+    // options.data.settingValue =
+    //   options.data.snewValue ||
+    //   (await settingsHandler.read({
+    //     settingName: settingBase.name,
+    //     retunrAs: "raw",
+    //   }));
     let menu = await new UkMessageBuilder().build(options, {
       rows: [["cancelButton", "settingEditConfirm"], ["settingEditSelect"]],
       embeds: [embed],

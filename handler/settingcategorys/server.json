@@ -25,13 +25,13 @@
       "defaultValue": ""
     },
     {
-      "name": "stringselectoption",
-      "display": "äge tekst2.0",
-      "description": "kirjuta siia mõni racist slurdsssssssssss",
-      "type": "string",
-      "defaultValue": "jaapan",
+      "name": "selectoption",
+      "display": "vinku pirukas",
+      "description": "võileib viineritega",
+      "type": "select",
+      "defaultValue": "xxl viiner",
       "validValues": {
-        "values": ["hiina", "saksa", "taiwan", "jaapan"],
+        "values": ["xl viner", "xxl viiner", "xxxl viiiner", "xxxxl viiiiner"],
         "max": 1,
         "min": 0
       }

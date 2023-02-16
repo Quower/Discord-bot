@@ -4,6 +4,9 @@ import fs from "fs";
 import { saveSetting, settingsCategory } from "../../handler/typings";
 const config = require("../../config.json");
 import mongoose from "mongoose";
+import { MenuDeleteCheck } from "../menuhandlre";
+import menuSchema from "../models/menuSchema";
+import { DMChannel, TextChannel } from "discord.js";
 const settingsfiles = fs.readdirSync("./handler/settingcategorys");
 export let settingcategorys: settingsCategory[] = [];
 settingsfiles.forEach(async (file) => {
@@ -70,9 +73,60 @@ export default {
         });
       }
     });
-    // });
-    // settingsUpdate.then(async () => {
-    console.log(`done with settings updating:\n${await settingsSchema.find()}`);
-    // });
+    const menus = await menuSchema.find();
+    menus.forEach(async (menu) => {
+      if (menu.deleteAfter && menu.deleteAfter > 0) {
+        if (menu.lastInteraction && menu.deleteAfter) {
+          if (menu.ephemeral != undefined) {
+            menu.delete();
+          } else if (
+            Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) >
+            0
+          ) {
+            // if (menu.interaction[0] instanceof CommandInteraction) {
+            //   try {
+            //     console.log('got to delete 3 we are tesing')
+            //     menu.interaction[0].deleteReply();
+            //   } catch (e) {
+            //     console.log("something went wrong when deleting interaction reply");
+            //   }
+            //   menu.delete();
+            //   return;
+            // }
+            try {
+              let channel = await client.channels.fetch(menu.channelId || "");
+              if (
+                channel instanceof DMChannel ||
+                channel instanceof TextChannel
+              ) {
+                try {
+                  channel.messages.fetch(menu.messageId || "").then((msg) => {
+                    if (msg.deletable == true) {
+                      msg.delete();
+                    }
+                  });
+                } catch (e) {
+                  console.log("could not find message");
+                }
+              } else {
+                console.log("something wrong with channel");
+              }
+            } catch (e) {
+              console.log("could not find channel");
+            }
+
+            menu.delete();
+          } else {
+            setTimeout(() => {
+              MenuDeleteCheck({
+                client: client,
+                messageId: menu.messageId || "",
+              });
+            }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
+          }
+        }
+      }
+    });
+    console.log(`done with ready`);
   },
 } as readyEvent;
