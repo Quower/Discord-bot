@@ -11,7 +11,7 @@ export default {
   allowInDMs: false,
   ownerOnly: true,
   testOnly: true,
-  permissions: [PermissionsBitField.Flags.Administrator],
+  permissions: PermissionsBitField.Flags.Administrator,
   MainCommand: false,
   callback: async (
     client: Client,

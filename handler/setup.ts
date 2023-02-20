@@ -1,5 +1,6 @@
 import {
   ActionRowBuilder,
+  AnySelectMenuInteraction,
   ApplicationCommandOption,
   ApplicationCommandOptionType,
   ButtonInteraction,
@@ -10,8 +11,8 @@ import {
   MessageActionRowComponentBuilder,
   ModalBuilder,
   ModalSubmitInteraction,
+  PermissionsBitField,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
-  SelectMenuInteraction,
   SlashCommandBuilder,
 } from "discord.js";
 import fs from "fs";
@@ -41,12 +42,12 @@ commandfolders.forEach((folder) => {
       callback: function (client: Client, interaction: CommandInteraction) {
         object.default.callback(client, interaction);
       },
-      options: object.default.options || undefined,
-      allowInDMs: object.default.allowInDMs || false,
-      ownerOnly: object.default.ownerOnly || false,
-      testOnly: object.default.testOnly || false,
-      permissions: object.default.permissions || undefined,
-      ManinCommand: object.default.ManinCommand || true,
+      options: object.default.options,
+      allowInDMs: object.default.allowInDMs,
+      ownerOnly: object.default.ownerOnly,
+      testOnly: object.default.testOnly,
+      permissions: object.default.permissions,
+      MainCommand: object.default.MainCommand,
     } as commandobject;
 
     commandsExport.push(subcommand);
@@ -55,6 +56,7 @@ commandfolders.forEach((folder) => {
     const path = `./commanddirs/${folder}/`;
     const object = require(`.${path}main.ts`);
     const subcommands = Setup_Subcommands(`${path}subcommands/`);
+    //console.log(object)
     const subcommand = {
       command: name,
       description: object.default.description,
@@ -63,17 +65,19 @@ commandfolders.forEach((folder) => {
       callback: function (client: Client, interaction: CommandInteraction) {
         object.default.callback(client, interaction);
       },
-      options: object.default.options || null,
-      allowInDMs: object.default.allowInDMs || false,
-      ownerOnly: object.default.ownerOnly || false,
-      testOnly: object.default.testOnly || false,
-      permissions: object.default.permissions || null,
-      ManinCommand: object.default.ManinCommand || false,
+      options: object.default.options,
+      allowInDMs: object.default.allowInDMs,
+      ownerOnly: object.default.ownerOnly,
+      testOnly: object.default.testOnly,
+      permissions: object.default.permissions,
+      MainCommand: object.default.MainCommand,
     } as commandobject;
+    //console.log(subcommand)
 
     commandsExport.push(subcommand);
   }
 });
+console.log(commandsExport)
 
 const menufolders = fs.readdirSync("./menus");
 export let menusExport = new Array<menuobject>();
@@ -156,7 +160,7 @@ menusExport.forEach((menu) => {
         path: path,
         callback: function (options: {
           client: Client;
-          interaction: ButtonInteraction | SelectMenuInteraction;
+          interaction: ButtonInteraction | AnySelectMenuInteraction;
           data?: any;
           waitingForResponse: boolean;
         }) {
@@ -217,7 +221,7 @@ modalfiles.forEach((modal) => {
       client: Client;
       interaction:
         | ButtonInteraction
-        | SelectMenuInteraction
+        | AnySelectMenuInteraction
         | ChatInputCommandInteraction;
       data?: any;
     }, modal: ModalBuilder){
@@ -343,16 +347,24 @@ export default class Handler {
 
       commandBuilder.setName(command.command);
       commandBuilder.default_member_permissions;
-      if ((command.MainCommand = true)) {
+      //if ((command.MainCommand == true)) {
         commandBuilder.setDescription(command.description);
-      }
+      //}
       commandBuilder.setDMPermission(command.allowInDMs);
+      //if (command.permissions) {
+      //const permissions = new PermissionsBitField(command.permissions);
+        //commandBuilder.setDefaultMemberPermissions(command.permissions)
+      //}
+      //commandBuilder.
+      
       let commandJSON = commandBuilder.toJSON();
+      commandJSON.default_member_permissions = command.permissions
       commandJSON.options = options;
+      //commandJSON.default_member_permissions = command.permissions
 
-      if ((command.testOnly = true)) {
+      if ((command.testOnly == true)) {
         guildCommands.push(commandJSON);
-      } else if ((command.testOnly = false)) {
+      } else if ((command.testOnly == false)) {
         globalCommands.push(commandJSON);
       }
     });

@@ -48,9 +48,9 @@ client.on("ready", async () => {
 });
 
 client.login(process.env.TOKEN);
-client.on("interactionCreate", (interaction) => {
-  console.log(interaction);
-});
+// client.on("interactionCreate", (interaction) => {
+//   console.log(interaction);
+// });
 
 
 // client.on(Events.InteractionCreate, async (interaction) => {

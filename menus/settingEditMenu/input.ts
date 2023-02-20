@@ -7,11 +7,11 @@ export default async (options: {
   data: any;
   messageId: string;
 }) => {
-  options.data.newValue = options.message;
-  options.data.snewValue = options.message;
-  Menus.update({
-    messageId: options.messageId,
-    client: options.client,
-    data: options.data,
-  });
+  // options.data.newValue = options.message;
+  // options.data.snewValue = options.message;   
+  // Menus.update({
+  //   messageId: options.messageId,
+  //   client: options.client,
+  //   data: options.data,
+  // });
 };

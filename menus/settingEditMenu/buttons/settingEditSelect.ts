@@ -5,12 +5,18 @@ import {
   ButtonStyle,
   Client,
   MessageActionRowComponentBuilder,
-  SelectMenuBuilder,
-  SelectMenuInteraction,
   TextInputBuilder,
   ChannelType,
   ComponentType,
   ModalBuilder,
+  StringSelectMenuBuilder,
+  RoleSelectMenuBuilder,
+  UserSelectMenuBuilder,
+  ChannelSelectMenuBuilder,
+  StringSelectMenuInteraction,
+  MentionableSelectMenuBuilder,
+  AnySelectMenuInteraction,
+  RoleSelectMenuInteraction,
 } from "discord.js";
 import { Menus } from "../../../handler/menuhandlre";
 import { CreateModal } from "../../../handler/modalhandelr";
@@ -19,7 +25,7 @@ import { button } from "../../../handler/typings";
 export default {
   callback: async (options: {
     client: Client;
-    interaction: SelectMenuInteraction | ButtonInteraction;
+    interaction: AnySelectMenuInteraction | ButtonInteraction;
     data?: any;
     waitingForResponse: boolean;
   }) => {
@@ -38,7 +44,6 @@ export default {
             },
           });
         case "role": {
-          
         }
       }
 
@@ -77,43 +82,118 @@ export default {
           }
 
         case "channel":
-          console.log(options.interaction);
+          options.data.newValue = `<#${options.interaction.values[0]}>`;
+          options.data.snewValue = options.interaction.values[0];
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "channels":
-          console.log(options.interaction);
+          options.data.newValue = [];
+          for (const roleId of options.interaction.values) {
+            options.data.newValue.push(`<#${roleId}>`);
+          }
+          options.data.snewValue = options.interaction.values;
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "textChannel":
-          console.log(options.interaction);
+          options.data.newValue = `<#${options.interaction.values[0]}>`;
+          options.data.snewValue = options.interaction.values[0];
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "textChannels":
-          console.log(options.interaction);
+          options.data.newValue = [];
+          for (const roleId of options.interaction.values) {
+            options.data.newValue.push(`<#${roleId}>`);
+          }
+          options.data.snewValue = options.interaction.values;
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "voiceChannel":
-          console.log(options.interaction);
+          options.data.newValue = `<#${options.interaction.values[0]}>`;
+          options.data.snewValue = options.interaction.values[0];
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "voiceChannels":
-          console.log(options.interaction);
+          options.data.newValue = [];
+          for (const roleId of options.interaction.values) {
+            options.data.newValue.push(`<#${roleId}>`);
+          }
+          options.data.snewValue = options.interaction.values;
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "member":
-          console.log(options.interaction);
+          options.data.newValue = `<@${options.interaction.values[0]}>`;
+          options.data.snewValue = options.interaction.values[0];
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "members":
-          console.log(options.interaction);
+          options.data.newValue = [];
+          for (const roleId of options.interaction.values) {
+            options.data.newValue.push(`<@${roleId}>`);
+          }
+          options.data.snewValue = options.interaction.values;
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "role":
-          console.log(options.interaction);
+          options.data.newValue = `<@&${options.interaction.values[0]}>`;
+          options.data.snewValue = options.interaction.values[0];
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "roles":
-          console.log(options.interaction);
+          options.data.newValue = [];
+          for (const roleId of options.interaction.values) {
+            options.data.newValue.push(`<@&${roleId}>`);
+          }
+          options.data.snewValue = options.interaction.values;
+          Menus.update({
+            messageId: options.interaction.message.id,
+            client: options.client,
+            data: options.data,
+          });
           break;
 
         case "select":
@@ -144,7 +224,7 @@ export default {
         return stringInput;
       case "boolean":
         if (options.data.settingValue) {
-          return new SelectMenuBuilder().setOptions([
+          return new StringSelectMenuBuilder().setOptions([
             {
               label: "true",
               value: "1",
@@ -157,7 +237,7 @@ export default {
             },
           ]);
         } else {
-          return new SelectMenuBuilder().setOptions([
+          return new StringSelectMenuBuilder().setOptions([
             {
               label: "true",
               value: "1",
@@ -172,8 +252,7 @@ export default {
         }
 
       case "channel":
-        const channelSelect = new SelectMenuBuilder({
-          type: ComponentType.ChannelSelect,
+        const channelSelect = new ChannelSelectMenuBuilder({
           channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
         });
         channelSelect.setPlaceholder("select channel");
@@ -182,8 +261,7 @@ export default {
 
         return channelSelect;
       case "channels":
-        const channelsSelect = new SelectMenuBuilder({
-          type: ComponentType.ChannelSelect,
+        const channelsSelect = new ChannelSelectMenuBuilder({
           channel_types: [ChannelType.GuildText, ChannelType.GuildVoice],
         });
         channelsSelect.setPlaceholder("select channels");
@@ -192,8 +270,7 @@ export default {
 
         return channelsSelect;
       case "textChannel":
-        const textchannelSelect = new SelectMenuBuilder({
-          type: ComponentType.ChannelSelect,
+        const textchannelSelect = new ChannelSelectMenuBuilder({
           channel_types: [ChannelType.GuildText],
         });
         textchannelSelect.setPlaceholder("select text channel");
@@ -202,8 +279,7 @@ export default {
 
         return textchannelSelect;
       case "textChannels":
-        const textchannelsSelect = new SelectMenuBuilder({
-          type: ComponentType.ChannelSelect,
+        const textchannelsSelect = new ChannelSelectMenuBuilder({
           channel_types: [ChannelType.GuildText],
         });
         textchannelsSelect.setPlaceholder("select text channels");
@@ -212,8 +288,7 @@ export default {
 
         return textchannelsSelect;
       case "voiceChannel":
-        const voicechannelSelect = new SelectMenuBuilder({
-          type: ComponentType.ChannelSelect,
+        const voicechannelSelect = new ChannelSelectMenuBuilder({
           channel_types: [ChannelType.GuildVoice],
         });
         voicechannelSelect.setPlaceholder("select voice channel");
@@ -222,8 +297,7 @@ export default {
 
         return voicechannelSelect;
       case "voiceChannels":
-        const voicechannelsSelect = new SelectMenuBuilder({
-          type: ComponentType.ChannelSelect,
+        const voicechannelsSelect = new ChannelSelectMenuBuilder({
           channel_types: [ChannelType.GuildVoice],
         });
         voicechannelsSelect.setPlaceholder("select voice channels");
@@ -232,18 +306,14 @@ export default {
 
         return voicechannelsSelect;
       case "member":
-        const memberSelect = new SelectMenuBuilder({
-          type: ComponentType.UserSelect,
-        });
+        const memberSelect = new UserSelectMenuBuilder();
         memberSelect.setPlaceholder("select member");
         memberSelect.setMinValues(0);
         memberSelect.setMaxValues(1);
 
         return memberSelect;
       case "members":
-        const membersSelect = new SelectMenuBuilder({
-          type: ComponentType.MentionableSelect,
-        });
+        const membersSelect = new MentionableSelectMenuBuilder();
         membersSelect.setPlaceholder("select members");
         membersSelect.setMinValues(0);
         membersSelect.setMaxValues(25);
@@ -251,25 +321,21 @@ export default {
         return membersSelect;
       case "role":
         console.log("at role");
-        const roleSelect = new SelectMenuBuilder({
-          type: ComponentType.RoleSelect,
-        });
+        const roleSelect = new RoleSelectMenuBuilder();
         roleSelect.setPlaceholder("select role");
         roleSelect.setMinValues(0);
         roleSelect.setMaxValues(1);
 
         return roleSelect;
       case "roles":
-        const rolesSelect = new SelectMenuBuilder({
-          type: ComponentType.RoleSelect,
-        });
+        const rolesSelect = new RoleSelectMenuBuilder();
         rolesSelect.setPlaceholder("select roles");
         rolesSelect.setMinValues(0);
         rolesSelect.setMaxValues(25);
 
         return rolesSelect;
       case "select":
-        const Select = new SelectMenuBuilder();
+        const Select = new StringSelectMenuBuilder();
         Select.setPlaceholder(
           `select ${options.data.validValues.min} to ${options.data.validValues.max} items`
         );

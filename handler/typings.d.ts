@@ -6,7 +6,6 @@ import {
   BaseMessageOptions,
   ButtonStyle,
   ButtonInteraction,
-  SelectMenuInteraction,
   AnyComponentBuilder,
   Events,
   CommandInteraction,
@@ -24,7 +23,7 @@ export interface command {
   allowInDMs?: boolean;
   ownerOnly?: boolean;
   testOnly?: boolean;
-  permissions?: PermissionsBitField[];
+  permissions?: PermissionsBitField;
   MainCommand?: boolean;
 }
 
@@ -38,7 +37,7 @@ export type commandobject = {
   allowInDMs?: boolean;
   ownerOnly?: boolean;
   testOnly?: boolean;
-  permissions?: PermissionsBitField[];
+  permissions?: PermissionsBitField;
   MainCommand?: boolean;
 };
 
@@ -86,7 +85,7 @@ export interface buttonobject {
 export interface button {
   callback(options: {
     client: Client;
-    interaction: ButtonInteraction | SelectMenuInteraction;
+    interaction: ButtonInteraction | AnySelectMenuInteraction;
     data?: any;
     waitingForResponse: boolean;
   });
@@ -105,7 +104,7 @@ export type buttonobject = {
   name: string;
   callback(options: {
     client: Client;
-    interaction: ButtonInteraction | SelectMenuInteraction;
+    interaction: ButtonInteraction | AnySelectMenuInteraction;
     data?: any;
     waitingForResponse: boolean;
   });
@@ -201,7 +200,7 @@ export type setting = {
 };
 
 export interface settingUpdate {
-  exec(options: { client: Client; guildId: string; setting: setting }): boolean;
+  exec(options: { client: Client; guildId: string; setting: saveSetting }): boolean;
 }
 
 export type saveSetting = {
@@ -238,7 +237,7 @@ export interface modal {
   });
   create(options: {
     client: Client;
-    interaction: ButtonInteraction | SelectMenuInteraction | ChatInputCommandInteraction
+    interaction: ButtonInteraction | AnySelectMenuInteraction | ChatInputCommandInteraction
     data?: any;
   }, modal: ModalBuilder);
 }
@@ -253,7 +252,7 @@ export type modalobject = {
   });
   create(options: {
     client: Client;
-    interaction: ButtonInteraction | SelectMenuInteraction | ChatInputCommandInteraction
+    interaction: ButtonInteraction | AnySelectMenuInteraction | ChatInputCommandInteraction
     data?: any;
   }, modal: ModalBuilder);
 };

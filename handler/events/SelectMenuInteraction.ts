@@ -1,4 +1,12 @@
-import { Client, Events, SelectMenuInteraction } from "discord.js";
+import {
+  ChannelSelectMenuInteraction,
+  Client,
+  Events,
+  MentionableSelectMenuInteraction,
+  RoleSelectMenuInteraction,
+  StringSelectMenuInteraction,
+  UserSelectMenuInteraction,
+} from "discord.js";
 import { botOwners } from "../../index";
 import menuSchema from "../models/menuSchema";
 import { buttonsExport } from "../setup";
@@ -9,7 +17,14 @@ export default {
     interaction, //: DiscordJS.Interaction<DiscordJS.CacheType>,
     client: Client
   ) => {
-    if (interaction instanceof SelectMenuInteraction) {
+    if (
+      interaction instanceof StringSelectMenuInteraction ||
+      interaction instanceof RoleSelectMenuInteraction ||
+      interaction instanceof MentionableSelectMenuInteraction ||
+      interaction instanceof UserSelectMenuInteraction ||
+      interaction instanceof ChannelSelectMenuInteraction
+    ) {
+      //console.log("got to 1");
       if (client == undefined || interaction == undefined) {
         console.log("no client or interaction");
         return;
@@ -20,6 +35,7 @@ export default {
       let buttonObject = (await buttonsExport).find(
         (button) => button.name == interaction.customId
       );
+      //console.log("got to 2");
       if (menuschema == undefined) {
         console.log("no menuschema found on selectmenu");
         interaction.reply({
@@ -46,6 +62,7 @@ export default {
           return;
         }
       }
+      //console.log("got to 5");
       buttonObject.callback({
         client: client,
         interaction: interaction,

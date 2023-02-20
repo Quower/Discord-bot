@@ -3,8 +3,8 @@ import {
   ButtonStyle,
   Client,
   MessageActionRowComponentBuilder,
-  SelectMenuBuilder,
-  SelectMenuInteraction,
+  StringSelectMenuBuilder,
+  StringSelectMenuInteraction,
 } from "discord.js";
 import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
@@ -12,7 +12,7 @@ import { button } from "../../../handler/typings";
 export default {
   callback: async (options: {
     client: Client;
-    interaction: SelectMenuInteraction;
+    interaction: StringSelectMenuInteraction;
     data?: any;
   }) => {
     options.interaction.deferUpdate();
@@ -31,7 +31,7 @@ export default {
     Indms: Boolean;
     data?: any;
   }): Promise<MessageActionRowComponentBuilder> => {
-    const selectMenu = new SelectMenuBuilder()
+    const selectMenu = new StringSelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)
       .setPlaceholder("Nothing Selected");

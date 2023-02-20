@@ -6,85 +6,9 @@
     {
       "name": "enableNewCommand",
       "display": "Enable new command by default",
-      "description": "Should we enable new commands added by default",
+      "description": "Should we enable new commands added by default(this feature is currently not implemented)",
       "type": "boolean",
       "defaultValue": true
-    },
-    {
-      "name": "role",
-      "display": "role",
-      "description": "tessy",
-      "type": "role",
-      "defaultValue": null
-    },
-    {
-      "name": "stringoption",
-      "display": "äge tekst",
-      "description": "kirjuta siia mõni racist slur",
-      "type": "string",
-      "defaultValue": ""
-    },
-    {
-      "name": "selectoption",
-      "display": "vinku pirukas",
-      "description": "võileib viineritega",
-      "type": "select",
-      "defaultValue": "xxl viiner",
-      "validValues": {
-        "values": ["xl viner", "xxl viiner", "xxxl viiiner", "xxxxl viiiiner"],
-        "max": 1,
-        "min": 0
-      }
-    },
-    {
-      "name": "roles",
-      "display": "roles",
-      "description": "tessy",
-      "type": "roles",
-      "defaultValue": null
-    },
-    {
-      "name": "member",
-      "display": "member",
-      "description": "tessy",
-      "type": "member",
-      "defaultValue": null
-    },
-    {
-      "name": "members",
-      "display": "members",
-      "description": "tessy",
-      "type": "members",
-      "defaultValue": null
-    },
-    {
-      "name": "channel",
-      "display": "channel",
-      "description": "tessy",
-      "type": "channel",
-      "defaultValue": null
-    },
-    {
-      "name": "channels",
-      "display": "channels",
-      "description": "tessy",
-      "type": "channels",
-      "defaultValue": null
-    },
-    {
-      "name": "textChannel",
-      "display": "textChannel",
-      "description": "tessy",
-      "type": "textChannel",
-      "defaultValue": null
-    },
-    {
-      "name": "textChannels",
-      "display": "textChannels",
-      "description": "tessy",
-      "type": "textChannels",
-      "defaultValue": null
     }
-
   ]
 }

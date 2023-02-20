@@ -30,7 +30,7 @@ export default class SettingsHandler {
           console.log(index);
           let scontinue = true;
           if (updateSetting.exec) {
-            const exec = require(`../../${updateSetting.exec}`).default;
+            const exec = require(`../${updateSetting.exec}`).default;
             try {
               scontinue = await exec.exec({
                 client: this.client,

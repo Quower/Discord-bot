@@ -3,8 +3,8 @@ import {
   ButtonStyle,
   Client,
   MessageActionRowComponentBuilder,
-  SelectMenuBuilder,
-  SelectMenuInteraction,
+  StringSelectMenuBuilder,
+  StringSelectMenuInteraction,
   VoiceChannel,
 } from "discord.js";
 import generatorSchema from "../../../commanddirs/generators/models/generatorSchema";
@@ -14,7 +14,7 @@ import { button } from "../../../handler/typings";
 export default {
   callback: async (options: {
     client: Client;
-    interaction: SelectMenuInteraction;
+    interaction: StringSelectMenuInteraction;
     data?: any;
   }) => {
     options.interaction.deferUpdate();
@@ -35,7 +35,7 @@ export default {
     data?: any;
   }): Promise<MessageActionRowComponentBuilder> => {
     const generators = await generatorSchema.find({ guildId: options.guildId });
-    const selectMenu = new SelectMenuBuilder()
+    const selectMenu = new StringSelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)
       .setPlaceholder("Nothing Selected");
