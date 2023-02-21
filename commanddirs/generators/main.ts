@@ -14,7 +14,7 @@ export default {
   permissions: PermissionsBitField.Flags.Administrator,
   MainCommand: false,
   callback: async (
-    client: Client,
-    interaction: ChatInputCommandInteraction
+    client,
+    interaction
   ) => {},
 } as command;

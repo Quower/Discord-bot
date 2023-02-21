@@ -10,11 +10,7 @@ import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: ButtonInteraction;
-    data?: any;
-  }) => {
+  callback: async (options) => {
     options.interaction.deferUpdate();
     let generator = await generatorSchema.findOne({ channelId: options.data });
     let channel = await options.client.channels.fetch(
@@ -28,14 +24,7 @@ export default {
       menu: "back",
     });
   },
-  create: async (options: {
-    client: Client;
-    guildId?: String;
-    channelId: String;
-    userIds: String[];
-    Indms: Boolean;
-    data?: any;
-  }): Promise<MessageActionRowComponentBuilder> => {
+  create: async (options): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     button.setLabel("Confirm");
     button.setStyle(ButtonStyle.Danger);

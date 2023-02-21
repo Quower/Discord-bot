@@ -17,7 +17,7 @@ export default {
       required: true,
     },
   ],
-  callback: (client: Client, interaction: ChatInputCommandInteraction) => {
+  callback: (client, interaction) => {
     if (client == undefined && interaction == undefined) {
       return;
     }

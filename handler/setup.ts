@@ -77,7 +77,7 @@ commandfolders.forEach((folder) => {
     commandsExport.push(subcommand);
   }
 });
-console.log(commandsExport)
+//console.log(commandsExport)
 
 const menufolders = fs.readdirSync("./menus");
 export let menusExport = new Array<menuobject>();

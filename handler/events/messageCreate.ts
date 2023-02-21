@@ -41,8 +41,13 @@ export default {
           return;
         }
       }
+      try {
+        message.delete()
+      } catch (e) {
+        console.log("couldn't delete input message")
+      }
 
-      let run = require(`${menuobject?.path}input.ts`);
+      let run = require(`../.${menuobject?.path}input.ts`).default;
       run({
         client: client,
         message: message.content,

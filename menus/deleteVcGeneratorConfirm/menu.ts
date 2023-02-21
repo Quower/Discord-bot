@@ -3,15 +3,7 @@ import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 
 export default {
-  create: async (options: {
-    client: Client;
-    waitingForResponse: boolean;
-    guildId?: string;
-    channelId: string;
-    userIds: string[];
-    Indms: boolean;
-    data?: any;
-  }): Promise<BaseMessageOptions> => {
+  create: async (options): Promise<BaseMessageOptions> => {
     console.log(`${options.data}    hhhh`);
     const embed = new EmbedBuilder();
     embed.setTitle("Delete Vc generator!");

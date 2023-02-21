@@ -4,15 +4,7 @@ import { menu } from "../../handler/typings";
 import generatorSchema from "../../commanddirs/generators/models/generatorSchema";
 
 export default {
-  create: async (options: {
-    client: Client;
-    waitingForResponse: boolean;
-    guildId?: string;
-    channelId: string;
-    userIds: string[];
-    Indms: boolean;
-    data?: any;
-  }): Promise<BaseMessageOptions> => {
+  create: async (options): Promise<BaseMessageOptions> => {
     // const embed = new EmbedBuilder();
     // embed.setTitle("Delete Vc generator!");
     // embed.setDescription(

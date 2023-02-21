@@ -10,11 +10,7 @@ import { Menus } from "../../../handler/menuhandlre";
 import SettingsHandler from "../../../handler/settingshandler";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: ButtonInteraction;
-    data?: any;
-  }) => {
+  callback: async (options) => {
     const settingsHandler = new SettingsHandler();
     await settingsHandler.init({
       client: options.client,
@@ -32,14 +28,7 @@ export default {
       menu: "back",
     });
   },
-  create: async (options: {
-    client: Client;
-    guildId?: String;
-    channelId: String;
-    userIds: String[];
-    Indms: Boolean;
-    data?: any;
-  }): Promise<MessageActionRowComponentBuilder> => {
+  create: async (options): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     button.setLabel("Confirm");
     if (!options.data.newValue) {

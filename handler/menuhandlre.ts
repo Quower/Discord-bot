@@ -3,6 +3,7 @@ import {
   Client,
   CommandInteraction,
   DMChannel,
+  TextBasedChannel,
   TextChannel,
 } from "discord.js";
 import { menuInfo, interactionSave } from "./typings";
@@ -207,7 +208,7 @@ export const Menus = {
   }) => {
     let time = Date.now();
     const menudb = await menuSchema.findOne({ messageId: options.messageId });
-    console.log(menudb?.ephemeral);
+    console.log(menudb);
     console.log(`got to menus update point 1:${Date.now() - time}`);
     time = Date.now();
     if (!menudb) {

@@ -3,6 +3,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   Client,
+  Interaction,
   MessageActionRowComponentBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuInteraction,
@@ -11,30 +12,21 @@ import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: StringSelectMenuInteraction;
-    data?: any;
-  }) => {
-    options.interaction.deferUpdate();
-    Menus.update({
-      messageId: options.interaction.message.id,
-      client: options.client,
-      menu: "settingEditMenu",
-      data: {
-        setting: options.interaction.values[0],
-        category: options.data.category,
-      },
-    });
+  callback: async (options) => {
+    if (options.interaction instanceof StringSelectMenuInteraction) {
+      options.interaction.deferUpdate();
+      Menus.update({
+        messageId: options.interaction.message.id,
+        client: options.client,
+        menu: "settingEditMenu",
+        data: {
+          setting: options.interaction.values[0],
+          category: options.data.category,
+        },
+      });
+    }
   },
-  create: async (options: {
-    client: Client;
-    guildId?: String;
-    channelId: String;
-    userIds: String[];
-    Indms: Boolean;
-    data?: any;
-  }): Promise<MessageActionRowComponentBuilder> => {
+  create: async (options): Promise<MessageActionRowComponentBuilder> => {
     const selectMenu = new StringSelectMenuBuilder()
       .setMaxValues(1)
       .setMinValues(1)

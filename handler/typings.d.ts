@@ -11,6 +11,7 @@ import {
   CommandInteraction,
   ModalSubmitInteraction,
   ModalBuilder,
+  AnySelectMenuInteraction,
 } from "discord.js";
 import fs from "fs";
 import { Model, model } from "mongoose";
@@ -96,6 +97,7 @@ export interface button {
     userIds: string[];
     Indms: boolean;
     data?: any;
+    waitingForResponse: boolean;
   }): Promise<MessageActionRowComponentBuilder>;
 }
 
@@ -200,7 +202,11 @@ export type setting = {
 };
 
 export interface settingUpdate {
-  exec(options: { client: Client; guildId: string; setting: saveSetting }): boolean;
+  exec(options: {
+    client: Client;
+    guildId: string;
+    setting: saveSetting;
+  }): boolean;
 }
 
 export type saveSetting = {
@@ -235,11 +241,17 @@ export interface modal {
     interaction: ModalSubmitInteraction;
     data?: any;
   });
-  create(options: {
-    client: Client;
-    interaction: ButtonInteraction | AnySelectMenuInteraction | ChatInputCommandInteraction
-    data?: any;
-  }, modal: ModalBuilder);
+  create(
+    options: {
+      client: Client;
+      interaction:
+        | ButtonInteraction
+        | AnySelectMenuInteraction
+        | ChatInputCommandInteraction;
+      data?: any;
+    },
+    modal: ModalBuilder
+  );
 }
 
 export type modalobject = {
@@ -250,9 +262,15 @@ export type modalobject = {
     interaction: ModalSubmitInteraction;
     data?: any;
   });
-  create(options: {
-    client: Client;
-    interaction: ButtonInteraction | AnySelectMenuInteraction | ChatInputCommandInteraction
-    data?: any;
-  }, modal: ModalBuilder);
+  create(
+    options: {
+      client: Client;
+      interaction:
+        | ButtonInteraction
+        | AnySelectMenuInteraction
+        | ChatInputCommandInteraction;
+      data?: any;
+    },
+    modal: ModalBuilder
+  );
 };

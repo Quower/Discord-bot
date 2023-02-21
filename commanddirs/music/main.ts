@@ -3,16 +3,16 @@ import {
     ChatInputCommandInteraction,
     PermissionsBitField,
   } from "discord.js";
-  import { command } from "../handler/typings";
+  import { command } from "../../handler/typings";
   // const deleteVcGeneratorSelectorCancelbutton = require('../menus/deleteVcGeneratorSelector/buttons/deleteVcGeneratorSelectorSelectMenu.ts')
   
   export default {
-    description: "command",
+    description: "music command",
     allowInDMs: false,
     ownerOnly: true,
     testOnly: true,
     permissions: PermissionsBitField.Flags.Administrator,
-    MainCommand: true,
+    MainCommand: false,
     callback: async (
       client: Client,
       interaction: ChatInputCommandInteraction

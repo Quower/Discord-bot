@@ -5,15 +5,7 @@ import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 
 export default {
-  create: async (options: {
-    client: Client;
-    waitingForResponse: boolean;
-    guildId?: string;
-    channelId: string;
-    userIds: string[];
-    Indms: boolean;
-    data?: any;
-  }): Promise<BaseMessageOptions> => {
+  create: async (options): Promise<BaseMessageOptions> => {
     const settingsCategory = settingcategorys.find(
       (category) => category.name == options.data.category
     );

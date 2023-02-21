@@ -23,12 +23,7 @@ import { CreateModal } from "../../../handler/modalhandelr";
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: AnySelectMenuInteraction | ButtonInteraction;
-    data?: any;
-    waitingForResponse: boolean;
-  }) => {
+  callback: async (options) => {
     console.log(options.data);
     if (options.interaction instanceof ButtonInteraction) {
       switch (options.data.settingType) {
@@ -207,14 +202,7 @@ export default {
       }
     }
   },
-  create: async (options: {
-    client: Client;
-    guildId?: string;
-    channelId: string;
-    userIds: string[];
-    Indms: boolean;
-    data?: any;
-  }): Promise<MessageActionRowComponentBuilder> => {
+  create: async (options): Promise<MessageActionRowComponentBuilder> => {
     console.log(options.data);
     switch (options.data.settingType) {
       case "string":

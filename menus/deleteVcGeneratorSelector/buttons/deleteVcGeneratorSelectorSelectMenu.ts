@@ -12,28 +12,19 @@ import { Menus } from "../../../handler/menuhandlre";
 import { button } from "../../../handler/typings";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: StringSelectMenuInteraction;
-    data?: any;
-  }) => {
-    options.interaction.deferUpdate();
-    console.log(options.interaction.values[0]);
-    Menus.update({
-      messageId: options.interaction.message.id,
-      client: options.client,
-      menu: "deleteVcGeneratorConfirm",
-      data: options.interaction.values[0],
-    });
+  callback: async (options) => {
+    if (options.interaction instanceof StringSelectMenuInteraction) {
+      options.interaction.deferUpdate();
+      console.log(options.interaction.values[0]);
+      Menus.update({
+        messageId: options.interaction.message.id,
+        client: options.client,
+        menu: "deleteVcGeneratorConfirm",
+        data: options.interaction.values[0],
+      });
+    }
   },
-  create: async (options: {
-    client: Client;
-    guildId?: String;
-    channelId: String;
-    userIds: String[];
-    Indms: Boolean;
-    data?: any;
-  }): Promise<MessageActionRowComponentBuilder> => {
+  create: async (options): Promise<MessageActionRowComponentBuilder> => {
     const generators = await generatorSchema.find({ guildId: options.guildId });
     const selectMenu = new StringSelectMenuBuilder()
       .setMaxValues(1)

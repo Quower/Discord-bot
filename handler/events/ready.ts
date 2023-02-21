@@ -43,6 +43,10 @@ export default {
       await settingsSchema.deleteMany();
       throw new Error("Settings nuke complete!");
     }
+    if (config.nukeMenusDB) {
+      await menuSchema.deleteMany();
+      //throw new Error("Settings nuke complete!");
+    }
     if (config.updateSettingsOnStart == true) {
       let settingSchemas = await settingsSchema.find();
       //console.log(optionSchemas)

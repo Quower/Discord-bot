@@ -5,8 +5,8 @@ import { subcommand } from "../../../handler/typings";
 export default {
   description: "open vc generator managment menu",
   callback: async (
-    client: Client,
-    interaction: ChatInputCommandInteraction
+    client,
+    interaction
   ) => {
     if (client == undefined && interaction == undefined) {
       return;

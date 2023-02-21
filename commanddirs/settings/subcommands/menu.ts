@@ -5,8 +5,8 @@ import { subcommand } from "../../../handler/typings";
 export default {
   description: "opens menu for managing settings",
   callback: async (
-    client: Client,
-    interaction: ChatInputCommandInteraction
+    client,
+    interaction
   ) => {
     if (client == undefined && interaction == undefined) {
       return;

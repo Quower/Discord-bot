@@ -10,11 +10,12 @@ import { Menus } from "../../../handler/menuhandlre";
 
 export default {
   callback: async (options) => {
-    options.interaction.deferUpdate();
+    options.interaction.deferUpdate()
     Menus.update({
       messageId: options.interaction.message.id,
       client: options.client,
-      menu: "createVcGeneratorMenu",
+      data: options.data,
+      waitingForResponse: !options.waitingForResponse
     });
   },
   create: async (options: {
@@ -26,10 +27,14 @@ export default {
     data?: any;
     waitingForResponse: boolean;
   }): Promise<MessageActionRowComponentBuilder> => {
-    const button = new ButtonBuilder();
-    button.setLabel("Create Generator");
-    button.setStyle(ButtonStyle.Secondary);
-    button.setDisabled(true);
-    return button;
+    if (options.waitingForResponse) {
+      return new ButtonBuilder()
+        .setLabel("Input On")
+        .setStyle(ButtonStyle.Success);
+    } else {
+      return new ButtonBuilder()
+        .setLabel("Input Off")
+        .setStyle(ButtonStyle.Secondary);
+    }
   },
 } as button;

@@ -4,7 +4,7 @@ import generatorSchema from "../models/generatorSchema";
 
 export default {
   description: "lis all vc generators",
-  callback: async (client: Client, interaction: CommandInteraction) => {
+  callback: async (client, interaction) => {
     if (client == undefined && interaction == undefined) {
       return;
     }

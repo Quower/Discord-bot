@@ -9,11 +9,7 @@ import { button } from "../../../handler/typings";
 import { Menus } from "../../../handler/menuhandlre";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: ButtonInteraction;
-    data?: any;
-  }) => {
+  callback: async (options) => {
     options.interaction.deferUpdate();
     options.data.page = options.data.page - 1;
     console.log(options.data);
@@ -23,14 +19,7 @@ export default {
       data: options.data,
     });
   },
-  create: async (options: {
-    client: Client;
-    guildId?: String;
-    channelId: String;
-    userIds: String[];
-    Indms: Boolean;
-    data?: any;
-  }): Promise<MessageActionRowComponentBuilder> => {
+  create: async (options): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     if (options.data.currentPage == 1) {
       button.setLabel("<");

@@ -9,11 +9,7 @@ import { button } from "../../../handler/typings";
 import { Menus } from "../../../handler/menuhandlre";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: ButtonInteraction;
-    data?: any;
-  }) => {
+  callback: async (options) => {
     options.interaction.deferUpdate();
     Menus.update({
       messageId: options.interaction.message.id,
@@ -21,14 +17,7 @@ export default {
       menu: "deleteVcGeneratorSelector",
     });
   },
-  create: async (options: {
-    client: Client;
-    guildId?: String;
-    channelId: String;
-    userIds: String[];
-    Indms: Boolean;
-    data?: any;
-  }): Promise<MessageActionRowComponentBuilder> => {
+  create: async (options): Promise<MessageActionRowComponentBuilder> => {
     const button = new ButtonBuilder();
     button.setLabel("Delete Generator");
     button.setStyle(ButtonStyle.Secondary);

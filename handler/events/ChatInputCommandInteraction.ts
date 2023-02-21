@@ -17,7 +17,7 @@ export default {
   ) => {
     let time = Date.now();
     if (interaction instanceof ChatInputCommandInteraction) {
-      console.log(commandsExport);
+      //console.log(commandsExport);
       let commandObject = (await commandsExport).find(
         (comannd) => comannd.command == interaction.commandName
       );

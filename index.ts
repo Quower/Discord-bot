@@ -6,8 +6,6 @@ import { MenuDeleteCheck } from "./handler/menuhandlre";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 export const botOwners = ["424279456031703041"];
-const deleteAllMenusOnStart = true;
-const deleteMenusWithoutMessage = true;
 
 export const client = new DiscordJS.Client({
   intents: [

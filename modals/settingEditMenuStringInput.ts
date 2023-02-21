@@ -12,16 +12,12 @@ import { Menus } from "../handler/menuhandlre";
 import { modal } from "../handler/typings";
 
 export default {
-  callback: async (options: {
-    client: Client;
-    interaction: ModalSubmitInteraction;
-    data?: any;
-  }) => {
-    let newData = options.data.menu
-    const value = options.interaction.fields.getTextInputValue("string")
+  callback: async (options) => {
+    let newData = options.data.menu;
+    const value = options.interaction.fields.getTextInputValue("string");
     newData.newValue = value;
     newData.snewValue = value;
-    options.interaction.deferUpdate()
+    options.interaction.deferUpdate();
     Menus.update({
       messageId: options.data.messageId,
       client: options.client,
@@ -29,15 +25,8 @@ export default {
     });
   },
   create: async (
-    options: {
-      client: Client;
-      interaction:
-        | ButtonInteraction
-        | SelectMenuInteraction
-        | ChatInputCommandInteraction;
-      data?: any;
-    },
-    modal: ModalBuilder
+    options,
+    modal
   ) => {
     modal.setTitle("Input");
     const Input = new TextInputBuilder();
