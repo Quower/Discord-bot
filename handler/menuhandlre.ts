@@ -26,7 +26,7 @@ export const Menus = {
   }) => {
     let time = Date.now();
     let menu = new menuSchema();
-    if ((menu.waitingForResponse = true)) {
+    if ((menu.waitingForResponse == true)) {
       const generators = await menuSchema.find({ waitingForResponse: true });
       if (generators) {
         menu.waitingForResponse = false;
@@ -236,7 +236,7 @@ export const Menus = {
         waitingForResponse = last.waitingForResponse;
       } else {
         menuName = options.menu;
-        if (options.waitingForResponse) {
+        if (options.waitingForResponse != undefined) {
           waitingForResponse = options.waitingForResponse;
         } else {
           waitingForResponse = false;
@@ -248,7 +248,7 @@ export const Menus = {
       }
     } else {
       menuName = menudb?.currentMenu || "";
-      if (options.waitingForResponse) {
+      if (options.waitingForResponse != undefined) {
         waitingForResponse = options.waitingForResponse;
       } else {
         waitingForResponse = menudb.waitingForResponse || false;
