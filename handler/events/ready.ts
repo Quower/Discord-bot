@@ -131,6 +131,7 @@ export default {
         }
       }
     });
+    console.log(await settingsSchema.find());
     console.log(`done with ready`);
   },
 } as readyEvent;

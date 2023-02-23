@@ -26,16 +26,6 @@ export const Menus = {
   }) => {
     let time = Date.now();
     let menu = new menuSchema();
-    if ((menu.waitingForResponse == true)) {
-      const generators = await menuSchema.find({ waitingForResponse: true });
-      if (generators) {
-        menu.waitingForResponse = false;
-      } else {
-        menu.waitingForResponse = true;
-      }
-    } else {
-      menu.waitingForResponse = false;
-    }
     if (options.saveMenu) {
       menu.saveMenu = options.saveMenu;
     } else {
@@ -109,6 +99,19 @@ export const Menus = {
       }
       console.log(`got to menus create point 4.1:${Date.now() - time}`);
       time = Date.now();
+      //console.log(options.waitingForResponse)
+      if (options.waitingForResponse == true) {
+        const generators = await menuSchema.find({ waitingForResponse: true, channelId: sendplace.id });
+        //console.log(generators)
+        if (generators.length > 0) {
+          menu.waitingForResponse = false;
+        } else {
+          menu.waitingForResponse = true;
+        }
+      } else {
+        menu.waitingForResponse = false;
+      }
+      //console.log(menu)
       const message = await menuObject.create({
         client: options.client,
         waitingForResponse: menu.waitingForResponse,
@@ -144,6 +147,16 @@ export const Menus = {
       }
       console.log(`got to menus create point 4.2:${Date.now() - time}`);
       time = Date.now();
+      if ((options.waitingForResponse == true)) {
+        const generators = await menuSchema.find({ waitingForResponse: true, channelId: menu.channelId });
+        if (generators.length > 0) {
+          menu.waitingForResponse = false;
+        } else {
+          menu.waitingForResponse = true;
+        }
+      } else {
+        menu.waitingForResponse = false;
+      }
       const message = await menuObject.create({
         client: options.client,
         waitingForResponse: menu.waitingForResponse,

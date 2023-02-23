@@ -9,7 +9,7 @@ export default {
     message, //: DiscordJS.Interaction<DiscordJS.CacheType>,
     client: Client
   ) => {
-    if (message instanceof Message) {
+    if (message instanceof Message && message.author.id != client.user?.id) {
       let menuschema = await menuSchema.findOne({
         channelId: message.channel.id,
         waitingForResponse: true,
@@ -36,7 +36,7 @@ export default {
               setTimeout(() => {
                 reply.delete();
                 message.delete();
-              }, 10000);
+              }, 3000);
             });
           return;
         }

@@ -6,6 +6,9 @@ import { MenuDeleteCheck } from "./handler/menuhandlre";
 //import testSchema from './mongodb/testschema'
 dotenv.config();
 export const botOwners = ["424279456031703041"];
+import { Player } from "discord-player";
+
+
 
 export const client = new DiscordJS.Client({
   intents: [
@@ -30,6 +33,9 @@ export const client = new DiscordJS.Client({
     IntentsBitField.Flags.MessageContent
   ],
 });
+
+export const player = new Player(client);
+
 client.on("ready", async () => {
   console.log(`Logged in as: ${client.user?.tag}`);
 
