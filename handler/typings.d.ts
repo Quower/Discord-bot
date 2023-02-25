@@ -27,38 +27,20 @@ export interface command {
   permissions?: PermissionsBitField;
   MainCommand?: boolean;
 }
-
-export type commandobject = {
-  command: string;
-  description: string;
+export interface commandobject extends command {
   path: fs.PathLike;
-  subcommands: subcommandArray;
-  callback(client: Client, interaction: ChatInputCommandInteraction): void;
-  options?: ApplicationCommandOption[];
-  allowInDMs?: boolean;
-  ownerOnly?: boolean;
-  testOnly?: boolean;
-  permissions?: PermissionsBitField;
-  MainCommand?: boolean;
-};
-
-export type commandArray = Array<commandobject>;
-
+  command: string;
+  subcommands: subcommandobject[];
+}
 export interface subcommand {
   description: string;
   callback(client: Client, interaction: ChatInputCommandInteraction): void;
   options?: ApplicationCommandSubCommand["options"];
 }
-
-export type subcommandobject = {
+export interface subcommandobject extends subcommand {
   command: string;
   description: string;
-  path: fs.PathLike;
-  callback(client: Client, interaction: ChatInputCommandInteraction): void;
-  options?: ApplicationCommandSubCommand["options"];
-};
-
-export type subcommandArray = Array<subcommandobject>;
+}
 
 export type returnMenu = {
   content?: string | undefined;
@@ -66,22 +48,6 @@ export type returnMenu = {
   components?: ActionRowBuilder[];
   ephemeral?: boolean | undefined;
 };
-
-/*export interface button {
-  callback(client: Client, interaction: ChatInputCommandInteraction);
-  label: string;
-  style: ButtonStyle;
-  emoji?: ComponentEmojiResolvable;
-}
-
-export interface buttonobject {
-  path: fs.PathLike;
-  name: string;
-  label: string;
-  style: ButtonStyle;
-  emoji?: ComponentEmojiResolvable;
-  callback(client: Client, interaction: ChatInputCommandInteraction);
-}*/
 
 export interface button {
   callback(options: {
@@ -101,25 +67,10 @@ export interface button {
   }): Promise<MessageActionRowComponentBuilder>;
 }
 
-export type buttonobject = {
+export interface buttonobject extends button {
   path: fs.PathLike;
   name: string;
-  callback(options: {
-    client: Client;
-    interaction: ButtonInteraction | AnySelectMenuInteraction;
-    data?: any;
-    waitingForResponse: boolean;
-  });
-  create(options: {
-    client: Client;
-    guildId?: string;
-    channelId: string;
-    userIds: string[];
-    Indms: boolean;
-    data?: any;
-    waitingForResponse: boolean;
-  }): Promise<MessageActionRowComponentBuilder>;
-};
+}
 
 export type menuInfo = {
   name: string;
@@ -136,17 +87,6 @@ export type readyEvent = {
   execute(client: Client);
 };
 
-/*export type menuSchema = {
-  permenent: boolean;
-  menuInDms: boolean;
-  guildId?: string;
-  channelId?: string;
-  userIds: string[];
-  MessageId?: String;
-  currentMenu: menuInfo;
-  prevMenus: menuInfo[];
-};*/
-
 export interface menu {
   create(options: {
     client: Client;
@@ -159,31 +99,15 @@ export interface menu {
   }): returnMenu;
 }
 
-export type menuobject = {
-  create(options: {
-    client: Client;
-    waitingForResponse: boolean;
-    guildId?: string;
-    channelId: string;
-    userIds: string[];
-    Indms: boolean;
-    data?: any;
-  }): returnMenu;
+export interface menuobject extends menu {
   name: string;
-  //buttons: buttonobject[];
-  //selectMenus: selectMenuobject[];
   path: fs.PathLike;
-  //buttons: buttonobject[];
 };
-
-export type buttonArray = buttonobject[];
 
 export type interactionSave = {
   messageId: string;
   interaction: CommandInteraction;
 };
-
-import { Client, GuildMember, Role } from "discord.js";
 
 export type settingsCategory = {
   name: string;
@@ -211,28 +135,8 @@ export interface settingUpdate {
 
 export type saveSetting = {
   name: string;
-  type: string /*
-  Acepted values:
-  string, boolean
-  channel, channels,
-  textChannel, textChannels,
-  voiceChannel, voiceChannels,
-  member, members,
-  role, roles,
-  select
-  */;
+  type: string;
   value: any;
-};
-
-export type perm = {
-  permissions: PermissionsBitField[];
-  members: GuildMember[];
-  roles: Role[];
-};
-export type savePerm = {
-  permissions: PermissionsBitField[];
-  members: string[];
-  roles: string[];
 };
 
 export interface modal {
@@ -254,23 +158,7 @@ export interface modal {
   );
 }
 
-export type modalobject = {
+export interface modalobject extends modal {
   path: fs.PathLike;
   name: string;
-  callback(options: {
-    client: Client;
-    interaction: ModalSubmitInteraction;
-    data?: any;
-  });
-  create(
-    options: {
-      client: Client;
-      interaction:
-        | ButtonInteraction
-        | AnySelectMenuInteraction
-        | ChatInputCommandInteraction;
-      data?: any;
-    },
-    modal: ModalBuilder
-  );
 };

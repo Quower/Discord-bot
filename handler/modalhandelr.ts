@@ -1,9 +1,9 @@
 import {
+  AnySelectMenuInteraction,
   ButtonInteraction,
   ChatInputCommandInteraction,
   Client,
   ModalBuilder,
-  SelectMenuInteraction,
 } from "discord.js";
 import modalSchema from "./models/modalSchema";
 import { modalExports } from "./setup";
@@ -16,7 +16,7 @@ export async function CreateModal(options: {
   deleteAfter: number;
   interaction:
     | ButtonInteraction
-    | SelectMenuInteraction
+    | AnySelectMenuInteraction
     | ChatInputCommandInteraction;
 }) {
     console.log(options)

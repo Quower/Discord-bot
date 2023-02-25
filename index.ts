@@ -36,6 +36,7 @@ export const client = new DiscordJS.Client({
 
 export const player = new Player(client);
 
+
 client.on("ready", async () => {
   console.log(`Logged in as: ${client.user?.tag}`);
 

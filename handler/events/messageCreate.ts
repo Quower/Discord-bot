@@ -50,7 +50,7 @@ export default {
       let run = require(`../.${menuobject?.path}input.ts`).default;
       run({
         client: client,
-        message: message.content,
+        message: message,
         data: menuschema.data,
         messageId: menuschema.messageId,
       });

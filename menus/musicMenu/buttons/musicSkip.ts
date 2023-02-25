@@ -35,8 +35,13 @@ export default {
         options.interaction.member?.permissions.has("Administrator") ||
         botOwners.includes(options.interaction.user.id)
       ) {
-        options.interaction.deferUpdate()
-        player.deleteQueue(options.interaction.guild || "");
+        options.interaction.deferUpdate();
+
+        let queue = player.getQueue(options.interaction.guildId || "");
+        if (queue) {
+          //queue.
+          queue.forceNext();
+        }
       } else {
         await options.interaction.reply({
           content:
@@ -44,19 +49,6 @@ export default {
           ephemeral: true,
         });
       }
-      //     if (options.interaction.member?.voice) {
-      //       const queue = player.createQueue(options.interaction.guild || '', {})
-      //       await queue.connect(options.interaction.member?.voice.channel || '');
-      //       Menus.update({
-      //         messageId: options.interaction.message.id,
-      //         client: options.client,
-      //       });
-      //     } else {
-      //       await options.interaction.reply({
-      //         content: "You are not in a voice channel!",
-      //         ephemeral: true,
-      //       });
-      //     }
     }
   },
   create: async (options: {
@@ -68,6 +60,6 @@ export default {
     data?: any;
     waitingForResponse: boolean;
   }): Promise<MessageActionRowComponentBuilder> => {
-    return new ButtonBuilder().setLabel("Leave").setStyle(ButtonStyle.Danger);
+    return new ButtonBuilder().setLabel("Skip").setStyle(ButtonStyle.Primary);
   },
 } as button;

@@ -16,27 +16,11 @@ export default {
   callback: async (options) => {
     //options.interaction.deferUpdate();
     if (options.interaction.member instanceof GuildMember) {
-      if (options.interaction.member?.voice) {
+      if (options.interaction.member?.voice.channelId) {
+        console.log("perse")
         options.interaction.deferUpdate();
         const queue = player.createQueue(options.interaction.guild || "");
         await queue.connect(options.interaction.member?.voice.channel || "");
-        Menus.update({
-          messageId: options.interaction.message.id,
-          client: options.client,
-        });
-        player.on("botDisconnect", async (queue) => {
-          queue.destroy()
-          const menudb = await menuSchema.find({
-            guildId: queue.guild.id,
-            currentMenu: "musicMenu",
-          });
-          menudb.forEach((menu) => {
-            Menus.update({
-              messageId: menu.messageId || "",
-              client: options.client,
-            });
-          });
-        });
       } else {
         await options.interaction.reply({
           content: "You are not in a voice channel!",

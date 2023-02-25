@@ -16,10 +16,10 @@ export default {
         waitingForResponse: true,
       });
       if (menudb) {
-        // await Menus.delete({
-        //   client: client,
-        //   messageId: menudb?.messageId || "",
-        // });
+        await Menus.delete({
+          client: client,
+          messageId: menudb?.messageId || "",
+        });
       }
 
       const settings = new SettingsHandler();

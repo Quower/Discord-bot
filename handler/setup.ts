@@ -21,10 +21,8 @@ import { modalobject, returnMenu } from "./typings";
 import {
   commandobject,
   subcommandobject,
-  subcommandArray,
   menuobject,
   buttonobject,
-  buttonArray,
 } from "./typings";
 
 const commandfolders = fs.readdirSync("./commanddirs");
@@ -145,7 +143,7 @@ menufolders.forEach((folder) => {
   }
 });
 
-export let buttonsExport: buttonArray = new Array();
+export let buttonsExport: buttonobject[] = new Array();
 menusExport.forEach((menu) => {
   if (fs.existsSync(`${menu.path}buttons/`)) {
     const buttonfiles = fs
@@ -236,7 +234,7 @@ modalfiles.forEach((modal) => {
   modalExports.push(Modal);
 });
 
-function Setup_Subcommands(folder: fs.PathLike): subcommandArray | undefined {
+function Setup_Subcommands(folder: fs.PathLike): subcommandobject[] | undefined {
   if (fs.existsSync(folder)) {
     const subcommandfiles = fs
       .readdirSync(folder)
