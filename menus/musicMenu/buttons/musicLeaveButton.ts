@@ -14,6 +14,7 @@ import { Menus } from "../../../handler/menuhandlre";
 import { botOwners, player } from "../../..";
 import SettingsHandler from "../../../handler/settingshandler";
 import menuSchema from "../../../handler/models/menuSchema";
+import { musicUpdate } from "../events/ready";
 
 export default {
   callback: async (options) => {
@@ -37,6 +38,7 @@ export default {
       ) {
         options.interaction.deferUpdate()
         player.deleteQueue(options.interaction.guild || "");
+        musicUpdate(options.interaction.guild?.id, options.client);
       } else {
         await options.interaction.reply({
           content:

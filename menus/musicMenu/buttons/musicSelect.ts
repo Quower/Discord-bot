@@ -26,9 +26,9 @@ export default {
       const value = options.interaction.values[0];
       //console.log(options.data.result);
 
-      const result = options.data.result.find((res: any) => res.id == value);
+      //const result = options.data.result.find((res: any) => res.id == value);
       //player.
-      const res = await player.search(result.url, {
+      const res = await player.search(value, {
         requestedBy: options.data.searchUser,
         searchEngine: QueryType.AUTO,
       });
@@ -67,7 +67,7 @@ export default {
       selectMenu.addOptions([
         {
           label: resu.title.substring(0, 99),
-          value: resu.id,
+          value: resu.url,
           description: resu.duration,
         },
       ]);

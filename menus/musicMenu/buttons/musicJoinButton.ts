@@ -11,6 +11,7 @@ import { button } from "../../../handler/typings";
 import { Menus } from "../../../handler/menuhandlre";
 import { player } from "../../..";
 import menuSchema from "../../../handler/models/menuSchema";
+import { musicUpdate } from "../events/ready";
 
 export default {
   callback: async (options) => {
@@ -21,6 +22,7 @@ export default {
         options.interaction.deferUpdate();
         const queue = player.createQueue(options.interaction.guild || "");
         await queue.connect(options.interaction.member?.voice.channel || "");
+        musicUpdate(options.interaction.guild?.id, options.client);
       } else {
         await options.interaction.reply({
           content: "You are not in a voice channel!",

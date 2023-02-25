@@ -18,16 +18,16 @@ export default {
     });
     player.on("botDisconnect", async (queue) => {
       queue.destroy();
-      musicUpdate(queue, client);
+      musicUpdate(queue.guild.id, client);
     });
     player.on("trackStart", async (queue) => {
-      musicUpdate(queue, client);
+      musicUpdate(queue.guild.id, client);
     });
     player.on("trackEnd", async (queue) => {
-      musicUpdate(queue, client);
+      musicUpdate(queue.guild.id, client);
     });
     player.on("trackAdd", async (queue) => {
-      musicUpdate(queue, client);
+      musicUpdate(queue.guild.id, client);
     });
     player.on("error", async (queue, e) => {
       console.log(e)
@@ -35,15 +35,15 @@ export default {
     player.on("connectionError", async (queue, e) => {
       console.log(e)
     });
-    player.on("voiceStateUpdate", async (queue) => {
-      musicUpdate(queue, client);
-    });
+    // player.on("voiceStateUpdate", async (queue) => {
+    //   musicUpdate(queue, client);
+    // });
   },
 } as readyEvent;
 
-async function musicUpdate(queue: Queue, client: Client) {
+export async function musicUpdate(guildId: String | undefined, client: Client) {
   const menudb = await menuSchema.find({
-    guildId: queue.guild.id,
+    guildId: guildId,
     currentMenu: "musicMenu",
   });
   menudb.forEach((menu) => {

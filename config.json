@@ -2,5 +2,5 @@
     "updateSettingsOnStart": true,
     "nukeSettings": false,
     "nukeEntireDB": false,
-    "nukeMenusDB": true
+    "nukeMenusDB": false
 }

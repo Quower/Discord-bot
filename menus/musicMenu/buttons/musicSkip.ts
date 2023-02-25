@@ -39,8 +39,8 @@ export default {
 
         let queue = player.getQueue(options.interaction.guildId || "");
         if (queue) {
-          //queue.
-          queue.forceNext();
+          if (queue.tracks.length > 0) await queue.play();
+          else await queue.skip();
         }
       } else {
         await options.interaction.reply({
