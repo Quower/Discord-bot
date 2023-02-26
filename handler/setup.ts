@@ -215,26 +215,34 @@ modalfiles.forEach((modal) => {
         data: options.data,
       });
     },
-    create: function (options: {
-      client: Client;
-      interaction:
-        | ButtonInteraction
-        | AnySelectMenuInteraction
-        | ChatInputCommandInteraction;
-      data?: any;
-    }, modal: ModalBuilder){
-      object.default.create({
-        client: options.client,
-        interaction: options.interaction,
-        data: options.data,
-      }, modal);
+    create: function (
+      options: {
+        client: Client;
+        interaction:
+          | ButtonInteraction
+          | AnySelectMenuInteraction
+          | ChatInputCommandInteraction;
+        data?: any;
+      },
+      modal: ModalBuilder
+    ) {
+      object.default.create(
+        {
+          client: options.client,
+          interaction: options.interaction,
+          data: options.data,
+        },
+        modal
+      );
     },
   } as modalobject;
 
   modalExports.push(Modal);
 });
 
-function Setup_Subcommands(folder: fs.PathLike): subcommandobject[] | undefined {
+function Setup_Subcommands(
+  folder: fs.PathLike
+): subcommandobject[] | undefined {
   if (fs.existsSync(folder)) {
     const subcommandfiles = fs
       .readdirSync(folder)
@@ -346,23 +354,23 @@ export default class Handler {
       commandBuilder.setName(command.command);
       commandBuilder.default_member_permissions;
       //if ((command.MainCommand == true)) {
-        commandBuilder.setDescription(command.description);
+      commandBuilder.setDescription(command.description);
       //}
       commandBuilder.setDMPermission(command.allowInDMs);
       //if (command.permissions) {
       //const permissions = new PermissionsBitField(command.permissions);
-        //commandBuilder.setDefaultMemberPermissions(command.permissions)
+      //commandBuilder.setDefaultMemberPermissions(command.permissions)
       //}
       //commandBuilder.
-      
+
       let commandJSON = commandBuilder.toJSON();
-      commandJSON.default_member_permissions = command.permissions
+      commandJSON.default_member_permissions = command.permissions;
       commandJSON.options = options;
       //commandJSON.default_member_permissions = command.permissions
 
-      if ((command.testOnly == true)) {
+      if (command.testOnly == true) {
         guildCommands.push(commandJSON);
-      } else if ((command.testOnly == false)) {
+      } else if (command.testOnly == false) {
         globalCommands.push(commandJSON);
       }
     });
@@ -493,10 +501,12 @@ export class UkMessageBuilder {
             row.addComponents(button);
           }
         }
-        if (menu.components) {
-          menu.components?.push(row);
-        } else {
-          menu.components = [row];
+        if (row.components.length > 0) {
+          if (menu.components) {
+            menu.components?.push(row);
+          } else {
+            menu.components = [row];
+          }
         }
       }
     }

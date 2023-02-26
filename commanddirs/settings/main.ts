@@ -9,8 +9,8 @@ import { command } from "../../handler/typings";
 export default {
   description: "command",
   allowInDMs: false,
-  ownerOnly: true,
-  testOnly: true,
+  ownerOnly: false,
+  testOnly: false,
   permissions: PermissionsBitField.Flags.Administrator,
   MainCommand: false,
   callback: async (

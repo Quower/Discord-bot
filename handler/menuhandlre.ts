@@ -188,6 +188,7 @@ export const Menus = {
         time = Date.now();
       } catch (e) {
         console.log("something went wrong when replying to interaction");
+        console.log(e);
       }
     }
     menu.lastInteraction = Date.now();

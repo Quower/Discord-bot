@@ -54,6 +54,7 @@ export default {
         data: menuschema.data,
         messageId: menuschema.messageId,
       });
+      menuschema.save()
     }
   },
 } as myEvent;

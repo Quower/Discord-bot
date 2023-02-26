@@ -78,6 +78,7 @@ export default {
       }
     });
     const menus = await menuSchema.find();
+    console.log(menus)
     menus.forEach(async (menu) => {
       if (menu.deleteAfter && menu.deleteAfter > 0) {
         if (menu.lastInteraction && menu.deleteAfter) {

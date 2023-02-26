@@ -40,8 +40,10 @@ export default {
           queue.addTrack(res.tracks[0]);
           console.log(queue.playing);
 
-          if (!queue.playing) {
+          if (!queue.playing && !options.data.paused) {
             await queue.play();
+            //queue.
+            //queue.setPaused(fa)
           }
         }
       }

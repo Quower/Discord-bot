@@ -39,8 +39,8 @@ export default {
 
         let queue = player.getQueue(options.interaction.guildId || "");
         if (queue) {
-          if (queue.tracks.length > 0) await queue.play();
-          else await queue.skip();
+          //if (queue.tracks.length > 0) await queue.play();
+           await queue.skip();
         }
       } else {
         await options.interaction.reply({
@@ -60,6 +60,11 @@ export default {
     data?: any;
     waitingForResponse: boolean;
   }): Promise<MessageActionRowComponentBuilder> => {
-    return new ButtonBuilder().setLabel("Skip").setStyle(ButtonStyle.Primary);
+    const button = new ButtonBuilder();
+    button.setStyle(ButtonStyle.Primary).setEmoji("1079331777807654912");
+    if (!options.data.queue.current) {
+      button.setDisabled(true);
+    }
+    return button;
   },
 } as button;

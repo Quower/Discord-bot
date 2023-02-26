@@ -17,7 +17,17 @@ export default {
         if (!res || !res.tracks.length) {
           options.data.result = `No results found <@${options.data.searchUser}>... try again ? ❌`;
         } else {
-          options.data.result = res.tracks.slice(0, 5);
+          const sliced = res.tracks.slice(0, 5);
+          options.data.result = [];
+          sliced.forEach((result) => {
+            options.data.result.push({
+              title: result.title,
+              author: result.author,
+              duration: result.duration,
+              url: result.url,
+            });
+          });
+
           //options.data.result;
           //res.tracks[1].
           /*options.data.result = `${maxTracks
@@ -27,30 +37,30 @@ export default {
         break;
     }
     options.data.action = "none";
-    const settings = new SettingsHandler();
-    await settings.init({
-      client: options.client,
-      guildId: options.guildId || "",
-    });
-    let row2 = ["exitButton"];
-    const messageinput = await settings.read({
-      settingName: "musicMessageInput",
-      retunrAs: "raw",
-    });
-    const forceInput = await settings.read({
-      settingName: "musicForceInput",
-      retunrAs: "raw",
-    });
-    if (messageinput == true && forceInput == false) {
-      row2.push("InputButton");
-    }
+    // const settings = new SettingsHandler();
+    // await settings.init({
+    //   client: options.client,
+    //   guildId: options.guildId || "",
+    // });
+    // let row2 = ["exitButton"];
+    // const messageinput = await settings.read({
+    //   settingName: "musicMessageInput",
+    //   retunrAs: "raw",
+    // });
+    // const forceInput = await settings.read({
+    //   settingName: "musicForceInput",
+    //   retunrAs: "raw",
+    // });
+    // if (messageinput == true && forceInput == false) {
+    //   row2.push("InputButton");
+    // }
     const embed = new EmbedBuilder();
     embed.setTitle("Music Menu");
     if (options.data.result) {
       const resultText = `${options.data.result
         .map(
-          (track: Track, i: number) =>
-            `**${i + 1}**. ${track.title} | ${track.author}`
+          (track: any, i: number) =>
+            `**${i + 1}**. ${track.title} | ${track.author}\n ${track.duration}`
         )
         .join("\n")}⬇️`;
       embed.addFields({
@@ -60,12 +70,17 @@ export default {
         }${"``"}\n${resultText}`,
       });
     }
-    embed.setDescription("description");
+    //embed.setDescription("description");
+
+    let row3 = []
+    if (options.waitingForResponse == false) {
+      row3.push("InputButton")
+    }
 
     let row1 = ["musicJoinButton"];
     const queue = player.getQueue(options.guildId || "");
     if (queue) {
-      row1 = ["musicLeaveButton", "musicSkip"];
+      row1 = ["musicLeaveButton", "musicPreveous", "musicPause", "musicSkip", "musicLoop"];
       console.log(queue.tracks);
       console.log("got to place");
       if (queue.current) {
@@ -88,7 +103,6 @@ export default {
         });
         embed.setThumbnail(track.thumbnail);
         if (queue.tracks[0]) {
-
           const songs = queue.tracks.length;
 
           const nextSongs =
@@ -98,9 +112,7 @@ export default {
 
           const tracks = queue.tracks.map(
             (track, i) =>
-              `**${i + 1}** - ${track.title} | ${
-                track.author
-              } (requested by : ${track.requestedBy.username})`
+              `**${i + 1}**. ${track.title} | ${track.author}\n ${track.duration} (requested by : ${track.requestedBy})`
           );
           embed.spliceFields(1, 0, {
             name: "Next",
@@ -112,6 +124,28 @@ export default {
             value: "none",
           });
         }
+        // if (queue.previousTracks[0]) {
+        //   const songs = queue.previousTracks.length;
+
+        //   const nextSongs =
+        //     songs > 5
+        //       ? `And **${songs - 5}** other song(s)...`
+        //       : `In the playlist **${songs}** song(s)...`;
+
+        //   const tracks = queue.previousTracks.map(
+        //     (track, i) =>
+        //       `**${i + 1}**. ${track.title} | ${track.author}\n ${track.duration} (requested by : ${track.requestedBy})`
+        //   );
+        //   embed.spliceFields(1, 0, {
+        //     name: "Preveous",
+        //     value: `${tracks.slice(0, 5).join("\n")}\n\n${nextSongs}`,
+        //   });
+        // } else {
+        //   embed.spliceFields(1, 0, {
+        //     name: "Preveous",
+        //     value: "none",
+        //   });
+        // }
       } else {
         embed.spliceFields(0, 0, {
           name: "Now Playing",
@@ -119,18 +153,24 @@ export default {
         });
       }
 
+      options.data.queue = queue;
+
       if (options.data.result) {
         const menu = await new UkMessageBuilder().build(options, {
-          rows: [["musicSelect"], row1, row2],
+          rows: [["musicSelect"], row1, row3],
           embeds: [embed],
         });
+        options.data.queue = undefined;
         return menu;
       }
     }
+    embed.setDescription("cool description")
+
     const menu = await new UkMessageBuilder().build(options, {
-      rows: [row1, row2],
+      rows: [row1,row3],
       embeds: [embed],
     });
+    options.data.queue = undefined;
     return menu;
   },
 } as menu;

@@ -9,20 +9,6 @@
       "description": "Role that can fully controll the music bot",
       "type": "role",
       "defaultValue": null
-    },
-    {
-      "name": "musicMessageInput",
-      "display": "Allow Message Input",
-      "description": "Should we allow inputing to the music menu by sending message in the channel",
-      "type": "boolean",
-      "defaultValue": true
-    },
-    {
-      "name": "musicForceInput",
-      "display": "Force Input on",
-      "description": "If true music menu input will allways be on",
-      "type": "boolean",
-      "defaultValue": true
     }
   ]
 }

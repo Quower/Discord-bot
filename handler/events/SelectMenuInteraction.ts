@@ -69,6 +69,7 @@ export default {
         data: menuschema.data,
         waitingForResponse: menuschema.waitingForResponse || false,
       });
+      menuschema.save()
     }
   },
 } as myEvent;

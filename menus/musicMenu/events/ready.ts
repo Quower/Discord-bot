@@ -30,6 +30,11 @@ export default {
       musicUpdate(queue.guild.id, client);
     });
     player.on("error", async (queue, e) => {
+      
+      console.log(e)
+    });
+    player.on("debug", async (queue, e) => {
+      
       console.log(e)
     });
     player.on("connectionError", async (queue, e) => {

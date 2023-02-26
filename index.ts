@@ -12,29 +12,34 @@ import { Player } from "discord-player";
 
 export const client = new DiscordJS.Client({
   intents: [
-    IntentsBitField.Flags.AutoModerationConfiguration,
-    IntentsBitField.Flags.AutoModerationExecution,
-    IntentsBitField.Flags.DirectMessageReactions,
+    //IntentsBitField.Flags.AutoModerationConfiguration,
+    //IntentsBitField.Flags.AutoModerationExecution,
+    //IntentsBitField.Flags.DirectMessageReactions,
     IntentsBitField.Flags.DirectMessageTyping,
     IntentsBitField.Flags.DirectMessages,
-    IntentsBitField.Flags.GuildBans,
     IntentsBitField.Flags.GuildEmojisAndStickers,
-    IntentsBitField.Flags.GuildIntegrations,
-    IntentsBitField.Flags.GuildInvites,
+    //IntentsBitField.Flags.GuildIntegrations,
+    //IntentsBitField.Flags.GuildInvites,
     IntentsBitField.Flags.GuildMembers,
-    IntentsBitField.Flags.GuildMessageReactions,
+    //IntentsBitField.Flags.GuildMessageReactions,
     IntentsBitField.Flags.GuildMessageTyping,
     IntentsBitField.Flags.GuildMessages,
+    //IntentsBitField.Flags.GuildModeration,
     IntentsBitField.Flags.GuildPresences,
-    IntentsBitField.Flags.GuildScheduledEvents,
+    //IntentsBitField.Flags.GuildScheduledEvents,
     IntentsBitField.Flags.GuildVoiceStates,
-    IntentsBitField.Flags.GuildWebhooks,
+    //IntentsBitField.Flags.GuildWebhooks,
     IntentsBitField.Flags.Guilds,
     IntentsBitField.Flags.MessageContent
   ],
 });
 
-export const player = new Player(client);
+export const player = new Player(client, {
+  ytdlOptions: {
+    quality: 'highestaudio'
+  },
+  
+});
 
 
 client.on("ready", async () => {
