@@ -1,13 +1,4 @@
-import {
-  ActionRowBuilder,
-  ButtonInteraction,
-  ChatInputCommandInteraction,
-  Client,
-  ModalBuilder,
-  ModalSubmitInteraction,
-  SelectMenuInteraction,
-  TextInputBuilder,
-} from "discord.js";
+import { ActionRowBuilder, TextInputBuilder } from "discord.js";
 import { Menus } from "../handler/menuhandlre";
 import { modal } from "../handler/typings";
 
@@ -24,10 +15,7 @@ export default {
       data: newData,
     });
   },
-  create: async (
-    options,
-    modal
-  ) => {
+  create: async (options, modal) => {
     modal.setTitle("Input");
     const Input = new TextInputBuilder();
     Input.setCustomId("string");

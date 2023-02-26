@@ -1,25 +1,16 @@
 import {
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
   Client,
   GuildMember,
-  InteractionCollector,
   MessageActionRowComponentBuilder,
-  PermissionFlagsBits,
-  PermissionsBitField,
 } from "discord.js";
 import { button } from "../../../handler/typings";
-import { Menus } from "../../../handler/menuhandlre";
 import { botOwners, player } from "../../..";
 import SettingsHandler from "../../../handler/settingshandler";
-import menuSchema from "../../../handler/models/menuSchema";
 import { musicUpdate } from "../events/ready";
-import { QueueRepeatMode } from "discord-player";
 export default {
   callback: async (options) => {
-    //options.data.paused = !options.data.paused;
-
     const settings = new SettingsHandler();
     await settings.init({
       client: options.client,
@@ -47,7 +38,7 @@ export default {
           queue.setRepeatMode(2);
         }
         await musicUpdate(options.interaction.guild?.id, options.client);
-        options.interaction.deferUpdate()
+        options.interaction.deferUpdate();
       } else {
         await options.interaction.reply({
           content:

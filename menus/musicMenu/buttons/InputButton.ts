@@ -1,6 +1,5 @@
 import {
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
   Client,
   MessageActionRowComponentBuilder,
@@ -10,13 +9,12 @@ import { Menus } from "../../../handler/menuhandlre";
 
 export default {
   callback: async (options) => {
-    options.interaction.deferUpdate()
-    //console.log(`options at inputbutton ${options}`)
+    options.interaction.deferUpdate();
     Menus.update({
       messageId: options.interaction.message.id,
       client: options.client,
       data: options.data,
-      waitingForResponse: !(options.waitingForResponse)
+      waitingForResponse: !options.waitingForResponse,
     });
   },
   create: async (options: {
@@ -28,7 +26,6 @@ export default {
     data?: any;
     waitingForResponse: boolean;
   }): Promise<MessageActionRowComponentBuilder> => {
-    //console.log(`options at inputbutton create ${JSON.stringify(options)}`)
     if (options.waitingForResponse) {
       return new ButtonBuilder()
         .setLabel("Input On")

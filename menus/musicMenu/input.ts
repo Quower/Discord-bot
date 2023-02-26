@@ -7,10 +7,10 @@ export default async (options: {
   data: any;
   messageId: string;
 }) => {
-    console.log('got to input')
+  console.log("got to input");
   options.data.lastInput = options.message.content;
-  options.data.action = 'search'
-  options.data.searchUser = options.message.member?.id
+  options.data.action = "search";
+  options.data.searchUser = options.message.member?.id;
 
   Menus.update({
     messageId: options.messageId,

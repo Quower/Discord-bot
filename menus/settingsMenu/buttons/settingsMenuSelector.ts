@@ -1,7 +1,6 @@
 import {
   ButtonBuilder,
   ButtonStyle,
-  Client,
   MessageActionRowComponentBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuInteraction,
@@ -26,9 +25,6 @@ export default {
       .setMaxValues(1)
       .setMinValues(1)
       .setPlaceholder("Nothing Selected");
-    // if(generators.length == 0) {selectMenu.setDisabled()
-    // selectMenu.setPlaceholder("This guild doesn't have any generators")
-    // return selectMenu}
     if (options.data.categorydata.length < 1) {
       const button = new ButtonBuilder();
       button

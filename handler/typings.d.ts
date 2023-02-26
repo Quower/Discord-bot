@@ -102,7 +102,7 @@ export interface menu {
 export interface menuobject extends menu {
   name: string;
   path: fs.PathLike;
-};
+}
 
 export type interactionSave = {
   messageId: string;
@@ -161,4 +161,4 @@ export interface modal {
 export interface modalobject extends modal {
   path: fs.PathLike;
   name: string;
-};
+}

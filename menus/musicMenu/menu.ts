@@ -1,8 +1,6 @@
-import { QueryType, Track } from "discord-player";
-import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
+import { QueryType } from "discord-player";
+import { BaseMessageOptions, EmbedBuilder } from "discord.js";
 import { player } from "../..";
-import { settingcategorys } from "../../handler/events/ready";
-import SettingsHandler from "../../handler/settingshandler";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
 
@@ -27,33 +25,10 @@ export default {
               url: result.url,
             });
           });
-
-          //options.data.result;
-          //res.tracks[1].
-          /*options.data.result = `${maxTracks
-            .map((track, i) => `**${i + 1}**. ${track.title} | ${track.author}`)
-            .join("\n")}⬇️`;*/
         }
         break;
     }
     options.data.action = "none";
-    // const settings = new SettingsHandler();
-    // await settings.init({
-    //   client: options.client,
-    //   guildId: options.guildId || "",
-    // });
-    // let row2 = ["exitButton"];
-    // const messageinput = await settings.read({
-    //   settingName: "musicMessageInput",
-    //   retunrAs: "raw",
-    // });
-    // const forceInput = await settings.read({
-    //   settingName: "musicForceInput",
-    //   retunrAs: "raw",
-    // });
-    // if (messageinput == true && forceInput == false) {
-    //   row2.push("InputButton");
-    // }
     const embed = new EmbedBuilder();
     embed.setTitle("Music Menu");
     if (options.data.result) {
@@ -70,17 +45,22 @@ export default {
         }${"``"}\n${resultText}`,
       });
     }
-    //embed.setDescription("description");
 
-    let row3 = []
+    let row3 = [];
     if (options.waitingForResponse == false) {
-      row3.push("InputButton")
+      row3.push("InputButton");
     }
 
     let row1 = ["musicJoinButton"];
     const queue = player.getQueue(options.guildId || "");
     if (queue) {
-      row1 = ["musicLeaveButton", "musicPreveous", "musicPause", "musicSkip", "musicLoop"];
+      row1 = [
+        "musicLeaveButton",
+        "musicPreveous",
+        "musicPause",
+        "musicSkip",
+        "musicLoop",
+      ];
       console.log(queue.tracks);
       console.log("got to place");
       if (queue.current) {
@@ -88,11 +68,8 @@ export default {
 
         const methods = ["disabled", "track", "queue"];
 
-        //const timestamp = queue.getPlayerTimestamp();
-
         const trackDuration = track.duration;
 
-        //const progress = queue.createProgressBar();
         embed.spliceFields(0, 0, {
           name: "Now Playing",
           value: `${"``"}${
@@ -112,7 +89,9 @@ export default {
 
           const tracks = queue.tracks.map(
             (track, i) =>
-              `**${i + 1}**. ${track.title} | ${track.author}\n ${track.duration} (requested by : ${track.requestedBy})`
+              `**${i + 1}**. ${track.title} | ${track.author}\n ${
+                track.duration
+              } (requested by : ${track.requestedBy})`
           );
           embed.spliceFields(1, 0, {
             name: "Next",
@@ -124,28 +103,6 @@ export default {
             value: "none",
           });
         }
-        // if (queue.previousTracks[0]) {
-        //   const songs = queue.previousTracks.length;
-
-        //   const nextSongs =
-        //     songs > 5
-        //       ? `And **${songs - 5}** other song(s)...`
-        //       : `In the playlist **${songs}** song(s)...`;
-
-        //   const tracks = queue.previousTracks.map(
-        //     (track, i) =>
-        //       `**${i + 1}**. ${track.title} | ${track.author}\n ${track.duration} (requested by : ${track.requestedBy})`
-        //   );
-        //   embed.spliceFields(1, 0, {
-        //     name: "Preveous",
-        //     value: `${tracks.slice(0, 5).join("\n")}\n\n${nextSongs}`,
-        //   });
-        // } else {
-        //   embed.spliceFields(1, 0, {
-        //     name: "Preveous",
-        //     value: "none",
-        //   });
-        // }
       } else {
         embed.spliceFields(0, 0, {
           name: "Now Playing",
@@ -164,10 +121,10 @@ export default {
         return menu;
       }
     }
-    embed.setDescription("cool description")
+    embed.setDescription("cool description");
 
     const menu = await new UkMessageBuilder().build(options, {
-      rows: [row1,row3],
+      rows: [row1, row3],
       embeds: [embed],
     });
     options.data.queue = undefined;

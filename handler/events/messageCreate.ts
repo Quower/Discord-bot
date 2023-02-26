@@ -5,10 +5,7 @@ import { menusExport } from "../setup";
 import { myEvent } from "../typings";
 export default {
   event: Events.MessageCreate,
-  execute: async (
-    message, //: DiscordJS.Interaction<DiscordJS.CacheType>,
-    client: Client
-  ) => {
+  execute: async (message, client: Client) => {
     if (message instanceof Message && message.author.id != client.user?.id) {
       let menuschema = await menuSchema.findOne({
         channelId: message.channel.id,
@@ -18,7 +15,6 @@ export default {
         (menu) => menu.name == menuschema?.currentMenu
       );
       if (menuschema == undefined) {
-        //console.log("no menuschema");
         return;
       }
       if (menuschema.userIds.length > 0) {
@@ -42,9 +38,9 @@ export default {
         }
       }
       try {
-        message.delete()
+        message.delete();
       } catch (e) {
-        console.log("couldn't delete input message")
+        console.log("couldn't delete input message");
       }
 
       let run = require(`../.${menuobject?.path}input.ts`).default;
@@ -54,7 +50,7 @@ export default {
         data: menuschema.data,
         messageId: menuschema.messageId,
       });
-      menuschema.save()
+      menuschema.save();
     }
   },
 } as myEvent;

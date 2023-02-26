@@ -1,4 +1,4 @@
-import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
+import { BaseMessageOptions, EmbedBuilder } from "discord.js";
 import { settingcategorys } from "../../handler/events/ready";
 import SettingsHandler from "../../handler/settingshandler";
 import { UkMessageBuilder } from "../../handler/setup";
@@ -130,24 +130,10 @@ export default {
     }
     console.log(options.data);
 
-    // options.data.settingValue =
-    //   options.data.snewValue ||
-    //   (await settingsHandler.read({
-    //     settingName: settingBase.name,
-    //     retunrAs: "raw",
-    //   }));
     let menu = await new UkMessageBuilder().build(options, {
       rows: [["cancelButton", "settingEditConfirm"], ["settingEditSelect"]],
       embeds: [embed],
     });
     return menu;
-
-    // let menu = await new UkMessageBuilder().build(options, {
-    //   rows: [
-    //     ["backButton"],
-    //     //["settingsMenuSelector"]
-    //   ],
-    //   embeds: [embed],
-    // });
   },
 } as menu;

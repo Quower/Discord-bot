@@ -7,7 +7,6 @@ import {
 } from "discord.js";
 import modalSchema from "./models/modalSchema";
 import { modalExports } from "./setup";
-//let modalid = 0;
 
 export async function CreateModal(options: {
   name: string;
@@ -19,7 +18,7 @@ export async function CreateModal(options: {
     | AnySelectMenuInteraction
     | ChatInputCommandInteraction;
 }) {
-    console.log(options)
+  console.log(options);
   const modalobject = modalExports.find(
     (modalexport) => modalexport.name == options.name
   );
@@ -33,10 +32,8 @@ export async function CreateModal(options: {
   modaldb.modalName = options.name;
   modaldb.data = options.data;
 
-  //modaldb.modalid = `${modalid}`
   await modaldb.save();
   modal.setCustomId(modaldb.id);
-  //modalid++
   await modalobject.create(
     {
       client: options.client,

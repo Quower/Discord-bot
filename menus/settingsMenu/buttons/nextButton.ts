@@ -1,8 +1,6 @@
 import {
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
-  Client,
   MessageActionRowComponentBuilder,
 } from "discord.js";
 import { button } from "../../../handler/typings";

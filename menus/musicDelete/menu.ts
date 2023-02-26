@@ -1,5 +1,4 @@
-import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
-import { settingcategorys } from "../../handler/events/ready";
+import { BaseMessageOptions, EmbedBuilder } from "discord.js";
 import menuSchema from "../../handler/models/menuSchema";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
@@ -11,26 +10,22 @@ export default {
         guildId: options.guildId,
         currentMenu: "musicMenu",
         deleteAfter: 0,
-        waitingForResponse: true
+        waitingForResponse: true,
       });
       if (menudb.length > 0) {
-        let result = new Array
+        let result = new Array();
         for (const men of menudb) {
           result.push({
             messageId: men.messageId,
             channelId: men.channelId,
           });
         }
-        options.data.result = result
+        options.data.result = result;
       } else {
         const embed = new EmbedBuilder();
-        embed.setTitle("No music menus in this server")
+        embed.setTitle("No music menus in this server");
         const menu = await new UkMessageBuilder().build(options, {
-          rows: [
-            /*["musicDeleteSelect"], */ [
-              "cancelButton" /*"musicDeleteConfirm"*/,
-            ],
-          ],
+          rows: [["cancelButton"]],
           embeds: [embed],
         });
         return menu;
@@ -47,13 +42,9 @@ export default {
         .join("\n")}`
     );
     const menu = await new UkMessageBuilder().build(options, {
-        rows: [
-          ["musicDeleteSelect"], [
-            "cancelButton", "musicDeleteConfirm",
-          ],
-        ],
-        embeds: [embed],
-      });
-      return menu;
+      rows: [["musicDeleteSelect"], ["cancelButton", "musicDeleteConfirm"]],
+      embeds: [embed],
+    });
+    return menu;
   },
 } as menu;

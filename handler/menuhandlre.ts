@@ -3,11 +3,9 @@ import {
   Client,
   CommandInteraction,
   DMChannel,
-  TextBasedChannel,
   TextChannel,
 } from "discord.js";
 import { menuInfo, interactionSave } from "./typings";
-//import { client } from "../index";
 import menuSchema from "./models/menuSchema";
 import { menusExport } from "./setup";
 let interactions: interactionSave[] = [];
@@ -101,7 +99,10 @@ export const Menus = {
       time = Date.now();
       //console.log(options.waitingForResponse)
       if (options.waitingForResponse == true) {
-        const generators = await menuSchema.find({ waitingForResponse: true, channelId: sendplace.id });
+        const generators = await menuSchema.find({
+          waitingForResponse: true,
+          channelId: sendplace.id,
+        });
         //console.log(generators)
         if (generators.length > 0) {
           menu.waitingForResponse = false;
@@ -147,8 +148,11 @@ export const Menus = {
       }
       console.log(`got to menus create point 4.2:${Date.now() - time}`);
       time = Date.now();
-      if ((options.waitingForResponse == true)) {
-        const generators = await menuSchema.find({ waitingForResponse: true, channelId: menu.channelId });
+      if (options.waitingForResponse == true) {
+        const generators = await menuSchema.find({
+          waitingForResponse: true,
+          channelId: menu.channelId,
+        });
         if (generators.length > 0) {
           menu.waitingForResponse = false;
         } else {
@@ -192,7 +196,6 @@ export const Menus = {
       }
     }
     menu.lastInteraction = Date.now();
-    //console.log(`menu at create end:\n${menu} \n`);
     console.log(`got to menus create point 7:${Date.now() - time}`);
     time = Date.now();
     menu.save();
@@ -429,16 +432,6 @@ export const Menus = {
       console.log("the menu you are trying to delete was not found");
       return;
     }
-    // if (menu.interaction[0] instanceof CommandInteraction) {
-    //   console.log(`got to interaction delete`)
-    //   try {
-    //     menu.interaction[0].deleteReply();
-    //   } catch (e) {
-    //     console.log("something went wrong when deleting interaction reply");
-    //   }
-    //   menu.delete();
-    //   return;
-    // }
     if (menu.ephemeral == undefined) {
       try {
         console.log(`got to menus delete point 2:${Date.now() - time}`);

@@ -7,9 +7,6 @@ export default class SettingsHandler {
   client!: Client;
   settings!: saveSetting[];
   updatedSettings: { setting: saveSetting; exec?: string }[] = [];
-  // constructor(options: { client: Client; guildId: string }) {
-  //   this.init(options);
-  // }
   async init(options: { client: Client; guildId: string }) {
     let { client, guildId } = options;
     this.client = client;
@@ -58,7 +55,6 @@ export default class SettingsHandler {
     this.settings =
       (await settingsSchema.findOne({ guildId: this.guildId }))?.settings || [];
   }
-  /**returnAs acepted values: raw, mention, other*/
   async read(options: { settingName: string; retunrAs: string }): Promise<any> {
     let setting;
     console.log(this.settings);
@@ -76,12 +72,14 @@ export default class SettingsHandler {
       setting = this.settings[index];
     }
     let channels = [];
-    if (setting.value == null) {return undefined}
+    if (setting.value == null) {
+      return undefined;
+    }
     switch (options.retunrAs) {
       case "raw":
         return setting.value;
 
-      case "mention": // not finished
+      case "mention":
         switch (setting.type) {
           case "string":
             return setting.value;
@@ -255,60 +253,4 @@ export default class SettingsHandler {
       });
     }
   }
-  // async checkRoles(options: {
-  //   optionName: string;
-  //   value: any;
-  //   member: GuildMember;
-  // }): Promise<boolean | void> {
-  //   let setting;
-  //   const index = this.settings.findIndex(
-  //     (setting) => setting.name == options.optionName
-  //   );
-  //   if (index == -1) {
-  //     setting = settingsBase.find(
-  //       (setting) => setting.name == options.optionName
-  //     );
-  //     if (!setting) {
-  //       //return;
-  //     }
-  //   } else {
-  //     setting = this.settings[index];
-  //   }
-  //   if (setting?.type == "roles") {
-  //     let retunrperms: perm[] = [];
-  //     for (const Perm of setting.value) {
-  //       let roles: Role[] = [];
-  //       for (const frole of Perm.roles) {
-  //         try {
-  //           const guild = await this.client.guilds.fetch(this.guildId);
-  //           const role = await guild.roles.fetch(frole);
-  //           if (role) {
-  //             roles.push(role);
-  //           }
-  //         } catch (e) {
-  //           console.log("something went wrong when fetchin channel");
-  //         }
-  //       }
-  //       let members: GuildMember[] = [];
-  //       for (const fmember of Perm.member) {
-  //         try {
-  //           const guild = await this.client.guilds.fetch(this.guildId);
-  //           const member = await guild.members.fetch(fmember);
-  //           if (member) {
-  //             members.push(member);
-  //           }
-  //         } catch (e) {
-  //           console.log("something went wrong when fetchin channel");
-  //         }
-  //       }
-  //       if (Perm.permissions instanceof Array<PermissionsBitField>) {
-  //         retunrperms.push({
-  //           permissions: Perm.permissions,
-  //           members: members,
-  //           roles: roles,
-  //         });
-  //       }
-  //     }
-  //   }
-  //}
 }

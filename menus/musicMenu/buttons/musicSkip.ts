@@ -1,19 +1,13 @@
 import {
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
   Client,
   GuildMember,
-  InteractionCollector,
   MessageActionRowComponentBuilder,
-  PermissionFlagsBits,
-  PermissionsBitField,
 } from "discord.js";
 import { button } from "../../../handler/typings";
-import { Menus } from "../../../handler/menuhandlre";
 import { botOwners, player } from "../../..";
 import SettingsHandler from "../../../handler/settingshandler";
-import menuSchema from "../../../handler/models/menuSchema";
 
 export default {
   callback: async (options) => {
@@ -39,7 +33,6 @@ export default {
 
         let queue = player.getQueue(options.interaction.guildId || "");
         if (queue) {
-          //if (queue.tracks.length > 0) await queue.play();
            await queue.skip();
         }
       } else {

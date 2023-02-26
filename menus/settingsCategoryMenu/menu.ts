@@ -1,4 +1,4 @@
-import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
+import { BaseMessageOptions, EmbedBuilder } from "discord.js";
 import { settingcategorys } from "../../handler/events/ready";
 import SettingsHandler from "../../handler/settingshandler";
 import { UkMessageBuilder } from "../../handler/setup";
@@ -83,7 +83,7 @@ export default {
           settingsCategory.settings[i].type == "textChannels" ||
           settingsCategory.settings[i].type == "voiceChannels" ||
           settingsCategory.settings[i].type == "members" ||
-          settingsCategory.settings[i].type == "roles" || 
+          settingsCategory.settings[i].type == "roles" ||
           settingsCategory.settings[i].type == "select"
         ) {
           let values = await settingsHandler.read({
@@ -102,17 +102,6 @@ export default {
             }${"``"}\n${values}`,
           });
         }
-
-        // const value = await settingsHandler.read({
-        //   optionName: settingsCategory.settings[i].name,
-        //   retunrAs: "mention",
-        // });
-        // embed.addFields({
-        //   name: settingsCategory.settings[i].display,
-        //   value: `${"``"}${
-        //     settingsCategory.settings[i].description
-        //   }${"``"}\n${value}`,
-        // });
         options.data.settingdata.push({
           name: settingsCategory.settings[i].name,
           description: settingsCategory.settings[i].description,

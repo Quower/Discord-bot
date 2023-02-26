@@ -1,22 +1,14 @@
 import {
-  ActionRowBuilder,
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  Client,
   MessageActionRowComponentBuilder,
-  TextInputBuilder,
   ChannelType,
-  ComponentType,
-  ModalBuilder,
   StringSelectMenuBuilder,
   RoleSelectMenuBuilder,
   UserSelectMenuBuilder,
   ChannelSelectMenuBuilder,
-  StringSelectMenuInteraction,
   MentionableSelectMenuBuilder,
-  AnySelectMenuInteraction,
-  RoleSelectMenuInteraction,
 } from "discord.js";
 import { Menus } from "../../../handler/menuhandlre";
 import { CreateModal } from "../../../handler/modalhandelr";
@@ -42,18 +34,6 @@ export default {
         }
       }
 
-      // const Modal = new ModalBuilder();
-      // Modal.setCustomId(options.interaction.message.id);
-      // Modal.setTitle("Input");
-      // const Input = new TextInputBuilder();
-      // Input.setCustomId("string");
-      // Input.setStyle(1);
-      // Input.setLabel("String");
-      // Input.setValue(options.data.settingValue);
-      // const ActionRow = new ActionRowBuilder<TextInputBuilder>();
-      // ActionRow.addComponents(Input);
-      // Modal.addComponents(ActionRow);
-      // await options.interaction.showModal(Modal);
     } else {
       options.interaction.deferUpdate();
       switch (options.data.settingType) {
