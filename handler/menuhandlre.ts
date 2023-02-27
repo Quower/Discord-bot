@@ -230,30 +230,29 @@ export const Menus = {
     let menudb = new menuSchema();
     if (options.messageId) {
       const menu2 = await menuSchema.findOne({ messageId: options.messageId });
-      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      console.log(`got to menus update point 1.1:${Date.now() - time}`);
       time = Date.now();
       if (!menu2) {
-        console.log("the menu you are trying to delete was not found");
+        console.log("the menu you are trying to update was not found");
         return;
       }
       menudb = menu2;
     } else if (options.menuId) {
       const menu2 = await menuSchema.findById(options.menuId);
-      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      console.log(`got to menus update point 1.2:${Date.now() - time}`);
       time = Date.now();
       if (!menu2) {
-        console.log("the menu you are trying to delete was not found");
+        console.log("the menu you are trying to update was not found");
         return;
       }
       menudb = menu2;
-    }
-    if (options.model) {
-      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+    } else if (options.model) {
+      console.log(`got to menus update point 1.3:${Date.now() - time}`);
       time = Date.now();
       if (options.model instanceof menuSchema) {
         menudb = options.model;
       } else {
-        console.log("the menu you are trying to delete was not found");
+        console.log("the menu you are trying to update was not found");
         return;
       }
     } else {
@@ -462,7 +461,7 @@ export const Menus = {
     messageId?: string;
     client: Client;
     menuId?: string;
-    model?: any
+    model?: any;
   }) => {
     let time = Date.now();
     let menu = new menuSchema();
@@ -484,8 +483,7 @@ export const Menus = {
         return;
       }
       menu = menu2;
-    }
-    if (options.model) {
+    } else if (options.model) {
       console.log(`got to menus delete point 1.1:${Date.now() - time}`);
       time = Date.now();
       if (options.model instanceof menuSchema) {
@@ -578,8 +576,7 @@ export async function MenuDeleteCheck(options: {
       return;
     }
     menu = menu2;
-  }
-  if (options.model) {
+  } else if (options.model) {
     console.log(`got to menus delete point 1.3:${Date.now() - time}`);
     time = Date.now();
     if (options.model instanceof menuSchema) {
@@ -660,7 +657,7 @@ export async function MenuDeleteCheck(options: {
     setTimeout(() => {
       MenuDeleteCheck({
         client: options.client,
-        menuId: menu.id
+        menuId: menu.id,
       });
     }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
   }
