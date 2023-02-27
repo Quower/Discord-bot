@@ -8,9 +8,9 @@ import {
 } from "discord.js";
 import { menuInfo, interactionSave } from "./typings";
 //import { client } from "../index";
-import menuSchema from "./models/menuSchema";
+import menuSchema, { menuI } from "./models/menuSchema";
 import { menusExport } from "./setup";
-import mongoose from "mongoose";
+import mongoose, { model } from "mongoose";
 let interactions: interactionSave[] = [];
 export const Menus = {
   create: async (options: {
@@ -124,6 +124,7 @@ export const Menus = {
         data: options.data,
         guildId: guildId,
         channelId: sendplace.id,
+        model: menu
       });
       console.log(`got to menus create point 5.1:${Date.now() - time}`);
       time = Date.now();
@@ -172,6 +173,7 @@ export const Menus = {
         data: options.data,
         guildId: guildId,
         channelId: sendplace.id,
+        model: menu
       });
       console.log(`got to menus create point 5.2:${Date.now() - time}`);
       time = Date.now();
@@ -220,7 +222,7 @@ export const Menus = {
     menu?: string | "back";
     messageId?: string;
     menuId?: string;
-    model?: any;
+    model?: menuI;
     saveMenu?: boolean;
     client: Client;
     deleteAfter?: number;
@@ -230,7 +232,7 @@ export const Menus = {
     data?: any;
   }) => {
     let time = Date.now();
-    let menudb = new menuSchema();
+    let menudb: menuI;
     if (options.messageId) {
       const menu2 = await menuSchema.findOne({ messageId: options.messageId });
       console.log(`got to menus update point 1.1:${Date.now() - time}`);
@@ -252,12 +254,7 @@ export const Menus = {
     } else if (options.model) {
       console.log(`got to menus update point 1.3:${Date.now() - time}`);
       time = Date.now();
-      if (options.model instanceof menuSchema) {
-        menudb = options.model;
-      } else {
-        console.log("the menu you are trying to update was not found");
-        return;
-      }
+      menudb = options.model;
     } else {
       console.log("no menu inputed");
       return;
@@ -381,6 +378,8 @@ export const Menus = {
     }
     console.log(`got to menus update point 5:${Date.now() - time}`);
     time = Date.now();
+    console.log("model:")
+    console.log(menudb)
     const message = await menuObject.create({
       client: options.client,
       waitingForResponse: waitingForResponse,
@@ -389,6 +388,7 @@ export const Menus = {
       data: data,
       guildId: menudb.guildId,
       channelId: menudb.channelId || "",
+      model: menudb
     });
     if (menudb.ephemeral != undefined) {
       try {

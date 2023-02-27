@@ -53,6 +53,7 @@ export default {
         interaction: interaction,
         data: menuschema.data,
         waitingForResponse: menuschema.waitingForResponse || false,
+        model: menuschema
       });
       
       menuschema.save()

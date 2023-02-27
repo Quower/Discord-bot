@@ -14,6 +14,7 @@ import { player } from "../../..";
 import { Menus } from "../../../handler/menuhandlre";
 import menuSchema from "../../../handler/models/menuSchema";
 import { button } from "../../../handler/typings";
+import { findTrack } from "../menu";
 
 export default {
   callback: async (options) => {
@@ -28,22 +29,21 @@ export default {
 
       //const result = options.data.result.find((res: any) => res.id == value);
       //player.
-      const res = await player.search(value, {
-        requestedBy: options.data.searchUser,
-        searchEngine: QueryType.AUTO,
-      });
-      let queue = await player.getQueue(options.interaction.guildId || "");
-      if (queue) {
-        if (res.tracks[0] instanceof Track) {
+      // const res = await player.search(value, {
+      //   requestedBy: options.data.searchUser,
+      //   searchEngine: QueryType.AUTO,
+      // });
+      const track = await findTrack(value, options.model?.id);
+      console.log(track)
+      if (track) {
+        let queue = await player.getQueue(options.interaction.guildId || "");
+        if (queue) {
           console.log("played");
-          //console.log(queue.playing);
-          queue.addTrack(res.tracks[0]);
+          queue.addTrack(track);
           console.log(queue.playing);
 
           if (!queue.playing && !options.data.paused) {
             await queue.play();
-            //queue.
-            //queue.setPaused(fa)
           }
         }
       }
@@ -69,7 +69,7 @@ export default {
       selectMenu.addOptions([
         {
           label: resu.title.substring(0, 99),
-          value: resu.url,
+          value: resu.id,
           description: resu.duration,
         },
       ]);

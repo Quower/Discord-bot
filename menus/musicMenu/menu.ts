@@ -1,59 +1,48 @@
 import { QueryType, Track } from "discord-player";
 import { BaseMessageOptions, Client, EmbedBuilder } from "discord.js";
 import { player } from "../..";
-import { settingcategorys } from "../../handler/events/ready";
-import SettingsHandler from "../../handler/settingshandler";
 import { UkMessageBuilder } from "../../handler/setup";
 import { menu } from "../../handler/typings";
+import { savedResult } from "./typings";
+let savedResults: savedResult[] = [];
 
 export default {
   create: async (options): Promise<BaseMessageOptions> => {
-    switch (options.data.action) {
-      case "search":
-        const res = await player.search(options.data.lastInput, {
-          requestedBy: options.data.searchUser,
-          searchEngine: QueryType.AUTO,
-        });
-        if (!res || !res.tracks.length) {
-          options.data.result = `No results found <@${options.data.searchUser}>... try again ? ❌`;
-        } else {
-          const sliced = res.tracks.slice(0, 5);
-          options.data.result = [];
-          sliced.forEach((result) => {
-            options.data.result.push({
-              title: result.title,
-              author: result.author,
-              duration: result.duration,
-              url: result.url,
-            });
-          });
-
-          //options.data.result;
-          //res.tracks[1].
-          /*options.data.result = `${maxTracks
-            .map((track, i) => `**${i + 1}**. ${track.title} | ${track.author}`)
-            .join("\n")}⬇️`;*/
-        }
-        break;
+    // switch (options.data.action) {
+    //   case "search":
+    const index = savedResults.findIndex(
+      (res) => res.menuId == options.model?.id
+    );
+    //options.model.id
+    console.log("model:")
+    console.log(options.model)
+    if (index == -1) {
+      options.data.result == undefined;
+    } else if (savedResults[index].search == options.data.lastInput) {
+      options.data.result = savedResults[index].result;
+    } else {
+      options.data.result == undefined;
     }
-    options.data.action = "none";
-    // const settings = new SettingsHandler();
-    // await settings.init({
-    //   client: options.client,
-    //   guildId: options.guildId || "",
-    // });
-    // let row2 = ["exitButton"];
-    // const messageinput = await settings.read({
-    //   settingName: "musicMessageInput",
-    //   retunrAs: "raw",
-    // });
-    // const forceInput = await settings.read({
-    //   settingName: "musicForceInput",
-    //   retunrAs: "raw",
-    // });
-    // if (messageinput == true && forceInput == false) {
-    //   row2.push("InputButton");
-    // }
+    if (options.data.result) {
+      const res = await player.search(options.data.lastInput, {
+        requestedBy: options.data.searchUser,
+        searchEngine: QueryType.AUTO,
+      });
+      if (!res || !res.tracks.length) {
+        options.data.result = `No results found <@${options.data.searchUser}>... try again ? ❌`;
+      } else {
+        options.data.result = res.tracks.slice(0, 5);
+        if (index == -1) {
+          savedResults.push({
+            search: options.data.lastInput,
+            menuId: options.model?.id,
+            result: options.data.result,
+          });
+        } else {
+          savedResults[index].result = options.data.result;
+        }
+      }
+    }
     const embed = new EmbedBuilder();
     embed.setTitle("Music Menu");
     if (options.data.result) {
@@ -72,15 +61,21 @@ export default {
     }
     //embed.setDescription("description");
 
-    let row3 = []
+    let row3 = [];
     if (options.waitingForResponse == false) {
-      row3.push("InputButton")
+      row3.push("InputButton");
     }
 
     let row1 = ["musicJoinButton"];
     const queue = player.getQueue(options.guildId || "");
     if (queue) {
-      row1 = ["musicLeaveButton", "musicPreveous", "musicPause", "musicSkip", "musicLoop"];
+      row1 = [
+        "musicLeaveButton",
+        "musicPreveous",
+        "musicPause",
+        "musicSkip",
+        "musicLoop",
+      ];
       console.log(queue.tracks);
       console.log("got to place");
       if (queue.current) {
@@ -112,7 +107,9 @@ export default {
 
           const tracks = queue.tracks.map(
             (track, i) =>
-              `**${i + 1}**. ${track.title} | ${track.author}\n ${track.duration} (requested by : ${track.requestedBy})`
+              `**${i + 1}**. ${track.title} | ${track.author}\n ${
+                track.duration
+              } (requested by : ${track.requestedBy})`
           );
           embed.spliceFields(1, 0, {
             name: "Next",
@@ -161,16 +158,29 @@ export default {
           embeds: [embed],
         });
         options.data.queue = undefined;
+        options.data.result = undefined;
         return menu;
       }
     }
-    embed.setDescription("cool description")
+    embed.setDescription("cool description");
 
     const menu = await new UkMessageBuilder().build(options, {
-      rows: [row1,row3],
+      rows: [row1, row3],
       embeds: [embed],
     });
     options.data.queue = undefined;
+    options.data.result = undefined;
     return menu;
   },
 } as menu;
+
+export async function findTrack(
+  trackId: string,
+  menuId: string
+): Promise<Track | void> {
+  const index = savedResults.findIndex((res) => res.menuId == menuId);
+  if (index == -1) {
+    return;
+  }
+  return savedResults[index].result.find((res) => res.id == trackId);
+}

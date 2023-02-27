@@ -17,6 +17,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import mongoose from "mongoose";
+import { menuI } from "./models/menuSchema";
 import { modalobject, returnMenu } from "./typings";
 import {
   commandobject,
@@ -462,6 +463,7 @@ export class UkMessageBuilder {
       userIds: string[];
       Indms: boolean;
       data?: any;
+      model: menuI
     },
     options2: {
       content?: string;
