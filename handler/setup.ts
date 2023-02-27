@@ -434,17 +434,19 @@ export default class Handler {
         event.execute(this.client);
       }
     }
-    const eventFiles2 = fs
-      .readdirSync(`./events`)
-      .filter((file) => file.endsWith(".ts"));
-    for (const file of eventFiles2) {
-      const event = require(`../events/${file}`).default;
-      if (event.event) {
-        client.on(event.event, (...args) =>
-          event.execute(...args, this.client)
-        );
-      } else {
-        event.execute(this.client);
+    if (fs.existsSync(`./events`)) {
+      const eventFiles2 = fs
+        .readdirSync(`./events`)
+        .filter((file) => file.endsWith(".ts"));
+      for (const file of eventFiles2) {
+        const event = require(`../events/${file}`).default;
+        if (event.event) {
+          client.on(event.event, (...args) =>
+            event.execute(...args, this.client)
+          );
+        } else {
+          event.execute(this.client);
+        }
       }
     }
   }

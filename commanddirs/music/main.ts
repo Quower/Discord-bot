@@ -9,8 +9,8 @@ import {
   export default {
     description: "music command",
     allowInDMs: false,
-    ownerOnly: false,
-    testOnly: false,
+    ownerOnly: true,
+    testOnly: true,
     permissions: PermissionsBitField.Flags.Administrator,
     MainCommand: false,
     callback: async (
