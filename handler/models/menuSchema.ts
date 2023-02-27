@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const menuSchema = new mongoose.Schema({
+export const menuSchema = new mongoose.Schema({
   channelId: {
     type: String,
     require: true,

@@ -8,6 +8,7 @@ import {
 import { menuInfo, interactionSave } from "./typings";
 import menuSchema from "./models/menuSchema";
 import { menusExport } from "./setup";
+import mongoose from "mongoose";
 let interactions: interactionSave[] = [];
 export const Menus = {
   create: async (options: {
@@ -214,7 +215,9 @@ export const Menus = {
   },
   update: async (options: {
     menu?: string | "back";
-    messageId: string;
+    messageId?: string;
+    menuId?: string;
+    model?: any;
     saveMenu?: boolean;
     client: Client;
     deleteAfter?: number;
@@ -224,7 +227,39 @@ export const Menus = {
     data?: any;
   }) => {
     let time = Date.now();
-    const menudb = await menuSchema.findOne({ messageId: options.messageId });
+    let menudb = new menuSchema();
+    if (options.messageId) {
+      const menu2 = await menuSchema.findOne({ messageId: options.messageId });
+      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      time = Date.now();
+      if (!menu2) {
+        console.log("the menu you are trying to delete was not found");
+        return;
+      }
+      menudb = menu2;
+    } else if (options.menuId) {
+      const menu2 = await menuSchema.findById(options.menuId);
+      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      time = Date.now();
+      if (!menu2) {
+        console.log("the menu you are trying to delete was not found");
+        return;
+      }
+      menudb = menu2;
+    }
+    if (options.model) {
+      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      time = Date.now();
+      if (options.model instanceof menuSchema) {
+        menudb = options.model;
+      } else {
+        console.log("the menu you are trying to delete was not found");
+        return;
+      }
+    } else {
+      console.log("no menu inputed");
+      return;
+    }
     console.log(menudb);
     console.log(`got to menus update point 1:${Date.now() - time}`);
     time = Date.now();
@@ -385,7 +420,7 @@ export const Menus = {
         try {
           console.log(`got to menus update point 8:${Date.now() - time}`);
           time = Date.now();
-          const msg = await channel.messages.fetch(options.messageId);
+          const msg = await channel.messages.fetch(menudb.messageId || "");
           console.log(`got to menus update point 9:${Date.now() - time}`);
           time = Date.now();
           try {
@@ -423,13 +458,44 @@ export const Menus = {
       return;
     }
   },
-  delete: async (options: { messageId: string; client: Client }) => {
+  delete: async (options: {
+    messageId?: string;
+    client: Client;
+    menuId?: string;
+    model?: any
+  }) => {
     let time = Date.now();
-    const menu = await menuSchema.findOne({ messageId: options.messageId });
-    console.log(`got to menus delete point 1:${Date.now() - time}`);
-    time = Date.now();
-    if (!menu) {
-      console.log("the menu you are trying to delete was not found");
+    let menu = new menuSchema();
+    if (options.messageId) {
+      const menu2 = await menuSchema.findOne({ messageId: options.messageId });
+      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      time = Date.now();
+      if (!menu2) {
+        console.log("the menu you are trying to delete was not found");
+        return;
+      }
+      menu = menu2;
+    } else if (options.menuId) {
+      const menu2 = await menuSchema.findById(options.menuId);
+      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      time = Date.now();
+      if (!menu2) {
+        console.log("the menu you are trying to delete was not found");
+        return;
+      }
+      menu = menu2;
+    }
+    if (options.model) {
+      console.log(`got to menus delete point 1.1:${Date.now() - time}`);
+      time = Date.now();
+      if (options.model instanceof menuSchema) {
+        menu = options.model;
+      } else {
+        console.log("the menu you are trying to delete was not found");
+        return;
+      }
+    } else {
+      console.log("no menu inputed");
       return;
     }
     if (menu.ephemeral == undefined) {
@@ -487,13 +553,43 @@ export const Menus = {
   },
 };
 export async function MenuDeleteCheck(options: {
-  messageId: string;
+  messageId?: string;
   client: Client;
+  menuId?: string;
+  model?: any;
 }) {
   let time = Date.now();
-  const menu = await menuSchema.findOne({ messageId: options.messageId });
-  if (!menu) {
-    console.log("the menu you are trying to delete was not found 2");
+  let menu = new menuSchema();
+  if (options.messageId) {
+    const menu2 = await menuSchema.findOne({ messageId: options.messageId });
+    console.log(`got to menus delete check point 1.1:${Date.now() - time}`);
+    time = Date.now();
+    if (!menu2) {
+      console.log("the menu you are trying to delete was not found");
+      return;
+    }
+    menu = menu2;
+  } else if (options.menuId) {
+    const menu2 = await menuSchema.findById(options.menuId);
+    console.log(`got to menus delete point 1.2:${Date.now() - time}`);
+    time = Date.now();
+    if (!menu2) {
+      console.log("the menu you are trying to delete check was not found");
+      return;
+    }
+    menu = menu2;
+  }
+  if (options.model) {
+    console.log(`got to menus delete point 1.3:${Date.now() - time}`);
+    time = Date.now();
+    if (options.model instanceof menuSchema) {
+      menu = options.model;
+    } else {
+      console.log("the menu you are trying to delete check was not found");
+      return;
+    }
+  } else {
+    console.log("no menu inputed");
     return;
   }
   console.log(`got to menus check delete point 1:${Date.now() - time}`);
@@ -564,7 +660,7 @@ export async function MenuDeleteCheck(options: {
     setTimeout(() => {
       MenuDeleteCheck({
         client: options.client,
-        messageId: options.messageId,
+        menuId: menu.id
       });
     }, menu.lastInteraction + menu.deleteAfter * 1000 - Date.now());
   }
