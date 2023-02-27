@@ -1,11 +1,7 @@
 import {
-  ButtonBuilder,
-  ButtonStyle,
-  Client,
   MessageActionRowComponentBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuInteraction,
-  TextBasedChannelMixin,
   TextChannel,
 } from "discord.js";
 import { Menus } from "../../../handler/menuhandlre";
@@ -35,9 +31,9 @@ export default {
       .setMinValues(0)
       .setPlaceholder("Nothing Selected");
     console.log(options.data.result);
-    let i = 0
+    let i = 0;
     for (const res of options.data.result) {
-      i++
+      i++;
       try {
         const channel = await options.client.channels.fetch(res.channelId);
         if (channel instanceof TextChannel) {
@@ -63,10 +59,7 @@ export default {
       }
     }
 
-    //cos
-
     console.log(selectMenu);
-    //options.data.result.forEach((res: any) => {});
 
     return selectMenu;
   },

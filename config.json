@@ -1,6 +1,6 @@
 {
-    "updateSettingsOnStart": true,
-    "nukeSettings": false,
-    "nukeEntireDB": false,
-    "nukeMenusDB": false
+  "updateSettingsOnStart": false,
+  "nukeSettings": false,
+  "nukeEntireDB": false,
+  "nukeMenusDB": false
 }

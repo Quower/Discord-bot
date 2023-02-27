@@ -1,7 +1,5 @@
-import { Client, ChatInputCommandInteraction, TextChannel } from "discord.js";
 import { Menus } from "../../../handler/menuhandlre";
-import menuSchema from "../../../handler/models/menuSchema";
-import { subcommand, subcommandobject } from "../../../handler/typings";
+import { subcommandobject } from "../../../handler/typings";
 
 export default {
   description: "opens menu for managing settings",

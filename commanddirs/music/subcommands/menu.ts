@@ -1,7 +1,6 @@
-import { Client, ChatInputCommandInteraction, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { Menus } from "../../../handler/menuhandlre";
 import menuSchema from "../../../handler/models/menuSchema";
-import SettingsHandler from "../../../handler/settingshandler";
 import { subcommand } from "../../../handler/typings";
 
 export default {
@@ -11,28 +10,6 @@ export default {
       return;
     }
     if (interaction.channel instanceof TextChannel) {
-      // const settings = new SettingsHandler();
-      // await settings.init({
-      //   client: client,
-      //   guildId: interaction.guildId || "",
-      // });
-      // const forceInput = await settings.read({
-      //   settingName: "musicForceInput",
-      //   retunrAs: "raw",
-      // });
-      // if (forceInput) {
-      //   const menudb = await menuSchema.findOne({
-      //     channelId: interaction.channelId,
-      //     waitingForResponse: true,
-      //   });
-      //   if (menudb) {
-      //     await Menus.delete({
-      //       client: client,
-      //       messageId: menudb?.messageId || "",
-      //     });
-      //   }
-      // }
-
       const menudb2 = await menuSchema.find({
         guildId: interaction.guildId,
         currentMenu: "musicMenu",

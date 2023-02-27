@@ -3,11 +3,9 @@ import {
   Client,
   CommandInteraction,
   DMChannel,
-  TextBasedChannel,
   TextChannel,
 } from "discord.js";
 import { menuInfo, interactionSave } from "./typings";
-//import { client } from "../index";
 import menuSchema from "./models/menuSchema";
 import { menusExport } from "./setup";
 import mongoose from "mongoose";
@@ -199,7 +197,6 @@ export const Menus = {
       }
     }
     menu.lastInteraction = Date.now();
-    //console.log(`menu at create end:\n${menu} \n`);
     console.log(`got to menus create point 7:${Date.now() - time}`);
     time = Date.now();
     menu.save();
@@ -501,16 +498,6 @@ export const Menus = {
       console.log("no menu inputed");
       return;
     }
-    // if (menu.interaction[0] instanceof CommandInteraction) {
-    //   console.log(`got to interaction delete`)
-    //   try {
-    //     menu.interaction[0].deleteReply();
-    //   } catch (e) {
-    //     console.log("something went wrong when deleting interaction reply");
-    //   }
-    //   menu.delete();
-    //   return;
-    // }
     if (menu.ephemeral == undefined) {
       try {
         console.log(`got to menus delete point 2:${Date.now() - time}`);
@@ -615,7 +602,6 @@ export async function MenuDeleteCheck(options: {
   }
   if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 0) {
     console.log(`vvvvvvvv`);
-    //console.log(Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000))
     if (menu.ephemeral == undefined) {
       try {
         console.log(`got to menus check delete point 2:${Date.now() - time}`);

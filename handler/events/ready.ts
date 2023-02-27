@@ -45,13 +45,10 @@ export default {
     }
     if (config.nukeMenusDB) {
       await menuSchema.deleteMany();
-      //throw new Error("Settings nuke complete!");
     }
     if (config.updateSettingsOnStart == true) {
       let settingSchemas = await settingsSchema.find();
-      //console.log(optionSchemas)
       for (let settings of settingSchemas) {
-        //console.log(options)
         let newSettings = settingsBase;
         for (let i = 0; i < newSettings.length; i++) {
           const foundOption = settings.settings.find(
@@ -67,7 +64,6 @@ export default {
       }
     }
     const guilds = client.guilds.cache;
-    // var settingsUpdate = new Promise((resolve, reject) => {
     guilds.forEach(async (guild) => {
       const guildOptions = await settingsSchema.findOne({ guildId: guild.id });
       if (!guildOptions) {
@@ -78,7 +74,7 @@ export default {
       }
     });
     const menus = await menuSchema.find();
-    console.log(menus)
+    console.log(menus);
     menus.forEach(async (menu) => {
       if (menu.deleteAfter && menu.deleteAfter > 0) {
         if (menu.lastInteraction && menu.deleteAfter) {
@@ -88,16 +84,6 @@ export default {
             Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) >
             0
           ) {
-            // if (menu.interaction[0] instanceof CommandInteraction) {
-            //   try {
-            //     console.log('got to delete 3 we are tesing')
-            //     menu.interaction[0].deleteReply();
-            //   } catch (e) {
-            //     console.log("something went wrong when deleting interaction reply");
-            //   }
-            //   menu.delete();
-            //   return;
-            // }
             try {
               let channel = await client.channels.fetch(menu.channelId || "");
               if (

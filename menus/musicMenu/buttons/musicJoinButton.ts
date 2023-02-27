@@ -1,26 +1,23 @@
 import {
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
   Client,
   GuildMember,
-  InteractionCollector,
   MessageActionRowComponentBuilder,
 } from "discord.js";
 import { button } from "../../../handler/typings";
-import { Menus } from "../../../handler/menuhandlre";
 import { player } from "../../..";
-import menuSchema from "../../../handler/models/menuSchema";
 import { musicUpdate } from "../events/ready";
 
 export default {
   callback: async (options) => {
-    //options.interaction.deferUpdate();
     if (options.interaction.member instanceof GuildMember) {
       if (options.interaction.member?.voice.channelId) {
-        console.log("perse")
+        console.log("perse");
         options.interaction.deferUpdate();
-        const queue = player.createQueue(options.interaction.guild || "", {leaveOnEnd: false});
+        const queue = player.createQueue(options.interaction.guild || "", {
+          leaveOnEnd: false,
+        });
         await queue.connect(options.interaction.member?.voice.channel || "");
         musicUpdate(options.interaction.guild?.id, options.client);
       } else {

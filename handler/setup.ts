@@ -11,7 +11,6 @@ import {
   MessageActionRowComponentBuilder,
   ModalBuilder,
   ModalSubmitInteraction,
-  PermissionsBitField,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   SlashCommandBuilder,
 } from "discord.js";
@@ -54,7 +53,6 @@ commandfolders.forEach((folder) => {
     const path = `./commanddirs/${folder}/`;
     const object = require(`.${path}main.ts`);
     const subcommands = Setup_Subcommands(`${path}subcommands/`);
-    //console.log(object)
     const subcommand = {
       command: name,
       description: object.default.description,
@@ -70,12 +68,10 @@ commandfolders.forEach((folder) => {
       permissions: object.default.permissions,
       MainCommand: object.default.MainCommand,
     } as commandobject;
-    //console.log(subcommand)
 
     commandsExport.push(subcommand);
   }
 });
-//console.log(commandsExport)
 
 const menufolders = fs.readdirSync("./menus");
 export let menusExport = new Array<menuobject>();
@@ -84,7 +80,6 @@ menufolders.forEach((folder) => {
     const name = folder.split(".")[0];
     const path = `./menus/${folder}`;
     const object = require(`.${path}`);
-    //const buttons = Setup_Buttons(`${path}buttons/`);
     const menu = {
       path: path,
       create: function (options: {
@@ -113,7 +108,6 @@ menufolders.forEach((folder) => {
     const name = folder;
     const path = `./menus/${folder}/`;
     const object = require(`.${path}menu.ts`);
-    //const buttons = Setup_Buttons(`${path}buttons/`);
     const menu = {
       path: path,
       create: function (options: {
@@ -136,7 +130,6 @@ menufolders.forEach((folder) => {
         });
       },
       name: name,
-      //buttons: buttons,
     } as menuobject;
 
     menusExport.push(menu);
@@ -271,38 +264,6 @@ function Setup_Subcommands(
   }
 }
 
-/*export function Setup_Buttons(folder: fs.PathLike): buttonobject[] {
-  const buttonfiles = fs
-    .readdirSync(folder)
-    .filter((file) => file.endsWith(".ts"));
-  let buttons: buttonobject[] = new Array();
-
-  buttonfiles.forEach((file) => {
-    const name = file.split(".")[0];
-    const path = `${folder}${file}`;
-    const object = require(`.${path}`);
-
-    const subcommand = {
-      name: name,
-      path: path,
-      callback: function (client: Client, interaction: CommandInteraction) {
-        object.default.callback(client, interaction);
-      },
-      label: object.default.label || "nolabel",
-      style: object.default.style || ButtonStyle.Primary,
-      emoji: object.default.emoji || null,
-    } as buttonobject;
-
-    buttons.push(subcommand);
-  });
-
-  return buttons;
-}*/
-
-// export const commandsExport = commands;
-// export const menusExport = menus;
-// export const buttonsExport = buttons;
-
 export default class Handler {
   testServers!: String[];
   client!: Client<boolean>;
@@ -329,7 +290,6 @@ export default class Handler {
     this.mongoUri = mongoUri;
 
     let commandArray = new Array();
-    // client.application?.commands
 
     let guildCommands =
       Array<RESTPostAPIChatInputApplicationCommandsJSONBody>();
@@ -353,20 +313,12 @@ export default class Handler {
 
       commandBuilder.setName(command.command);
       commandBuilder.default_member_permissions;
-      //if ((command.MainCommand == true)) {
       commandBuilder.setDescription(command.description);
-      //}
       commandBuilder.setDMPermission(command.allowInDMs);
-      //if (command.permissions) {
-      //const permissions = new PermissionsBitField(command.permissions);
-      //commandBuilder.setDefaultMemberPermissions(command.permissions)
-      //}
-      //commandBuilder.
 
       let commandJSON = commandBuilder.toJSON();
       commandJSON.default_member_permissions = command.permissions;
       commandJSON.options = options;
-      //commandJSON.default_member_permissions = command.permissions
 
       if (command.testOnly == true) {
         guildCommands.push(commandJSON);
@@ -478,9 +430,7 @@ export class UkMessageBuilder {
       time = Date.now();
       for (const buttons of options2.rows) {
         const row = new ActionRowBuilder();
-        //console.log(buttons)
         for (const buttonName of buttons) {
-          //console.log(buttonsExport)
           console.log(`got to messagebuilder point 3:${Date.now() - time}`);
           time = Date.now();
           let buttonobject = buttonsExport.find(

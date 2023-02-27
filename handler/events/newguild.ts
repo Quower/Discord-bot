@@ -1,6 +1,5 @@
 import optionsSchema from "../models/optionsSchema";
 import { myEvent } from "../typings";
-const config = require("../../config.json");
 import { Events, Guild } from "discord.js";
 import { settingsBase } from "./ready";
 

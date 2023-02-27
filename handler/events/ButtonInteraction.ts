@@ -6,10 +6,7 @@ import { myEvent } from "../typings";
 
 export default {
   event: Events.InteractionCreate,
-  execute: async (
-    interaction, //: DiscordJS.Interaction<DiscordJS.CacheType>,
-    client: Client
-  ) => {
+  execute: async (interaction, client: Client) => {
     if (interaction instanceof ButtonInteraction) {
       if (client == undefined || interaction == undefined) {
         console.log("no client or interaction");
@@ -54,8 +51,8 @@ export default {
         data: menuschema.data,
         waitingForResponse: menuschema.waitingForResponse || false,
       });
-      
-      menuschema.save()
+
+      menuschema.save();
     }
   },
 } as myEvent;

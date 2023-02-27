@@ -1,19 +1,13 @@
 import {
   ButtonBuilder,
-  ButtonInteraction,
   ButtonStyle,
   Client,
   GuildMember,
-  InteractionCollector,
   MessageActionRowComponentBuilder,
-  PermissionFlagsBits,
-  PermissionsBitField,
 } from "discord.js";
 import { button } from "../../../handler/typings";
-import { Menus } from "../../../handler/menuhandlre";
 import { botOwners, player } from "../../..";
 import SettingsHandler from "../../../handler/settingshandler";
-import menuSchema from "../../../handler/models/menuSchema";
 import { musicUpdate } from "../events/ready";
 
 export default {
@@ -36,7 +30,7 @@ export default {
         options.interaction.member?.permissions.has("Administrator") ||
         botOwners.includes(options.interaction.user.id)
       ) {
-        options.interaction.deferUpdate()
+        options.interaction.deferUpdate();
         player.deleteQueue(options.interaction.guild || "");
         musicUpdate(options.interaction.guild?.id, options.client);
       } else {

@@ -1,9 +1,5 @@
 import mongoose from "mongoose";
 const modalSchema = new mongoose.Schema({
-//   modalid: {
-//     type: String,
-//     require: true,
-//   },
   modalName: {
     type: String,
     require: true,

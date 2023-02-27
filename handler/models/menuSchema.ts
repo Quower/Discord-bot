@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { menuInfo } from "../typings";
 export const menuSchema = new mongoose.Schema({
   channelId: {
     type: String,

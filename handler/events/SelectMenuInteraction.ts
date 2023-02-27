@@ -13,10 +13,7 @@ import { buttonsExport } from "../setup";
 import { myEvent } from "../typings";
 export default {
   event: Events.InteractionCreate,
-  execute: async (
-    interaction, //: DiscordJS.Interaction<DiscordJS.CacheType>,
-    client: Client
-  ) => {
+  execute: async (interaction, client: Client) => {
     if (
       interaction instanceof StringSelectMenuInteraction ||
       interaction instanceof RoleSelectMenuInteraction ||
@@ -24,7 +21,6 @@ export default {
       interaction instanceof UserSelectMenuInteraction ||
       interaction instanceof ChannelSelectMenuInteraction
     ) {
-      //console.log("got to 1");
       if (client == undefined || interaction == undefined) {
         console.log("no client or interaction");
         return;
@@ -35,7 +31,6 @@ export default {
       let buttonObject = (await buttonsExport).find(
         (button) => button.name == interaction.customId
       );
-      //console.log("got to 2");
       if (menuschema == undefined) {
         console.log("no menuschema found on selectmenu");
         interaction.reply({
@@ -62,14 +57,13 @@ export default {
           return;
         }
       }
-      //console.log("got to 5");
       await buttonObject.callback({
         client: client,
         interaction: interaction,
         data: menuschema.data,
         waitingForResponse: menuschema.waitingForResponse || false,
       });
-      menuschema.save()
+      menuschema.save();
     }
   },
 } as myEvent;
