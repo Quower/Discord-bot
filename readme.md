@@ -1,1 +1,0 @@
-hiina on parii

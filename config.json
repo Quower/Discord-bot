@@ -1,0 +1,6 @@
+{
+  "updateSettingsOnStart": false,
+  "nukeSettings": false,
+  "nukeEntireDB": false,
+  "nukeMenusDB": false
+}

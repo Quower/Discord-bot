@@ -1,57 +1,40 @@
-import DiscordJS, {Intents,} from 'discord.js'
-import WOKCommands from 'wokcommands'
-import path from 'path'
-import dotenv from 'dotenv'
-import mongoose from 'mongoose'
-dotenv.config()
-
-
-
-
+import DiscordJS, { DMChannel, TextChannel, IntentsBitField } from "discord.js";
+import dotenv from "dotenv";
+import Handler from "./handler/setup";
+dotenv.config({path: "./.env2"});
+export const botOwners = ["424279456031703041"];
+import { Player } from "discord-player";
 
 export const client = new DiscordJS.Client({
-    intents: [
-        //Intents.FLAGS.DIRECT_MESSAGES, 
-        //Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-        //Intents.FLAGS.DIRECT_MESSAGE_TYPING,
-        Intents.FLAGS.GUILDS,
-        //Intents.FLAGS.GUILD_BANS,
-        Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-        //Intents.FLAGS.GUILD_INTEGRATIONS,
-        //Intents.FLAGS.GUILD_INVITES,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        //Intents.FLAGS.GUILD_MESSAGE_TYPING,
-        //Intents.FLAGS.GUILD_PRESENCES,
-        //Intents.FLAGS.GUILD_SCHEDULED_EVENTS,
-        Intents.FLAGS.GUILD_VOICE_STATES,
-        //Intents.FLAGS.GUILD_WEBHOOKS
-    ]
-})
+  intents: [
+    IntentsBitField.Flags.DirectMessageTyping,
+    IntentsBitField.Flags.DirectMessages,
+    IntentsBitField.Flags.GuildEmojisAndStickers,
+    IntentsBitField.Flags.GuildMembers,
+    IntentsBitField.Flags.GuildMessageTyping,
+    IntentsBitField.Flags.GuildMessages,
+    IntentsBitField.Flags.GuildPresences,
+    IntentsBitField.Flags.GuildVoiceStates,
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.MessageContent,
+  ],
+});
 
+export const player = new Player(client, {
+  ytdlOptions: {
+    quality: "highestaudio",
+  },
+});
 
-client.on('ready', async () => {
+client.on("ready", async () => {
+  console.log(`Logged in as: ${client.user?.tag}`);
 
-    console.log(`Logged in as: ${client.user?.tag}`)
+  new Handler({
+    testServers: ["966345190480687167"],
+    botOwners: botOwners,
+    mongoUri: process.env.MONGODB || "",
+    client,
+  });
+});
 
-    if (client.users.cache.get('424279456031703041')) {
-        client.users.cache.get('424279456031703041')!.send('bot started yay')
-    }
-
-    new WOKCommands(client, {
-        commandsDir: path.join(__dirname, 'commands'),
-        typeScript: true,
-        testServers: '966345190480687167',
-        botOwners: '424279456031703041',
-        mongoUri: process.env.MONGODB,
-    })
-})
-
-
-
-client.login(process.env.TOKEN)
-
-
-
-
+client.login(process.env.TOKEN);
