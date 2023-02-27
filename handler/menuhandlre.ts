@@ -506,7 +506,6 @@ export async function MenuDeleteCheck(options: {
   }
   if (Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000) > 0) {
     console.log(`vvvvvvvv`);
-    //console.log(Date.now() - (menu.lastInteraction + menu.deleteAfter * 1000))
     if (menu.ephemeral == undefined) {
       try {
         console.log(`got to menus check delete point 2:${Date.now() - time}`);
