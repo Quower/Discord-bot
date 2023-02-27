@@ -52,9 +52,10 @@ export async function musicUpdate(guildId: String | undefined, client: Client) {
     currentMenu: "musicMenu",
   });
   menudb.forEach((menu) => {
+    if (menu) {
     Menus.update({
-      messageId: menu.messageId || "",
+      model: menu,
       client: client,
-    });
+    });}
   });
 }

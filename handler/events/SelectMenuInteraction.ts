@@ -63,7 +63,7 @@ export default {
         }
       }
       //console.log("got to 5");
-      buttonObject.callback({
+      await buttonObject.callback({
         client: client,
         interaction: interaction,
         data: menuschema.data,

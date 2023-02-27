@@ -48,7 +48,7 @@ export default {
           return;
         }
       }
-      buttonObject.callback({
+      await buttonObject.callback({
         client: client,
         interaction: interaction,
         data: menuschema.data,
