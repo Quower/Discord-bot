@@ -6,24 +6,23 @@ import {
 } from "discord.js";
 import { player } from "../../..";
 import { button } from "../../../handler/typings";
+import { findTrack } from "../menu";
 
 export default {
   callback: async (options) => {
     if (options.interaction instanceof StringSelectMenuInteraction) {
       options.interaction.deferUpdate();
       const value = options.interaction.values[0];
-      const res = await player.search(value, {
-        requestedBy: options.data.searchUser,
-        searchEngine: QueryType.AUTO,
-      });
-      let queue = await player.getQueue(options.interaction.guildId || "");
-      if (queue) {
-        if (res.tracks[0] instanceof Track) {
+      const track = await findTrack(value, options.model?.id);
+      console.log(track)
+      if (track) {
+        let queue = await player.getQueue(options.interaction.guildId || "");
+        if (queue) {
           console.log("played");
-          queue.addTrack(res.tracks[0]);
+          queue.addTrack(track);
           console.log(queue.playing);
 
-          if (!queue.playing && !options.data.paused) {
+          if (!queue.playing) {
             await queue.play();
           }
         }

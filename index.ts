@@ -22,7 +22,8 @@ export const client = new DiscordJS.Client({
 
 export const player = new Player(client, {
   ytdlOptions: {
-    quality: "highestaudio",
+    quality: 'highestaudio',
+    highWaterMark: 1 << 25
   },
 });
 

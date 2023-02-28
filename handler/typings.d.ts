@@ -15,7 +15,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import { Model, model } from "mongoose";
-import menuSchema from "./models/menuSchema";
+import menuSchema, { menuI } from "./models/menuSchema";
 
 export interface command {
   description: string;
@@ -53,17 +53,43 @@ export interface button {
   callback(options: {
     client: Client;
     interaction: ButtonInteraction | AnySelectMenuInteraction;
+    /**
+     * @deprecated Use {@link model.data} instead.
+     */
     data?: any;
+    /**
+     * @deprecated Use {@link model.waitingForResponse} instead.
+     */
     waitingForResponse: boolean;
+    model: menuI;
   });
   create(options: {
     client: Client;
+    /**
+     * @deprecated Use {@link model.guildId} instead.
+     */
     guildId?: string;
+    /**
+     * @deprecated Use {@link model.channelId} instead.
+     */
     channelId: string;
+    /**
+     * @deprecated Use {@link model.userIds} instead.
+     */
     userIds: string[];
+    /**
+     * @deprecated Use {@link model.Indms} instead.
+     */
     Indms: boolean;
+    /**
+     * @deprecated Use {@link model.data} instead.
+     */
     data?: any;
+    /**
+     * @deprecated Use {@link model.waitingForResponse} instead.
+     */
     waitingForResponse: boolean;
+    model: menuI;
   }): Promise<MessageActionRowComponentBuilder>;
 }
 
@@ -88,15 +114,36 @@ export type readyEvent = {
 };
 
 export interface menu {
-  create(options: {
-    client: Client;
-    waitingForResponse: boolean;
-    guildId?: string;
-    channelId: string;
-    userIds: string[];
-    Indms: boolean;
-    data?: any;
-  }): returnMenu;
+  create(
+    options: {
+      client: Client;
+      /**
+       * @deprecated Use {@link model.waitingForResponse} instead.
+       */
+      waitingForResponse: boolean;
+      /**
+       * @deprecated Use {@link model.guildId} instead.
+       */
+      guildId?: string;
+      /**
+       * @deprecated Use {@link model.channelId} instead.
+       */
+      channelId: string;
+      /**
+       * @deprecated Use {@link model.userIds} instead.
+       */
+      userIds: string[];
+      /**
+       * @deprecated Use {@link model.Indms} instead.
+       */
+      Indms: boolean;
+      /**
+       * @deprecated Use {@link model.data} instead.
+       */
+      data?: any;
+      model: menuI;
+    }
+  ): returnMenu;
 }
 
 export interface menuobject extends menu {

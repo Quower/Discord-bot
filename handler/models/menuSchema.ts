@@ -1,4 +1,23 @@
 import mongoose from "mongoose";
+
+export interface menuI extends mongoose.Document {
+  channelId: string,
+  messageId: string,
+  guildId?: string,
+  userIds: any[],
+  inDms: boolean,
+  prevMenus: any[],
+  currentMenu: string,
+  waitingForResponse: boolean,
+  saveMenu: boolean,
+  saveState: boolean,
+  deleteAfter: number,
+  lastInteraction: number,
+  data?: any,
+  ephemeral?: number
+
+};
+
 export const menuSchema = new mongoose.Schema({
   channelId: {
     type: String,
@@ -18,7 +37,7 @@ export const menuSchema = new mongoose.Schema({
   },
   inDms: {
     type: Boolean,
-    requere: true,
+    require: true,
   },
   prevMenus: {
     type: Array,
@@ -58,4 +77,4 @@ export const menuSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("menu", menuSchema);
+export default mongoose.model<menuI>("menu", menuSchema);
