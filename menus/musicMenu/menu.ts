@@ -14,8 +14,8 @@ export default {
       (res) => res.menuId == options.model?.id
     );
     //options.model.id
-    console.log("model:")
-    console.log(options.model)
+    // console.log("index:")
+    // console.log(index)
     if (index == -1) {
       options.data.result == undefined;
     } else if (savedResults[index].search == options.data.lastInput) {
@@ -23,7 +23,7 @@ export default {
     } else {
       options.data.result == undefined;
     }
-    if (options.data.result) {
+    if (!options.data.result) {
       const res = await player.search(options.data.lastInput, {
         requestedBy: options.data.searchUser,
         searchEngine: QueryType.AUTO,
@@ -43,6 +43,7 @@ export default {
         }
       }
     }
+    console.log(options.data.result);
     const embed = new EmbedBuilder();
     embed.setTitle("Music Menu");
     if (options.data.result) {
@@ -81,44 +82,27 @@ export default {
       if (queue.current) {
         const track = queue.current;
 
-        const methods = ["disabled", "track", "queue"];
+        //const methods = ["disabled", "track", "queue"];
 
         //const timestamp = queue.getPlayerTimestamp();
 
         const trackDuration = track.duration;
 
         //const progress = queue.createProgressBar();
-        embed.spliceFields(0, 0, {
-          name: "Now Playing",
-          value: `${"``"}${
-            track.title
-          }${"``"}\nDuration **${trackDuration}**\nLoop mode **${
-            methods[queue.repeatMode]
-          }**\nRequested by ${track.requestedBy}`,
-        });
-        embed.setThumbnail(track.thumbnail);
-        if (queue.tracks[0]) {
-          const songs = queue.tracks.length;
-
-          const nextSongs =
-            songs > 5
-              ? `And **${songs - 5}** other song(s)...`
-              : `In the playlist **${songs}** song(s)...`;
-
-          const tracks = queue.tracks.map(
-            (track, i) =>
-              `**${i + 1}**. ${track.title} | ${track.author}\n ${
-                track.duration
-              } (requested by : ${track.requestedBy})`
-          );
-          embed.spliceFields(1, 0, {
-            name: "Next",
-            value: `${tracks.slice(0, 5).join("\n")}\n\n${nextSongs}`,
+        if (queue.connection.status != "idle") {
+          embed.spliceFields(0, 0, {
+            name: "Now Playing",
+            value: `${"``"}${
+              track.title
+            }${"``"}\nDuration **${trackDuration}**\nStatus **${
+              queue.connection.status
+            }**\nRequested by ${track.requestedBy}`,
           });
+          embed.setThumbnail(track.thumbnail);
         } else {
-          embed.spliceFields(1, 0, {
-            name: "Next",
-            value: "none",
+          embed.spliceFields(0, 0, {
+            name: "Now Playing",
+            value: "No music currently playing",
           });
         }
         // if (queue.previousTracks[0]) {
@@ -150,6 +134,26 @@ export default {
         });
       }
 
+      if (queue.tracks[0]) {
+        const songs = queue.tracks.length;
+
+        const nextSongs =
+          songs > 5
+            ? `And **${songs - 5}** other song(s)...`
+            : `In the playlist **${songs}** song(s)...`;
+
+        const tracks = queue.tracks.map(
+          (track, i) =>
+            `**${i + 1}**. ${track.title} | ${track.author}\n ${
+              track.duration
+            } (requested by : ${track.requestedBy})`
+        );
+        embed.spliceFields(1, 0, {
+          name: "Next",
+          value: `${tracks.slice(0, 5).join("\n")}\n\n${nextSongs}`,
+        });
+      }
+
       options.data.queue = queue;
 
       if (options.data.result) {
@@ -175,12 +179,12 @@ export default {
 } as menu;
 
 export async function findTrack(
-  trackId: string,
+  trackUrl: string,
   menuId: string
 ): Promise<Track | void> {
   const index = savedResults.findIndex((res) => res.menuId == menuId);
   if (index == -1) {
     return;
   }
-  return savedResults[index].result.find((res) => res.id == trackId);
+  return savedResults[index].result.find((res) => res.url == trackUrl);
 }

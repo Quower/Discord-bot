@@ -316,7 +316,7 @@ export const Menus = {
         waitingForResponse: true,
       });
       menus.forEach((menu) => {
-        if (menu.channelId != menudb.channelId) {
+        if (menu.channelId == menudb.channelId && menu.messageId != menudb.messageId) {
           waitingForResponse = false;
         }
       });
@@ -378,8 +378,6 @@ export const Menus = {
     }
     console.log(`got to menus update point 5:${Date.now() - time}`);
     time = Date.now();
-    console.log("model:")
-    console.log(menudb)
     const message = await menuObject.create({
       client: options.client,
       waitingForResponse: waitingForResponse,

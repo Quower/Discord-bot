@@ -42,7 +42,7 @@ export default {
           queue.addTrack(track);
           console.log(queue.playing);
 
-          if (!queue.playing && !options.data.paused) {
+          if (!queue.playing) {
             await queue.play();
           }
         }
@@ -69,7 +69,7 @@ export default {
       selectMenu.addOptions([
         {
           label: resu.title.substring(0, 99),
-          value: resu.id,
+          value: resu.url,
           description: resu.duration,
         },
       ]);

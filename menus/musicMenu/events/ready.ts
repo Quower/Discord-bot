@@ -23,10 +23,13 @@ export default {
     player.on("trackStart", async (queue) => {
       musicUpdate(queue.guild.id, client);
     });
-    player.on("trackEnd", async (queue) => {
+    // player.on("trackEnd", async (queue) => {
+    //   musicUpdate(queue.guild.id, client);
+    // });
+    player.on("trackAdd", async (queue) => {
       musicUpdate(queue.guild.id, client);
     });
-    player.on("trackAdd", async (queue) => {
+    player.on("queueEnd", async (queue) => {
       musicUpdate(queue.guild.id, client);
     });
     player.on("error", async (queue, e) => {
@@ -51,7 +54,7 @@ export async function musicUpdate(guildId: String | undefined, client: Client) {
     guildId: guildId,
     currentMenu: "musicMenu",
   });
-  menudb.forEach((menu) => {
+  menudb.forEach(async (menu) => {
     if (menu) {
     Menus.update({
       model: menu,

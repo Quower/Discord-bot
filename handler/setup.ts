@@ -96,6 +96,7 @@ menufolders.forEach((folder) => {
         userId?: String;
         Indms?: Boolean;
         data?: any;
+        model: menuI
       }): Promise<returnMenu> {
         return object.default.create({
           client: options.client,
@@ -105,6 +106,7 @@ menufolders.forEach((folder) => {
           userId: options.userId,
           Indms: options.Indms,
           data: options.data,
+          model: options.model
         });
       },
       name: name,
@@ -125,6 +127,7 @@ menufolders.forEach((folder) => {
         userId?: String;
         Indms?: Boolean;
         data?: any;
+        model: menuI
       }): Promise<returnMenu> {
         return object.default.create({
           client: options.client,
@@ -134,6 +137,7 @@ menufolders.forEach((folder) => {
           userId: options.userId,
           Indms: options.Indms,
           data: options.data,
+          model: options.model
         });
       },
       name: name,
@@ -162,12 +166,14 @@ menusExport.forEach((menu) => {
           interaction: ButtonInteraction | AnySelectMenuInteraction;
           data?: any;
           waitingForResponse: boolean;
+          model: menuI
         }) {
           object.default.callback({
             client: options.client,
             interaction: options.interaction,
             data: options.data,
             waitingForResponse: options.waitingForResponse,
+            model: options.model
           });
         },
         create: function (options: {
@@ -178,6 +184,7 @@ menusExport.forEach((menu) => {
           Indms: boolean;
           data?: any;
           waitingForResponse: boolean;
+          model: menuI
         }): Promise<MessageActionRowComponentBuilder> {
           return object.default.create({
             client: options.client,
@@ -187,6 +194,7 @@ menusExport.forEach((menu) => {
             InDms: options.Indms,
             data: options.data,
             waitingForResponse: options.waitingForResponse,
+            model: options.model
           });
         },
       } as buttonobject;

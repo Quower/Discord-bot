@@ -61,7 +61,7 @@ export interface button {
      * @deprecated Use {@link model.waitingForResponse} instead.
      */
     waitingForResponse: boolean;
-    model: menuI
+    model: menuI;
   });
   create(options: {
     client: Client;
@@ -89,7 +89,7 @@ export interface button {
      * @deprecated Use {@link model.waitingForResponse} instead.
      */
     waitingForResponse: boolean;
-    model: menuI
+    model: menuI;
   }): Promise<MessageActionRowComponentBuilder>;
 }
 
@@ -114,40 +114,42 @@ export type readyEvent = {
 };
 
 export interface menu {
-  create(options: {
-    client: Client;
-    /**
-     * @deprecated Use {@link model.waitingForResponse} instead.
-     */
-    waitingForResponse: boolean;
-    /**
-     * @deprecated Use {@link model.guildId} instead.
-     */
-    guildId?: string;
-    /**
-     * @deprecated Use {@link model.channelId} instead.
-     */
-    channelId: string;
-    /**
-     * @deprecated Use {@link model.userIds} instead.
-     */
-    userIds: string[];
-    /**
-     * @deprecated Use {@link model.Indms} instead.
-     */
-    Indms: boolean;
-    /**
-     * @deprecated Use {@link model.data} instead.
-     */
-    data?: any;
-    model: menuI
-  }): returnMenu;
+  create(
+    options: {
+      client: Client;
+      /**
+       * @deprecated Use {@link model.waitingForResponse} instead.
+       */
+      waitingForResponse: boolean;
+      /**
+       * @deprecated Use {@link model.guildId} instead.
+       */
+      guildId?: string;
+      /**
+       * @deprecated Use {@link model.channelId} instead.
+       */
+      channelId: string;
+      /**
+       * @deprecated Use {@link model.userIds} instead.
+       */
+      userIds: string[];
+      /**
+       * @deprecated Use {@link model.Indms} instead.
+       */
+      Indms: boolean;
+      /**
+       * @deprecated Use {@link model.data} instead.
+       */
+      data?: any;
+      model: menuI;
+    }
+  ): returnMenu;
 }
 
 export interface menuobject extends menu {
   name: string;
   path: fs.PathLike;
-};
+}
 
 export type interactionSave = {
   messageId: string;
@@ -206,4 +208,4 @@ export interface modal {
 export interface modalobject extends modal {
   path: fs.PathLike;
   name: string;
-};
+}
