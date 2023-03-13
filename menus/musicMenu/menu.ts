@@ -46,7 +46,7 @@ export default {
     console.log(options.data.result);
     const embed = new EmbedBuilder();
     embed.setTitle("Music Menu");
-    if (options.data.result) {
+    if (options.data.result instanceof Array<Track>) {
       const resultText = `${options.data.result
         .map(
           (track: any, i: number) =>
@@ -59,6 +59,12 @@ export default {
           options.data.lastInput || "none"
         }${"``"}\n${resultText}`,
       });
+    } else if (options.data.result instanceof String) {
+      embed.addFields({
+        name: "Search results",
+        value: options.data.result
+      });
+
     }
     //embed.setDescription("description");
 
