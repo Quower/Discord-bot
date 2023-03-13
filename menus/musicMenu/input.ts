@@ -8,8 +8,8 @@ export default async (options: {
   messageId: string;
 }) => {
   console.log("got to input");
+  console.log(options.message.content)
   options.data.lastInput = options.message.content;
-  options.data.action = "search";
   options.data.searchUser = options.message.member?.id;
 
   Menus.update({
