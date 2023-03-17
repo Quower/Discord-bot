@@ -38,9 +38,8 @@ import {
           options.interaction.member?.permissions.has("Administrator") ||
           botOwners.includes(options.interaction.user.id)
         ) {
-          let queue = await player.getQueue(options.interaction.guildId || "");
-          queue?.back()
-          queue?.getTrackPosition
+          let queue = await player.nodes.get(options.interaction.guildId || "");
+          queue?.history.back()
           //await musicUpdate(options.interaction.guild?.id, options.client);
           options.interaction.deferUpdate();
         } else {

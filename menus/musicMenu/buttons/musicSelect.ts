@@ -36,14 +36,14 @@ export default {
       const track = await findTrack(value, options.model?.id);
       console.log(track)
       if (track) {
-        let queue = await player.getQueue(options.interaction.guildId || "");
+        let queue = await player.nodes.get(options.interaction.guildId || "");
         if (queue) {
           console.log("played");
           queue.addTrack(track);
-          console.log(queue.playing);
+          console.log(queue.node.isPlaying());
 
-          if (!queue.playing) {
-            await queue.play();
+          if (!queue.node.isPlaying()) {
+            await queue.node.play()
           }
         }
       }

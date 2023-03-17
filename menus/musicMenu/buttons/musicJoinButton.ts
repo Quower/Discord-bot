@@ -20,7 +20,7 @@ export default {
       if (options.interaction.member?.voice.channelId) {
         console.log("perse")
         options.interaction.deferUpdate();
-        const queue = player.createQueue(options.interaction.guild || "", {leaveOnEnd: false});
+        const queue = player.nodes.create(options.interaction.guild || "", {leaveOnEnd: false});
         await queue.connect(options.interaction.member?.voice.channel || "");
         musicUpdate(options.interaction.guild?.id, options.client);
       } else {

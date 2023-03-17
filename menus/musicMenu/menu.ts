@@ -74,7 +74,7 @@ export default {
     }
 
     let row1 = ["musicJoinButton"];
-    const queue = player.getQueue(options.guildId || "");
+    const queue = player.nodes.get(options.guildId || "");
     if (queue) {
       row1 = [
         "musicLeaveButton",
@@ -85,52 +85,25 @@ export default {
       ];
       console.log(queue.tracks);
       console.log("got to place");
-      if (queue.current) {
-        const track = queue.current;
-
-        //const methods = ["disabled", "track", "queue"];
-
-        //const timestamp = queue.getPlayerTimestamp();
+      if (queue.currentTrack) {
+        const track = queue.currentTrack;
 
         const trackDuration = track.duration;
 
-        //const progress = queue.createProgressBar();
-        if (queue.connection.status != "idle") {
-          embed.spliceFields(0, 0, {
-            name: "Now Playing",
-            value: `${"``"}${
-              track.title
-            }${"``"}\nDuration **${trackDuration}**\nStatus **${
-              queue.connection.status
-            }**\nRequested by ${track.requestedBy}`,
-          });
-          embed.setThumbnail(track.thumbnail);
-        } else {
-          embed.spliceFields(0, 0, {
-            name: "Now Playing",
-            value: "No music currently playing",
-          });
-        }
-        // if (queue.previousTracks[0]) {
-        //   const songs = queue.previousTracks.length;
-
-        //   const nextSongs =
-        //     songs > 5
-        //       ? `And **${songs - 5}** other song(s)...`
-        //       : `In the playlist **${songs}** song(s)...`;
-
-        //   const tracks = queue.previousTracks.map(
-        //     (track, i) =>
-        //       `**${i + 1}**. ${track.title} | ${track.author}\n ${track.duration} (requested by : ${track.requestedBy})`
-        //   );
-        //   embed.spliceFields(1, 0, {
-        //     name: "Preveous",
-        //     value: `${tracks.slice(0, 5).join("\n")}\n\n${nextSongs}`,
+        // if (queue != "idle") {
+        //   embed.spliceFields(0, 0, {
+        //     name: "Now Playing",
+        //     value: `${"``"}${
+        //       track.title
+        //     }${"``"}\nDuration **${trackDuration}**\nStatus **${
+        //       queue.connection.status
+        //     }**\nRequested by ${track.requestedBy}`,
         //   });
+        //   embed.setThumbnail(track.thumbnail);
         // } else {
-        //   embed.spliceFields(1, 0, {
-        //     name: "Preveous",
-        //     value: "none",
+        //   embed.spliceFields(0, 0, {
+        //     name: "Now Playing",
+        //     value: "No music currently playing",
         //   });
         // }
       } else {
@@ -140,8 +113,8 @@ export default {
         });
       }
 
-      if (queue.tracks[0]) {
-        const songs = queue.tracks.length;
+      if (queue.tracks.size > 0) {
+        const songs = queue.tracks.size;
 
         const nextSongs =
           songs > 5

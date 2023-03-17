@@ -37,10 +37,10 @@ export default {
       ) {
         options.interaction.deferUpdate();
 
-        let queue = player.getQueue(options.interaction.guildId || "");
+        let queue = player.nodes.get(options.interaction.guildId || "");
         if (queue) {
           //if (queue.tracks.length > 0) await queue.play();
-           await queue.skip();
+           await queue.node.skip();
         }
       } else {
         await options.interaction.reply({

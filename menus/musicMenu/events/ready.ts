@@ -1,4 +1,3 @@
-import { Queue } from "discord-player";
 import { Client } from "discord.js";
 import { player } from "../../..";
 import { Menus } from "../../../handler/menuhandlre";
@@ -16,31 +15,27 @@ export default {
         client: client,
       });
     });
-    player.on("botDisconnect", async (queue) => {
-      queue.destroy();
+    player.events.on("disconnect", async (queue) => {
       musicUpdate(queue.guild.id, client);
     });
-    player.on("trackStart", async (queue) => {
+    player.events.on("playerStart", async (queue) => {
       musicUpdate(queue.guild.id, client);
     });
     // player.on("trackEnd", async (queue) => {
     //   musicUpdate(queue.guild.id, client);
     // });
-    player.on("trackAdd", async (queue) => {
+    player.events.on("audioTrackAdd", async (queue) => {
       musicUpdate(queue.guild.id, client);
     });
-    player.on("queueEnd", async (queue) => {
+    player.events.on("playerFinish", async (queue) => {
       musicUpdate(queue.guild.id, client);
     });
-    player.on("error", async (queue, e) => {
+    player.events.on("error", async (queue, e) => {
       
       console.log(e)
     });
-    player.on("debug", async (queue, e) => {
+    player.events.on("debug", async (queue, e) => {
       
-      console.log(e)
-    });
-    player.on("connectionError", async (queue, e) => {
       console.log(e)
     });
     // player.on("voiceStateUpdate", async (queue) => {

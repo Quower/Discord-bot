@@ -38,7 +38,7 @@ export default {
         options.interaction.member?.permissions.has("Administrator") ||
         botOwners.includes(options.interaction.user.id)
       ) {
-        let queue = await player.getQueue(options.interaction.guildId || "");
+        let queue = await player.nodes.get(options.interaction.guildId || "");
         if (queue?.repeatMode == 2) {
           queue.setRepeatMode(1);
         } else if (queue?.repeatMode == 1) {
