@@ -1,7 +1,7 @@
 import DiscordJS, { DMChannel, TextChannel, IntentsBitField } from "discord.js";
 import dotenv from "dotenv";
 import Handler from "./handler/setup";
-dotenv.config({path: "./.env2"});
+dotenv.config({path: "./.env"});
 export const botOwners = ["424279456031703041"];
 import { Player } from "discord-player";
 

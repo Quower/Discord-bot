@@ -1,5 +1,6 @@
 import { Queue } from "discord-player";
 import { Client } from "discord.js";
+import mongoose from "mongoose";
 import { player } from "../../..";
 import { Menus } from "../../../handler/menuhandlre";
 import menuSchema from "../../../handler/models/menuSchema";
@@ -7,6 +8,7 @@ import { readyEvent } from "../../../handler/typings";
 
 export default {
   async execute(client) {
+    mongoose.set('strictQuery', false);
     const menudb = await menuSchema.find({
       currentMenu: "musicMenu",
     });
