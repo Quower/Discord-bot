@@ -39,8 +39,8 @@ export default {
         options.interaction.member?.permissions.has("Administrator") ||
         botOwners.includes(options.interaction.user.id)
       ) {
-        let queue = await player.nodes.get(options.interaction.guildId || "");
-        queue?.node.setPaused(!queue.node.isPaused());
+        let queue = await player.getQueue(options.interaction.guildId || "");
+        queue?.setPaused(!queue.connection.paused);
         await musicUpdate(options.interaction.guild?.id, options.client);
         options.interaction.deferUpdate();
       } else {

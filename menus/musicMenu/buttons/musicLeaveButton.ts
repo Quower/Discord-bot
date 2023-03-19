@@ -37,7 +37,7 @@ export default {
         botOwners.includes(options.interaction.user.id)
       ) {
         options.interaction.deferUpdate()
-        player.nodes.delete(options.interaction.guild || "");
+        player.deleteQueue(options.interaction.guild || "");
         musicUpdate(options.interaction.guild?.id, options.client);
       } else {
         await options.interaction.reply({
